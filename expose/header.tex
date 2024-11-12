@@ -1,0 +1,104 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Optionen zum Layout des Artikels                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{fix-cm} % nur unter MS-Windows
+
+\documentclass[%
+pdftex,
+a4paper,						% alle weiteren Papierformat einstellbar
+%landscape,					% Querformat
+12pt,								% Schriftgr��e (12pt, 11pt (Standard))
+%BCOR27.5mm,					% Bindekorrektur, bspw. 1 cm
+%DIVcalc,							% f�hrt die Satzspiegelberechnung neu aus
+%twoside,
+%openright,					% Doppelseiten
+%twocolumn,					% zweispaltiger Satz
+%halfparskip*,			% Absatzformatierung s. scrguide 3.1
+%headsepline,				% Trennline zum Seitenkopf	
+%headinclude,
+%footsepline,				% Trennline zum Seitenfu�
+%footinclude=false,
+%titlepage,					% Titelei auf eigener Seite
+%headings=normal,			% �berschriften etwas kleiner (smallheadings)
+%idxtotoc,					% Index im Inhaltsverzeichnis
+%liststotoc,				% Abb.- und Tab.verzeichnis im Inhalt
+%bibliography=totoc,					% Literaturverzeichnis im Inhalt
+%abstract=true,			% �berschrift �ber der Zusammenfassung an	
+%leqno,   					% Nummerierung von Gleichungen links
+fleqn,							% Ausgabe von Gleichungen linksb�ndig
+%draft								% �berlangen Zeilen in Ausgabe gekennzeichnet
+%headings=normal,
+]
+{article}
+
+%% Normales LaTeX oder pdfLaTeX? %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ==> Das neue if-Kommando "\ifpdf" wird an einigen wenigen
+%% ==> Stellen ben�tigt, um die Kompatibilit�t zwischen
+%% ==> LaTeX und pdfLaTeX herzustellen.
+\usepackage{ifpdf}
+
+%% Fonts f�r pdfLaTeX, falls keine cm-super-Fonts installiert %%%%%%%%
+\ifpdf
+	%\usepackage{ae}        % Benutzen Sie nur
+	%\usepackage{zefonts}  % eines dieser Pakete
+\else
+	%%Normales LaTeX - keine speziellen Fontpackages notwendig
+\fi
+
+%% optischer Randausgleich, falls pdflatex verwandt %%%%%%%%%%%%%%%%%%%
+%\ifpdf
+%	\usepackage[activate]{pdfcprot}				
+%\else											
+	% pdfcprot funktioniert nur mit pdflatex
+%\fi
+
+%% Packages f�r Grafiken & Abbildungen %%%%%%%%%%%%%%%%%%%%%%
+\ifpdf %%Einbindung von Grafiken mittels \includegraphics{datei}
+	\usepackage[pdftex]{graphicx} %%Grafiken in pdfLaTeX
+\else
+	\usepackage[dvips]{graphicx} %%Grafiken und normales LaTeX
+\fi
+%\usepackage[hang]{subfigure} %%Mehrere Teilabbildungen in einer Abbildung
+%\usepackage{pst-all} %%PSTricks - nicht verwendbar mit pdfLaTeX
+
+%% deutsche Anpassung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[ngerman]{babel}		
+\usepackage[T1]{fontenc}							
+\usepackage[latin1]{inputenc}		
+
+%% Bibliographiestil %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{natbib}
+%\usepackage{bibgerm}
+
+%% Index %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{makeidx}
+\makeindex
+
+%% Dateiendungen f�r Grafiken %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ==> Sie k�nnen hiermit die Dateiendung einer Grafik weglassen.
+%% ==> Aus "\includegraphics{titel.eps}" wird "\includegraphics{titel}".
+%% ==> Wenn Sie nunmehr 2 inhaltsgleiche Grafiken "titel.eps" und
+%% ==> "titel.pdf" erstellen, wird jeweils nur die Grafik eingebunden,
+%% ==> die von ihrem Compiler verarbeitet werden kann.
+%% ==> pdfLaTeX benutzt "titel.pdf". LaTeX benutzt "titel.eps".
+\ifpdf
+	\DeclareGraphicsExtensions{.pdf,.jpg,.png}
+\else
+	\DeclareGraphicsExtensions{.eps}
+\fi
+
+%% Weitere benutzte Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{color}
+\usepackage{courier}
+
+\usepackage{latexsym}
+\usepackage{amssymb,amsfonts}
+
+\usepackage{url}
+\usepackage{eurosym}
+
+%\usepackage{textcomp}
+%\usepackage{logicdefs}
+
+%% Trennung %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hyphenation{}

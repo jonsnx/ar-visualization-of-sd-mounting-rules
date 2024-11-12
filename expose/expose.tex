@@ -1,0 +1,59 @@
+\include{header}
+
+\begin{document}
+%\pagestyle{empty}
+
+%% Titelseite %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+%\include{titlepage}
+
+%% Zusammenfassung nach Titel, vor Inhaltsverzeichnis %%%%%%%%%%%%%%%%%
+%\begin{abstract}
+%Here comes the abstract...
+%\end{abstract}
+%\cleardoublepage
+
+%% Erzeugung von Verzeichnissen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\pagestyle{headings}	% lebender Kolumnentitel
+%\pagenumbering{roman}
+
+%\tableofcontents			% Inhaltsverzeichnis
+%\listoftables				  % Tabellenverzeichnis
+%\listoffigures				% Abbildungsverzeichnis
+%\cleardoublepage
+
+%% Der Text %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nocite{*}
+
+\pagenumbering{arabic}
+
+\input{title}
+
+\input{problem}
+
+\input{goals}
+
+\input{related}
+
+\input{methods}
+
+\input{results}
+
+\input{milestones}
+
+\input{structure}
+
+%\include{somechapters}
+
+%% Appendix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\appendix
+%\include{appendix}
+
+%% Bibliographie %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\setbibpreamble{Pr�ambel}		% Text vor dem Verzeichnis
+%\bibliographystyle{IEEEtran}
+%\bibliography{expose}
+
+%% Index %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\printindex
+
+\end{document}
