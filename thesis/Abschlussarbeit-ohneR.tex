@@ -1,0 +1,178 @@
+%%% ---------------------------------------------------------------------------------
+%%% Vorlage Abschlussarbeit (LaTeX)
+%%% 
+%%% V1   03/2017, Stefan Etschberger (HSA)
+%%% V1.1 04/2021, rnw-hack für biblatex-run
+%%% V2   05/2021, Titelblatt und Erweiterungen: Stefan Jansen (HSA)
+%%% V2.1 05/2021, Trennung von R-Support und einfachem LaTeX: Phillip Heidegger (HSA)
+%%% V2.2 01/2024, Anpassung an THA-Layout
+%%% V3   01/2024, I18n
+%%% V3.1 10/2024, Phillip Heideger, Online Version präferiert, Reparatur langes Inhaltsverzeichnis,
+%%%               Erklärung Referenzen, blau für Refs & Links
+%%% ---------------------------------------------------------------------------------
+\documentclass[12pt,a4paper%
+              ,oneside     % fuer PDF-Abgabe, bei Druck twoside
+              ,titlepage
+              ,DIV=13
+              ,headinclude
+              ,footinclude=false%
+              ,cleardoublepage=empty%
+              ,parskip=half,
+              BCOR=0mm,
+              ]{scrreprt}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[authorName={Jonas Kraus}
+           ,authorEnrolmentNo={30041777}
+           ,authorStreet={Afrastraße 40}
+           ,authorZip={86316}
+           ,authorCity={Friedberg}
+           ,authorEMail={jonas.kraus@tha.de}
+           ,authorSignaturePlace={Augsburg}
+           ,studyProgram={Informatik}
+           ,thesisType={Bachelorarbeit}
+           ,thesisTitle={Visualisierung von Montageregeln für Rauchmelder mithilfe von Augmented Reality}
+           ,studyDegree={{Bachelor of Science (B.\,Sc.)}}
+           ,faculty={{Fakultät für \\ Informatik}}
+%           ,topicAssignment={\today}
+%           ,submissionDate={\today}
+%           ,defenseDate={\today}
+%           ,nonDisclosure={false}
+           ,supervisor={Prof.~Dr.~Michael Strohmeier}
+           ,supervisorDeputy={Prof.~Dr.~Michael Strohmeier}
+%           ,language={en}
+           ]{THA-Abschlussarbeit}
+
+% ====== mögliches Setup fürs PDFs =======
+\hypersetup{
+  colorlinks=true,
+  allcolors = THAi-Blue, % oder THAred ??
+  linktocpage  
+}
+% Siehe:
+% https://ctan.net/macros/latex/contrib/hyperref/doc/hyperref-doc.pdf
+% S. Kap. 5, S. 10 ff
+
+% Ohne diese Zeile: Mit klickbaren links
+% \hypersetup{draft}
+
+
+% Literaturdatenbank (.bib-Datei) aus Citavi o.ä.
+\bibliography{Literatur_Abschlussarbeit}
+
+\graphicspath{{Bilder/}}
+
+\usepackage{caption}
+\DeclareCaptionLabelFormat{something}{#2.#1.}
+\captionsetup[lstlisting]{labelformat=something}
+
+\begin{document}
+
+% Sprachauswahl zum Umschalten innerhalb des Textes. 
+% Alternativen: \thesisLanguage, ngerman, english
+\selectlanguage{\thesisLanguage}
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\THAtitlepage
+
+\tableofcontents
+
+%%% --------------------------------------------------
+%%% Ab hier: Inhalt
+%%% --------------------------------------------------
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\chapter{Hier beginnt das erste Kapitel}
+
+% -----------------------------------------------------
+\section{Wie verweist man auf Quellen?}
+
+Hier wird \citet{Neumann:1977} zitiert. Zitate sollten in den Text eingebunden werden, zum Beispiel eine Quelle aus einem Tagungsband, hier von \citet{Bauer} oder ein Artikel aus einer Fachzeitschrift (auf den dann in einer Klammer beispielsweise bei \cite{Fox:2002} verwiesen wird). 
+
+Noch ein Absatz mit einem Zitat aus einem Buch, nämlich von \citet{R:Chambers:1998}. Webseiten, zum Beispiel das Dokument von \citet{xmlComparingSchemata} sollten nur äußerst sparsam referenziert werden. 
+
+Hier wird ein Buch zitiert, nämlich das von \citet{darwin}. Die Arbeit von \citet{meulman} ist in einer wissenschaftlichen Fachzeitschrift veröffentlicht worden. Ein Beispiel für einen Aufsatz in einem Tagungsband liefert \citet{banzhaf96effect}. In Ausnahmefällen zu zitieren ist eine unveröffentlichte Abschlussarbeit, zum Beispiel eine Diplom-, Bachelor-, oder Masterthesis, wie die von \citet{holzheuer}. Ganz selten ist man gezwungen Manuale oder Referenzen zu referenzieren, die nur im Internet zugänglich sind und zudem keinen ausgewiesenen Autor haben wie zum Beispiel die Anleitung vom \citet{hornik} oder der Aufsatz von \citet{xmlComparingSchemata}.
+
+% -----------------------------------------------------
+\section{Einbinden von Grafiken}
+
+Es folgt die Abbildung~\ref{fig:Gauss} auf Seite \pageref{fig:Gauss}, die dynamisch (gleitend) eingebunden wird. Das ist typischerweise eine gute Idee und man sollte Grafiken, wenn es nicht unbedingt anders gemacht werden soll von LaTeX automatisch positionieren lassen.
+
+\blindtext 
+
+\begin{figure}
+\centering
+\includegraphics[ angle=0, width=.3\textwidth]{karl_friedrich_gauss}
+\caption{\index{Grafik}\index{jpg}Ein jpeg-Bild, hier mit Gauß darauf\label{fig:Gauss}}\par
+\end{figure}
+
+\blindtext \blindtext 
+
+\blindtext
+
+
+
+% -----------------------------------------------------
+\section{Einträge im Stichwortverzeichnis}
+
+Einträge im Stichwortverzeichnis können über den \lstI{index}-Befehl generiert werden. Zum Beispiel soll der Begriff \emph{Bachelorarbeit}\index{Bachelorarbeit} hier referenziert werden. Außerdem sollen noch die Begriffe Apfel\index{Apfel}, Birne\index{Birne} und Zebra\index{Zebra} ins Verzeichnis. Damit unter dem Buchstaben mehr als ein Eintrag steht, nehmen wir noch \emph{Buch}\index{Buch} und Brille\index{Brille} auf. 
+
+\section{Dynamische Tabellen aus beliebigen Quellen}
+
+In dieser Version kein Support für R-Code. 
+
+\blindtext 
+
+\blindtext \blindtext
+
+\blindtext
+
+\blindtext
+
+\section{Grafiken aus R}
+
+In dieser Version kein Support für R-Code. Die Grafiken können
+natürlich durch das Makefile passend generiert werden, und dann
+auch eingebunden werden.
+
+\blindtext
+
+\blindtext
+
+\blindtext \blindtext \blindtext
+
+
+\include{Beispielinhalt}
+
+
+\appendix
+
+% Selbständigkeitserklärung
+\AuthorDeclaration
+
+
+\listoffigures % Abbildungsverzeichnis
+\listoftables % Tabellenverzeichnis
+
+% --------------------------------------------------
+% Bibliographie
+% --------------------------------------------------
+\renewcommand{\bibfont}{\footnotesize}
+\printbibliography[title={Literaturverzeichnis}, 
+                   heading=bibintoc]
+
+
+% --------------------------------------------------
+% Index
+% --------------------------------------------------
+{\setkomafont{section}{\Huge} % temporarily set chapter font
+\printindex
+}
+
+\end{document}

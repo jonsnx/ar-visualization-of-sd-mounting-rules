@@ -1,0 +1,228 @@
+%%% ----------------------------------------------------------
+%%% Vorlage Abschlussarbeit (LaTeX)
+%%% 
+%%% V1   03/2017, Stefan Etschberger (HSA)
+%%% V1.1 04/2021, rnw-hack für biblatex-run
+%%% V2   05/2021, Titelblatt und Erweiterungen: Stefan Jansen (HSA)
+%%% V3   01/2024, Internationalisierung
+%%% ----------------------------------------------------------
+\documentclass[12pt,a4paper%
+              ,twoside     % Fuer Veröffentlichung
+              ,titlepage
+              ,DIV=13
+              ,headinclude
+              ,footinclude=false%
+              ,cleardoublepage=empty%
+              ,parskip=half,
+              ]{scrreprt}
+
+<<R_SETUP, echo=FALSE, message=FALSE>>=
+library(pacman)
+p_load(tidyverse,rio,kableExtra)
+
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", 
+         paste0("\n \\", options$size,"\n\n", 
+                x, "\n\n \\normalsize"), x)
+})
+@
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[authorName={Carl Friedrich Gauß}
+           ,authorEnrolmentNo={30041777}
+           ,authorStreet={Leonhard-Euler-Str.~271}
+           ,authorZip={37001}
+           ,authorCity={Göttingen}
+           ,authorEMail={carl.friedrich.gauss@tha.de}
+           ,authorPhone= {+49\,3141-5926}
+           ,authorSignaturePlace={Augsburg}
+           ,studyProgram={Mathematik}
+%           ,thesisType={Bachelorarbeit}
+           ,thesisTitle={Disquisitiones generales circa superficies curvas}
+           ,studyDegree=%
+%                        {{Bachelor of Arts}}
+%                        {{Bachelor of Engeneering}}
+                        {{Bachelor of Science (B.\,Sc.)}}
+%                        {{Master of Arts}}
+%                        {{Master of Engeneering}}
+%                        {{Master of Science (M.\,Sc.)}}
+           ,faculty=% 
+                     {{Fakultät für \\ Angewandte \\ Geistes-  und  \\ Naturwissenschaften}}
+%                     {{Fakultät für \\ Architektur und \\ Bauwesen}}
+%                     {{Fakultät für \\ Elektrotechnik}}
+%                     {{Fakultät für \\ Gestaltung}}
+%                     {{Fakultät für \\ Informatik}}
+%                     {{Fakultät für \\ Maschinenbau und \\ Verfahrenstechnik}}, showDiesel=true
+%                     {{Fakultät für \\ Wirtschaft}}
+%           ,topicAssignment={\today}
+%           ,submissionDate={\today}
+%           ,defenseDate={\today}
+%           ,nonDisclosure={false}
+           ,supervisor={Prof.~Dr.~Frank N. Stein}
+%           ,supervisorDeputy={Prof.~Dr.~Mario Huana}
+%           ,language={en}
+           ]{THA-Abschlussarbeit}
+
+% Ohne diese Zeile: Mit klickbaren links
+\hypersetup{draft}
+
+% Literaturdatenbank (.bib-Datei) aus Citavi o.ä.
+\bibliography{Literatur_Abschlussarbeit}
+
+\graphicspath{{Bilder/}}
+
+\usepackage{caption}
+\DeclareCaptionLabelFormat{something}{#2.#1.}
+\captionsetup[lstlisting]{labelformat=something}
+
+\begin{document}
+
+% Sprachauswahl zum Umschalten innerhalb des Textes. 
+% Alternativen: \thesisLanguage, ngerman, english
+\selectlanguage{\thesisLanguage}
+
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\THAtitlepage
+
+\tableofcontents
+
+%%% --------------------------------------------------
+%%% Ab hier: Inhalt
+%%% --------------------------------------------------
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\chapter{Hier beginnt das erste Kapitel}
+
+% -----------------------------------------------------
+\section{Wie verweist man auf Quellen?}
+
+Hier wird \citet{Neumann:1977} zitiert. Zitate sollten in den Text eingebunden werden, zum Beispiel eine Quelle aus einem Tagungsband, hier von \citet{Bauer} oder ein Artikel aus einer Fachzeitschrift (auf den dann in einer Klammer beispielsweise bei \cite{Fox:2002} verwiesen wird). 
+
+Noch ein Absatz mit einem Zitat aus einem Buch, nämlich von \citet{R:Chambers:1998}. Webseiten, zum Beispiel das Dokument von \citet{xmlComparingSchemata} sollten nur äußerst sparsam referenziert werden. 
+
+Hier wird ein Buch zitiert, nämlich das von \citet{darwin}. Die Arbeit von \citet{meulman} ist in einer wissenschaftlichen Fachzeitschrift veröffentlicht worden. Ein Beispiel für einen Aufsatz in einem Tagungsband liefert \citet{banzhaf96effect}. In Ausnahmefällen zu zitieren ist eine unveröffentlichte Abschlussarbeit, zum Beispiel eine Diplom-, Bachelor-, oder Masterthesis, wie die von \citet{holzheuer}. Ganz selten ist man gezwungen Manuale oder Referenzen zu referenzieren, die nur im Internet zugänglich sind und zudem keinen ausgewiesenen Autor haben wie zum Beispiel die Anleitung vom \citet{hornik} oder der Aufsatz von \citet{xmlComparingSchemata}.
+
+% -----------------------------------------------------
+\section{Einbinden von Grafiken}
+
+Es folgt die Abbildung~\ref{fig:Gauss} auf Seite \pageref{fig:Gauss}, die dynamisch (gleitend) eingebunden wird. Das ist typischerweise eine gute Idee und man sollte Grafiken, wenn es nicht unbedingt anders gemacht werden soll von LaTeX automatisch positionieren lassen.
+
+\blindtext 
+
+\begin{figure}
+\centering
+\includegraphics[ angle=0, width=.3\textwidth]{karl_friedrich_gauss}
+\caption{\index{Grafik}\index{jpg}Ein jpeg-Bild, hier mit Gauß darauf\label{fig:Gauss}}\par
+\end{figure}
+
+\blindtext \blindtext 
+
+\blindtext
+
+
+
+% -----------------------------------------------------
+\section{Einträge im Stichwortverzeichnis}
+
+Einträge im Stichwortverzeichnis können über den \lstI{index}-Befehl generiert werden. Zum Beispiel soll der Begriff \emph{Bachelorarbeit}\index{Bachelorarbeit} hier referenziert werden. Außerdem sollen noch die Begriffe Apfel\index{Apfel}, Birne\index{Birne} und Zebra\index{Zebra} ins Verzeichnis. Damit unter dem Buchstaben mehr als ein Eintrag steht, nehmen wir noch \emph{Buch}\index{Buch} und Brille\index{Brille} auf. 
+
+\section{Dynamische Tabellen aus beliebigen Quellen}
+
+R-Code kann direkt im Text eingebettet werden, sogar mit Syntax-Highlighting. Man kann damit z.B. eine Tabelle von einer beliebigen Datenquelle (beispielsweise wie hier aus einer Excel-Datei) direkt einlesen und (selektiv) ausgeben lassen. Tabellen sollten auch als floating-Objekte von latex automatisch positioniert werden. Eine typische Konvention ist es auch, dass Beschriftungen  oberhalb von Tabellen, Abbildungsbeschriftungen unterhalb positioniert werden sollten.
+
+
+<<size="small">>=
+Tabelle = rio::import("Umfrage.xlsx")
+Tabelle %>% 
+  select(Geschlecht, Alter, Groesse, GroesseV, GroesseM, ) %>% 
+  slice_sample(n=7) %>% 
+  kbl(caption = paste0("Diese Tabelle wurde direkt aus ",
+                       "Excel eingelesen ", 
+                       "und automatisch formatiert"), 
+      align = "c",
+      booktabs=T, linesep="") %>% 
+  kable_styling(position = "center")
+@
+
+\blindtext 
+
+\blindtext \blindtext
+
+\blindtext
+
+\blindtext
+
+\section{Grafiken aus R}
+
+Dynamisch aus Datenquellen generierte Grafiken in Vektorgraphikqualität im Text (siehe Abbildung~\ref{R-Graph1}) sind auch kein Problem.
+
+<<R_Plot1, eval=FALSE>>=
+Tabelle %>% 
+  drop_na(AlterV, AlterM) %>% 
+  ggplot(aes(x=AlterV, y=AlterM)) +
+  geom_jitter(alpha=0.4, size=2, color="darkblue") +
+  theme_light() +
+  xlab("Alter des Vaters") +
+  ylab("Alter der Mutter") 
+@
+
+\begin{figure}
+\centering
+<<fig.width=8, fig.height=4, out.width=".9\\textwidth", echo=FALSE>>=
+<<R_Plot1>>
+@
+
+\caption{\index{Grafik}\index{R}Eine dynamisch generierte Grafik\label{R-Graph1}}\par
+\end{figure}
+
+\blindtext
+
+\blindtext
+
+\blindtext \blindtext \blindtext
+
+
+\include{Beispielinhalt}
+
+
+\appendix
+
+% Selbständigkeitserklärung
+\AuthorDeclaration
+
+
+\listoffigures % Abbildungsverzeichnis
+\listoftables % Tabellenverzeichnis
+
+% --------------------------------------------------
+% Bibliographie
+% --------------------------------------------------
+\renewcommand{\bibfont}{\footnotesize}
+\printbibliography[title={Literaturverzeichnis}, 
+                   heading=bibintoc]
+
+<<biber_run, echo=FALSE, results='hide'>>=
+bibtex.file = current_input() %>% str_replace("\\.Rnw", "")
+biber.run = paste("biber", bibtex.file)
+
+system(biber.run)
+@
+
+
+% --------------------------------------------------
+% Index
+% --------------------------------------------------
+{\setkomafont{section}{\Huge} % temporarily set chapter font
+\printindex
+}
+
+\end{document}
