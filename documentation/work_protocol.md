@@ -44,6 +44,12 @@
 
 #### Datum: 2024-11-28
 - Buch "Mastering ARKit" weitergelesen
+- Konzept für den Prototypen erstellt
+- Struktur des Repos angepasst
+- Montageregeln übertragen
+- MacBook organisiert
+- ARKit Anforderungen erneut geprüft
+- Recherche zu Instant AR (LiDAR-Implementierung von ARKit) durchgeführt
 
 ### Zusammenfassung der Woche
 - [Summary of activities and progress]
