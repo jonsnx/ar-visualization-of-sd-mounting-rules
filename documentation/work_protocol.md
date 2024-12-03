@@ -51,6 +51,52 @@
 - ARKit Anforderungen erneut geprüft
 - Recherche zu Instant AR (LiDAR-Implementierung von ARKit) durchgeführt
 
+#### Datum: 2024-11-29
+- Buch "Mastering ARKit" weitergelesen
+
+### Zusammenfassung der Woche
+- Buch "Mastering ARKit" weitergelesen
+- Konzept für den Prototypen erstellt
+- MacBook organisiert
+- ARKit Anforderungen erneut geprüft
+- Recherche zu Instant AR (LiDAR-Implementierung von ARKit) durchgeführt
+- Aufgaben priorisiert
+
+---
+
+## Woche [2024-12-02] bis [2024-12-08]
+
+### Daily Protocol
+
+#### Datum: [2024-12-02]
+- Plane Detection in der Dokumentation gesichtet
+
+#### Datum: [YYYY-MM-DD]
+- XCode aufgesetzt
+- XCode HelloARWord-App erstellt
+- ARKit-Grundlagen erarbeitet
+- Buch "Mastering ARKit" weitergelesen
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
 ### Zusammenfassung der Woche
 - [Summary of activities and progress]
 
