@@ -71,23 +71,31 @@
 #### Datum: [2024-12-02]
 - Plane Detection in der Dokumentation gesichtet
 
-#### Datum: [YYYY-MM-DD]
+#### Datum: [2024-12-03]
 - XCode aufgesetzt
 - XCode HelloARWord-App erstellt
 - ARKit-Grundlagen erarbeitet
 - Buch "Mastering ARKit" weitergelesen
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-04]
+- HelloARWord-App in XCode erstellt
+- Einarbeitung in ARKit fortgesetzt
+- Buch "Mastering ARKit" weitergelesen
+- Dokumentation zu ARKit gelesen
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-05]
+- HelloARWord-App in XCode erstellt
+- Einarbeitung in ARKit fortgesetzt
+- Dokumentation zu ARKit gelesen
+- Unterschiede der einzelnen Kits genauer betrachtet
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-06]
+- PlaneDetection von RealityKit getestet
+- Bisschen was zu RealityKit zusammengeschrieben
+- Einige Syntax-Eigenheiten von Swift rechercherchiert (some-Keyword, "."-Notation, "_"-Parameter, ...)
+- RealityKit-Doku gelesen
+- "The Swift Programming Language" angefangen zu lesen
+- Angefangen Gliederung mit Stichpunkten zu füllen
 
 #### Datum: [YYYY-MM-DD]
 - [Task]
