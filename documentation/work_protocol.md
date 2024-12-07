@@ -97,9 +97,10 @@
 - "The Swift Programming Language" angefangen zu lesen
 - Angefangen Gliederung mit Stichpunkten zu füllen
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-07]
+- LiDAR Point Clouds Beispiel implementiert
+- Swift Syntax recherchiert (Delegates, Actors und Protocols)
+- Recherche bezüglich ARKit und AR-Algorithmen
 
 #### Datum: [YYYY-MM-DD]
 - [Task]
