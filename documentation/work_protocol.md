@@ -114,6 +114,43 @@
 
 ---
 
+## Woche [2024-12-09] bis [2024-12-15]
+
+### Daily Protocol
+
+#### Datum: [2024-12-09]
+- 
+
+#### Datum: [2024-12-10]
+- Stichpunktartige Inhalte in Gliederung ergänzt
+- Swift-Syntax recherchiert und Erkenntnisse dokumentiert
+- 
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+### Zusammenfassung der Woche
+- [Summary of activities and progress]
+
+---
+
 ## Woche [YYYY-MM-DD] bis [YYYY-MM-DD]
 
 ### Daily Protocol
