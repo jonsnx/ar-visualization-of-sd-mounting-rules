@@ -1,6 +1,7 @@
 1. Einleitung
    - Relevanz von Augmented Reality (AR) in einem geschäftlichen Kontext
-   - Zielsetzung der Arbeit
+   - Hürden bei der Verwendung von AR zur Lösung von realen Problemen (Usability, Genauigkeit, Lichtempfindlichkeit, ...)
+   - Zielsetzung der Arbeit (Prototyp, Evaluation von AR im Arbeitseinsatz, Informationsgewinnung im Bereich Computer Vision und AR)
    - Struktur der Arbeit
 1. Motivation und Problemstellung
    - Stellung von AR in der heutigen Zeit (Pokemon Go, IKEA Place, Smartglasses)
@@ -19,19 +20,20 @@
    - Implementierung eines Prototypen
    - ChatGPT als Unterstützung für die Ausformulierung der Arbeit 
 1. Technische Umsetzung
+   - Übersetzung der Montageregeln in ein AR-Modell
    - Anforderungsanalyse für den Prototypen
    - Auswahl der Technologien (Framework, Hardware, Sensorik, ...)
    - Implementierung des Prototypen
 1. Vergleich und Bewertung
-   - Implementierung des Prototypen ohne LiDAR-Technologie (bestenfalls in ARCore)
-   - Vergleich der Prototypen anhand relevanter Kriterien (Genauigkeit, Geschwindigkeit, Lichtempfindlichkeit, Ausfallsicherheit, ...)
+   - Implementierung des Prototypen ohne LiDAR-Technologie (bestenfalls in ARCore: SLAM)
+   - Vergleich der Prototypen anhand relevanter Kriterien (Genauigkeit, Geschwindigkeit, Lichtempfindlichkeit, Ausfallsicherheit, )
    - Bewertung der Ergebnisse
-1. Evaluation und Testing der Anwendung
+1. Evaluation und Testing der LiDAR-Anwendung
    - Testen der LiDAR-Anwendung in realen Umgebungen
    - Usability-Tests mit Montage-Experten
    - Analyse der Testergebnisse und Verbesserungspotenziale
 1. Fazit und Ausblick
-   - Zusammenfassung der Ergebnisse
+   - Zusammenfassung der Rerche-Ergebnisse
    - Ausblick auf zukünftige Entwicklungen
    - Kritische Würdigung der Arbeit
    - Handlungsempfehlungen für das Unternehmen
