@@ -33,7 +33,7 @@
    - Usability-Tests mit Montage-Experten
    - Analyse der Testergebnisse und Verbesserungspotenziale
 1. Fazit und Ausblick
-   - Zusammenfassung der Rerche-Ergebnisse
+   - Zusammenfassung der Rercheergebnisse
    - Ausblick auf zukünftige Entwicklungen
    - Kritische Würdigung der Arbeit
    - Handlungsempfehlungen für das Unternehmen
