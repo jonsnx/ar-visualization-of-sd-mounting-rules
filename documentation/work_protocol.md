@@ -61,6 +61,7 @@
 - ARKit Anforderungen erneut geprüft
 - Recherche zu Instant AR (LiDAR-Implementierung von ARKit) durchgeführt
 - Aufgaben priorisiert
+- Teilaufgaben 
 
 ---
 
@@ -102,12 +103,14 @@
 - Swift Syntax recherchiert (Delegates, Actors und Protocols)
 - Recherche bezüglich ARKit und AR-Algorithmen
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
-
 ### Zusammenfassung der Woche
-- [Summary of activities and progress]
+- Relevante Kapitel aus "Mastering ARKit" gelesen
+- HelloARWord-App in XCode erstellt und verstanden
+- Einarbeitung in ARKit bzw. RealityKit fortgesetzt
+- Swift-Besonderheiten recherchiert
+- Temporäre Gliederung stichpunktartig mit Inhalt gefüllt
+- LiDAR Point Clouds Beispiel implementiert
+- Recherche bezüglich AR- und Mapping-Algorithmen
 
 ---
 
