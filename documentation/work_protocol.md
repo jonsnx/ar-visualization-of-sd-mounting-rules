@@ -124,7 +124,7 @@
 #### Datum: [2024-12-10]
 - Stichpunktartige Inhalte in Gliederung ergänzt
 - Swift-Syntax recherchiert und Erkenntnisse dokumentiert
-- 
+- Implementierung der LiDAR Point Clouds fortgesetzt
 
 #### Datum: [2024-12-11]
 - 
