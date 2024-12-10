@@ -4,6 +4,7 @@
    - Zielsetzung der Arbeit (Prototyp, Evaluation von AR im Arbeitseinsatz, Informationsgewinnung im Bereich Computer Vision und AR)
    - Struktur der Arbeit
 1. Motivation und Problemstellung
+   - Entwicklung von AR in den letzten Jahren
    - Stellung von AR in der heutigen Zeit (Pokemon Go, IKEA Place, Smartglasses)
    - Beschreibung der Herausforderungen bei der Montage von Rauchmeldern (Regeln, Rechtliche Konsquenzen, ...)
    - AR als Lösungsansatz
