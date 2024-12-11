@@ -61,6 +61,7 @@
 - ARKit Anforderungen erneut geprüft
 - Recherche zu Instant AR (LiDAR-Implementierung von ARKit) durchgeführt
 - Aufgaben priorisiert
+- Teilaufgaben 
 
 ---
 
@@ -97,11 +98,50 @@
 - "The Swift Programming Language" angefangen zu lesen
 - Angefangen Gliederung mit Stichpunkten zu füllen
 
-#### Datum: [YYYY-MM-DD]
+#### Datum: [2024-12-07]
+- LiDAR Point Clouds Beispiel implementiert
+- Swift Syntax recherchiert (Delegates, Actors und Protocols)
+- Recherche bezüglich ARKit und AR-Algorithmen
+
+### Zusammenfassung der Woche
+- Relevante Kapitel aus "Mastering ARKit" gelesen
+- HelloARWord-App in XCode erstellt und verstanden
+- Einarbeitung in ARKit bzw. RealityKit fortgesetzt
+- Swift-Besonderheiten recherchiert
+- Temporäre Gliederung stichpunktartig mit Inhalt gefüllt
+- LiDAR Point Clouds Beispiel implementiert
+- Recherche bezüglich AR- und Mapping-Algorithmen
+
+---
+
+## Woche [2024-12-09] bis [2024-12-15]
+
+### Daily Protocol
+
+#### Datum: [2024-12-09]
+- 
+
+#### Datum: [2024-12-10]
+- Stichpunktartige Inhalte in Gliederung ergänzt
+- Swift-Syntax recherchiert und Erkenntnisse dokumentiert
+- Implementierung der LiDAR Point Clouds fortgesetzt
+
+#### Datum: [2024-12-11]
+- 
+
+#### Datum: [2024-12-12]
 - [Task]
 - [Task]
 
-#### Datum: [YYYY-MM-DD]
+#### Datum: [2024-12-13]
+- [Task]
+- [Task]
+
+#### Datum: [2024-12-14]
+- [Task]
+- [Task]
+
+#### Datum: [2024-12-15]
 - [Task]
 - [Task]
 
