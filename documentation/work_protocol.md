@@ -127,6 +127,7 @@
 - Implementierung der LiDAR Point Clouds fortgesetzt
 
 #### Datum: [2024-12-11]
+- Implementierung und Verstehen des LiDAR Point Clouds Beispiels
 - 
 
 #### Datum: [2024-12-12]
