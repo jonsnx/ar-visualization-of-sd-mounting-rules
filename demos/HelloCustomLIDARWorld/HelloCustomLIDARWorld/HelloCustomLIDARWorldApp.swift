@@ -10,13 +10,32 @@ struct UIViewWrapper<V: UIView>: UIViewRepresentable {
 }
 
 @main
-struct HelloCustomLIDARWorldApp: App {
+struct PointCloudExampleApp: App {
     
     @StateObject var arManager = ARManager()
     
     var body: some Scene {
         WindowGroup {
-            UIViewWrapper(view: arManager.sceneView).ignoresSafeArea()
+            ZStack(alignment: .bottom) {
+                UIViewWrapper(view: arManager.sceneView).ignoresSafeArea()
+                
+                HStack(spacing: 30) {
+                    Button {
+                        arManager.isCapturing.toggle()
+                    } label: {
+                        Image(systemName: arManager.isCapturing ?
+                                          "stop.circle.fill" :
+                                          "play.circle.fill")
+                    }
+                    
+                    ShareLink(item: PLYFile(pointCloud: arManager.pointCloud),
+                                            preview: SharePreview("exported.ply")) {
+                        Image(systemName: "square.and.arrow.up.circle.fill")
+                    }
+                }.foregroundStyle(.black, .white)
+                    .font(.system(size: 50))
+                    .padding(25)
+            }
         }
     }
 }
