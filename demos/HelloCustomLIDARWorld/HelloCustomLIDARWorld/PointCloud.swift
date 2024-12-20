@@ -28,10 +28,10 @@ actor PointCloud {
     
     func process(frame: ARFrame) async {
         guard let depth = (frame.smoothedSceneDepth ?? frame.sceneDepth),
-              let depthBuffer = PixelBuffer<Float32>(pixelBuffer: depth.depthMap),
-              let confidenceMap = depth.confidenceMap,
-              let confidenceBuffer = PixelBuffer<UInt8>(pixelBuffer: confidenceMap),
-              let imageBuffer = YCBCRBuffer(pixelBuffer: frame.capturedImage) else { return }
+        let depthBuffer = PixelBuffer<Float32>(pixelBuffer: depth.depthMap),
+        let confidenceMap = depth.confidenceMap,
+        let confidenceBuffer = PixelBuffer<UInt8>(pixelBuffer: confidenceMap),
+        let imageBuffer = YCBCRBuffer(pixelBuffer: frame.capturedImage) else { return }
            
         let rotateToARCamera = makeRotateToARCameraMatrix(orientation: .portrait)
         let cameraTransform = frame.camera.viewMatrix(for: .portrait).inverse * rotateToARCamera
@@ -64,6 +64,8 @@ actor PointCloud {
                     
                 // Converts the local camera space 3D point into world space.
                 let worldPoint = cameraTransform * simd_float4(localPoint, 1)
+                
+                print(worldPoint)
                     
                 // Normalizes the result.
                 let resulPosition = (worldPoint / worldPoint.w)
