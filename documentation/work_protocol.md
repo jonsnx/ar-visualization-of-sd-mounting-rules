@@ -128,48 +128,32 @@
 
 #### Datum: [2024-12-11]
 - Implementierung und Verstehen des LiDAR Point Clouds Beispiels
-- 
 
 #### Datum: [2024-12-12]
-- [Task]
-- [Task]
 
 #### Datum: [2024-12-13]
-- [Task]
-- [Task]
 
 #### Datum: [2024-12-14]
-- [Task]
-- [Task]
 
 #### Datum: [2024-12-15]
-- [Task]
-- [Task]
 
 ### Zusammenfassung der Woche
 - [Summary of activities and progress]
 
 ---
 
-## Woche [YYYY-MM-DD] bis [YYYY-MM-DD]
+## Woche [2024-12-16] bis [2024-12-22]
 
 ### Daily Protocol
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-16]
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-17]
+- Point Clouds Beispiel analysiert
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-18]
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-19]
 
 #### Datum: [YYYY-MM-DD]
 - [Task]
