@@ -24,7 +24,7 @@
    - Übersetzung der Montageregeln in ein AR-Modell
    - Anforderungsanalyse für den Prototypen
    - Auswahl der Technologien (Framework, Hardware, Sensorik, ...)
-   - Implementierung des Prototypen
+   - Implementierung des Prototypen (ARKit, SceneKit, RealityKit, Point Cloud, RANSAC, ...)
 1. Vergleich und Bewertung
    - Implementierung des Prototypen ohne LiDAR-Technologie (bestenfalls in ARCore: SLAM)
    - Vergleich der Prototypen anhand relevanter Kriterien (Genauigkeit, Geschwindigkeit, Lichtempfindlichkeit, Ausfallsicherheit, )
