@@ -155,17 +155,17 @@
 
 #### Datum: [2024-12-19]
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-20]
+- Evaluierung des Mesh ARKit-Beispiels
+- Implementierung des Mesh ARKit-Beispiels
+- Dokumentation zu Mesh ARKit gelesen
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-21]
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
+#### Datum: [2024-12-22]
+- Implementierung des Mesh ARKit-Beispiels verstanden
+- Dokumentation zu Mesh ARKit gelesen
+- Weitere Planung für die Implementierung des Prototypen
 
 ### Zusammenfassung der Woche
 - [Summary of activities and progress]
