@@ -168,6 +168,11 @@
 - Weitere Planung für die Implementierung des Prototypen
 
 ### Zusammenfassung der Woche
-- [Summary of activities and progress]
+- Swift-Syntax recherchiert und Erkenntnisse dokumentiert
+- Implementierung und Verstehen des LiDAR Point Clouds Beispiels
+- Implementierung der LiDAR Point Clouds fortgesetzt
+- Implementierung des Mesh ARKit-Beispiels
+- Evaluierung des Mesh ARKit-Beispiels
+- ARKit Dokumentation gelesen (ARMeshGeometry, ARMeshAnchor, Scene Understanding, Scene Reconstruction)
 
 ---
