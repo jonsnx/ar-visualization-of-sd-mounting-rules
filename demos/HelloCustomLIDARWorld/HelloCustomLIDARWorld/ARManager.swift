@@ -39,6 +39,75 @@ actor ARManager: NSObject, ARSessionDelegate, ObservableObject {
         }
 
         func updateGeometry() async {
+            
+            // 1. Find the extreme points
+            var minXMaxYMinZ: (SCNVector3, simd_float4) = (SCNVector3(Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude, Float.greatestFiniteMagnitude), simd_float4(1.0, 0.0, 0.0, 1.0)) // Red
+            var maxXMaxYMinZ: (SCNVector3, simd_float4) = (SCNVector3(-Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude, Float.greatestFiniteMagnitude), simd_float4(0.0, 1.0, 0.0, 1.0)) // Green
+            var minXMaxYMaxZ: (SCNVector3, simd_float4) = (SCNVector3(Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude), simd_float4(0.0, 0.0, 1.0, 1.0)) // Blue
+            var maxXMaxYMaxZ: (SCNVector3, simd_float4) = (SCNVector3(-Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude, -Float.greatestFiniteMagnitude), simd_float4(1.0, 1.0, 0.0, 1.0)) // Yellow
+
+            // 2. Iterate through point cloud to find the extreme points
+            for vertex in await pointCloud.vertices.values {
+                let position = vertex.position
+                
+                if position.x < minXMaxYMinZ.0.x && position.y > minXMaxYMinZ.0.y && position.z < minXMaxYMinZ.0.z {
+                    minXMaxYMinZ.0 = position
+                }
+                if position.x > maxXMaxYMinZ.0.x && position.y > maxXMaxYMinZ.0.y && position.z < maxXMaxYMinZ.0.z {
+                    maxXMaxYMinZ.0 = position
+                }
+                if position.x < minXMaxYMaxZ.0.x && position.y > minXMaxYMaxZ.0.y && position.z > minXMaxYMaxZ.0.z {
+                    minXMaxYMaxZ.0 = position
+                }
+                if position.x > maxXMaxYMaxZ.0.x && position.y > maxXMaxYMaxZ.0.y && position.z > maxXMaxYMaxZ.0.z {
+                    maxXMaxYMaxZ.0 = position
+                }
+            }
+
+            // 3. Collect the extreme points
+            let extremePoints = [
+                minXMaxYMinZ,
+                maxXMaxYMinZ,
+                minXMaxYMaxZ,
+                maxXMaxYMaxZ
+            ]
+
+            // 4. Create a geometry for these extreme points
+            let vertices = extremePoints.map { $0.0 }
+            let colors = extremePoints.map { $0.1 }
+
+            // Create a vertex source for geometry
+            let vertexSource = SCNGeometrySource(vertices: vertices)
+
+            // Create a color source
+            let colorData = Data(bytes: colors.map { $0 }, count: MemoryLayout<simd_float4>.size * colors.count)
+            let colorSource = SCNGeometrySource(data: colorData,
+                                                semantic: .color,
+                                                vectorCount: colors.count,
+                                                usesFloatComponents: true,
+                                                componentsPerVector: 4,
+                                                bytesPerComponent: MemoryLayout<Float>.size,
+                                                dataOffset: 0,
+                                                dataStride: MemoryLayout<SIMD4<Float>>.size)
+
+            // Create indices for the extreme points (we're visualizing each one individually)
+            let pointIndices: [UInt32] = Array(0..<UInt32(vertices.count))
+            let element = SCNGeometryElement(indices: pointIndices, primitiveType: .point)
+
+            // Customize the size of the point, rendered in ARView
+            element.maximumPointScreenSpaceRadius = 15
+
+            // Create the geometry
+            let geometry = SCNGeometry(sources: [vertexSource, colorSource], elements: [element])
+            geometry.firstMaterial?.isDoubleSided = true
+            geometry.firstMaterial?.lightingModel = .constant
+
+            // Apply the geometry to the geometry node
+            Task { @MainActor in
+                geometryNode.geometry = geometry
+            }
+
+            /*
             // make an array of every 10th point
             let vertices = await pointCloud.vertices.values.enumerated().filter { index, _ in
                     index % 10 == 9
@@ -76,5 +145,6 @@ actor ARManager: NSObject, ARSessionDelegate, ObservableObject {
             Task { @MainActor in
                 geometryNode.geometry = geometry
             }
+            */
         }
 }
