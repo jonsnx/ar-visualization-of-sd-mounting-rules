@@ -1,14 +1,13 @@
+import UIKit
 import RealityKit
 import ARKit
 
 class ViewController: UIViewController, ARSessionDelegate {
-    
     @IBOutlet var arView: ARView!
     
-    var ceilingVertices: [(Float, Float, Float)] = []
-    var isProcessing: Bool = false
-    
-    /// - Tag: ViewDidLoad
+    // Dictionary to keep track of AnchorEntities
+    var anchorEntities: [UUID: AnchorEntity] = [:]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,103 +30,75 @@ class ViewController: UIViewController, ARSessionDelegate {
         // Manually configure what kind of AR session to run since
         // ARView on its own does not turn on mesh classification.
         arView.automaticallyConfigureSession = false
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.sceneReconstruction = .meshWithClassification
         
-        configuration.environmentTexturing = .automatic
-        arView.session.run(configuration)
+        // Configure AR session
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal] // Include vertical planes
+        configuration.sceneReconstruction = .meshWithClassification
+        if ARWorldTrackingConfiguration.supportsSceneReconstruction(.meshWithClassification) {
+            arView.session.run(configuration)
+        }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        // Prevent the screen from being dimmed to avoid interrupting the AR experience.
-        UIApplication.shared.isIdleTimerDisabled = true
-    }
-    
-    override var prefersHomeIndicatorAutoHidden: Bool {
-        return true
-    }
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        let meshAnchors = frame.anchors.compactMap({ $0 as? ARMeshAnchor })
-        if !isProcessing {
-            DispatchQueue.global().async {
-                self.isProcessing = true
-                for anchor in meshAnchors {
-                    for index in 0..<anchor.geometry.faces.count {
-                        let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
-                        if classification == .ceiling {
-                            let vertices = anchor.geometry.verticesOf(faceWithIndex: index)
-                            let center = anchor.geometry.centerOf(faceWithIndex: index)
-                            let redMaterial = SimpleMaterial(color: .red, isMetallic: false)
-                            
-                            // Create a mesh and apply the material to the face
-                            let modelEntity = ModelEntity(mesh: .generateSphere(radius: 0.1))  // Placeholder for box, you can use the actual face geometry here
-                            modelEntity.position = SIMD3(center.0, center.1, center.2)
-                            modelEntity.model?.materials = [redMaterial]
-                            
-                            // Add the model entity to the AR scene
-                            let anchorEntity = AnchorEntity(world: modelEntity.position)
-                            anchorEntity.addChild(modelEntity)
-                            self.arView.scene.addAnchor(anchorEntity)
-                        }
-                    }
-                }
-                self.isProcessing = false
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        print("didAdd anchors: \(anchors)")
+        for anchor in anchors {
+            guard let planeAnchor = anchor as? ARPlaneAnchor,
+                  planeAnchor.classification == .ceiling else {
+                print("Skipping anchor: \(anchor)")
+                continue
             }
-            
-            
+            print("Anchor: \(anchor)")
+            addRedPlane(for: planeAnchor)
         }
     }
-}
-
-
-
-extension ARMeshGeometry {
-    func vertex(at index: UInt32) -> (Float, Float, Float) {
-        assert(vertices.format == MTLVertexFormat.float3, "Expected three floats (twelve bytes) per vertex.")
-        let vertexPointer = vertices.buffer.contents().advanced(by: vertices.offset + (vertices.stride * Int(index)))
-        let vertex = vertexPointer.assumingMemoryBound(to: (Float, Float, Float).self).pointee
-        return vertex
-    }
     
-    /// To get the mesh's classification, the sample app parses the classification's raw data and instantiates an
-    /// `ARMeshClassification` object. For efficiency, ARKit stores classifications in a Metal buffer in `ARMeshGeometry`.
-    func classificationOf(faceWithIndex index: Int) -> ARMeshClassification {
-        guard let classification = classification else { return .none }
-        assert(classification.format == MTLVertexFormat.uchar, "Expected one unsigned char (one byte) per classification")
-        let classificationPointer = classification.buffer.contents().advanced(by: classification.offset + (classification.stride * index))
-        let classificationValue = Int(classificationPointer.assumingMemoryBound(to: CUnsignedChar.self).pointee)
-        return ARMeshClassification(rawValue: classificationValue) ?? .none
-    }
-    
-    func vertexIndicesOf(faceWithIndex faceIndex: Int) -> [UInt32] {
-        assert(faces.bytesPerIndex == MemoryLayout<UInt32>.size, "Expected one UInt32 (four bytes) per vertex index")
-        let vertexCountPerFace = faces.indexCountPerPrimitive
-        let vertexIndicesPointer = faces.buffer.contents()
-        var vertexIndices = [UInt32]()
-        vertexIndices.reserveCapacity(vertexCountPerFace)
-        for vertexOffset in 0..<vertexCountPerFace {
-            let vertexIndexPointer = vertexIndicesPointer.advanced(by: (faceIndex * vertexCountPerFace + vertexOffset) * MemoryLayout<UInt32>.size)
-            vertexIndices.append(vertexIndexPointer.assumingMemoryBound(to: UInt32.self).pointee)
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        for anchor in anchors {
+            guard let planeAnchor = anchor as? ARPlaneAnchor,
+                  planeAnchor.classification == .ceiling else { continue }
+            
+            // Update the red plane if the plane anchor is updated
+            updateRedPlane(for: planeAnchor)
         }
-        return vertexIndices
     }
     
-    func verticesOf(faceWithIndex index: Int) -> [(Float, Float, Float)] {
-        let vertexIndices = vertexIndicesOf(faceWithIndex: index)
-        let vertices = vertexIndices.map { vertex(at: $0) }
-        return vertices
+    private func addRedPlane(for planeAnchor: ARPlaneAnchor) {
+        // Create the plane entity (a red rectangle) with the correct size
+        let planeEntity = ModelEntity(mesh: .generatePlane(width: planeAnchor.planeExtent.width, height: planeAnchor.planeExtent.height))
+        planeEntity.model?.materials = [SimpleMaterial(color: .red, isMetallic: false)]
+        
+        // Create an AnchorEntity using the ARPlaneAnchor's transform to match its position and orientation
+        let anchorEntity = AnchorEntity(anchor: planeAnchor)
+        
+        // Set the name of the anchor entity to the plane anchor's UUID string
+        anchorEntity.name = planeAnchor.identifier.uuidString
+        
+        // Add the plane entity to the anchor entity
+        anchorEntity.addChild(planeEntity)
+        
+        // Add the anchor entity to the scene
+        arView.scene.addAnchor(anchorEntity)
+        
+        // Save the anchorEntity in the dictionary for later use
+        anchorEntities[planeAnchor.identifier] = anchorEntity
     }
     
-    func centerOf(faceWithIndex index: Int) -> (Float, Float, Float) {
-        let vertices = verticesOf(faceWithIndex: index)
-        let sum = vertices.reduce((0, 0, 0)) { ($0.0 + $1.0, $0.1 + $1.1, $0.2 + $1.2) }
-        let geometricCenter = (sum.0 / 3, sum.1 / 3, sum.2 / 3)
-        return geometricCenter
+    private func updateRedPlane(for planeAnchor: ARPlaneAnchor) {
+        // Get the corresponding AnchorEntity from the dictionary using the plane anchor's identifier
+        guard let anchorEntity = anchorEntities[planeAnchor.identifier],
+              let planeEntity = anchorEntity.children.first as? ModelEntity else {
+            print("Update skipped: AnchorEntity not found!")
+            return
+        }
+        
+        print("Updating...")
+        
+        // Update the plane's size and position to match the new planeAnchor's extent and position
+        planeEntity.model = ModelComponent(mesh: .generatePlane(width: planeAnchor.planeExtent.width, height: planeAnchor.planeExtent.height),
+                                           materials: [SimpleMaterial(color: .red, isMetallic: false)])
+        
+        // Apply the updated position and orientation from the planeAnchor's transform
+        anchorEntity.transform = Transform(matrix: planeAnchor.transform)
     }
 }
