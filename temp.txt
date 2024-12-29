@@ -1,0 +1,69 @@
+import UIKit
+import RealityKit
+import ARKit
+
+class ViewController: UIViewController, ARSessionDelegate {
+    @IBOutlet var arView: ARView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Configure AR session
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical] // Include vertical planes
+        configuration.sceneReconstruction = .meshWithClassification
+        if ARWorldTrackingConfiguration.supportsSceneReconstruction(.meshWithClassification) {
+            arView.session.run(configuration)
+        }
+
+        // Set AR session delegate
+        arView.session.delegate = self
+    }
+    
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        for anchor in anchors {
+            guard let planeAnchor = anchor as? ARPlaneAnchor,
+                  planeAnchor.alignment == .vertical else { continue }
+            
+            // Check if the detected plane is a ceiling
+            if isCeiling(anchor: planeAnchor) {
+                addRedPlane(for: planeAnchor)
+            }
+        }
+    }
+    
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        for anchor in anchors {
+            guard let planeAnchor = anchor as? ARPlaneAnchor,
+                  planeAnchor.alignment == .vertical else { continue }
+            
+            // Update the red plane if the plane anchor is updated
+            updateRedPlane(for: planeAnchor)
+        }
+    }
+
+    private func isCeiling(anchor: ARPlaneAnchor) -> Bool {
+        // Logic to determine if a plane is the ceiling.
+        // This might involve checking its position relative to the camera or other criteria.
+        return anchor.center.y > 2.0 // Example: planes above 2 meters could be ceilings
+    }
+
+    private func addRedPlane(for planeAnchor: ARPlaneAnchor) {
+        let planeEntity = ModelEntity(mesh: .generatePlane(width: planeAnchor.extent.x, height: planeAnchor.extent.z))
+        planeEntity.model?.materials = [SimpleMaterial(color: .red, isMetallic: false)]
+
+        let anchorEntity = AnchorEntity(anchor: planeAnchor)
+        anchorEntity.addChild(planeEntity)
+        arView.scene.addAnchor(anchorEntity)
+    }
+    
+    private func updateRedPlane(for planeAnchor: ARPlaneAnchor) {
+        guard let anchorEntity = arView.scene.findEntity(named: planeAnchor.identifier.uuidString) as? AnchorEntity,
+              let planeEntity = anchorEntity.children.first as? ModelEntity else { return }
+        
+        // Update the plane's size and position
+        planeEntity.model = ModelComponent(mesh: .generatePlane(width: planeAnchor.extent.x, height: planeAnchor.extent.z),
+                                           materials: [SimpleMaterial(color: .red, isMetallic: false)])
+        anchorEntity.transform = Transform(matrix: planeAnchor.transform)
+    }
+}
