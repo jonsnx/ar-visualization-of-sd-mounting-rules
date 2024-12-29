@@ -9,8 +9,7 @@ import RealityKit
 import ARKit
 
 class ViewController: UIViewController, ARSessionDelegate {
-    
-    // Todo: rewrite this to be SwiftUI
+
     @IBOutlet var arView: ARView!
     
     /// - Tag: ViewDidLoad

@@ -49,18 +49,23 @@ actor ARManager: NSObject, ARSessionDelegate, ObservableObject {
             // 2. Iterate through point cloud to find the extreme points
             for vertex in await pointCloud.vertices.values {
                 let position = vertex.position
+                print("Vertex position: \(position)")
                 
                 if position.x < minXMaxYMinZ.0.x && position.y > minXMaxYMinZ.0.y && position.z < minXMaxYMinZ.0.z {
                     minXMaxYMinZ.0 = position
+                    print("NewMinXMaxYMinZ Vertex position: \(minXMaxYMinZ.0)")
                 }
                 if position.x > maxXMaxYMinZ.0.x && position.y > maxXMaxYMinZ.0.y && position.z < maxXMaxYMinZ.0.z {
                     maxXMaxYMinZ.0 = position
+                    print("NewMaxXMaxYMinZ Vertex position: \(maxXMaxYMinZ.0)")
                 }
                 if position.x < minXMaxYMaxZ.0.x && position.y > minXMaxYMaxZ.0.y && position.z > minXMaxYMaxZ.0.z {
                     minXMaxYMaxZ.0 = position
+                    print("NewMinXMaxYMaxZ Vertex position: \(minXMaxYMaxZ.0)")
                 }
                 if position.x > maxXMaxYMaxZ.0.x && position.y > maxXMaxYMaxZ.0.y && position.z > maxXMaxYMaxZ.0.z {
                     maxXMaxYMaxZ.0 = position
+                    print("NewMaxXMaxYMaxZ Vertex position: \(maxXMaxYMaxZ.0)")
                 }
             }
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="ipad11_0rounded" orientation="portrait" layout="fullscreen" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--ARView-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" userLabel="ARView" customClass="ViewController" customModule="ARMountingRulesVisualization" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="pDv-4v-CSH">
+                        <rect key="frame" x="0.0" y="0.0" width="834" height="1210"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <arView multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k4Z-bN-ivP">
+                                <rect key="frame" x="0.0" y="24" width="834" height="1186"/>
+                            </arView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="eng-pw-LPV"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="k4Z-bN-ivP" firstAttribute="leading" secondItem="eng-pw-LPV" secondAttribute="leading" id="BZ1-TQ-PvC"/>
+                            <constraint firstItem="k4Z-bN-ivP" firstAttribute="centerX" secondItem="pDv-4v-CSH" secondAttribute="centerX" id="XIC-2g-04I"/>
+                            <constraint firstItem="k4Z-bN-ivP" firstAttribute="top" secondItem="eng-pw-LPV" secondAttribute="top" id="fOa-iT-qD8"/>
+                            <constraint firstItem="k4Z-bN-ivP" firstAttribute="bottom" secondItem="eng-pw-LPV" secondAttribute="bottom" constant="20" id="gOQ-O6-CEU"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="arView" destination="k4Z-bN-ivP" id="EeW-ii-L6y"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="137.41007194244605" y="133.66834170854273"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

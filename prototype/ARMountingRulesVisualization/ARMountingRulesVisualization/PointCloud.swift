@@ -27,11 +27,6 @@ actor PointCloud {
     
     
     func process(frame: ARFrame) async {
-        guard let depth = (frame.smoothedSceneDepth ?? frame.sceneDepth),
-              let depthBuffer = PixelBuffer<Float32>(pixelBuffer: depth.depthMap),
-              let confidenceMap = depth.confidenceMap,
-              let confidenceBuffer = PixelBuffer<UInt8>(pixelBuffer: confidenceMap),
-              let imageBuffer = YCBCRBuffer(pixelBuffer: frame.capturedImage) else { return }
         
         let rotateToARCamera = makeRotateToARCameraMatrix(orientation: .portrait)
         let cameraTransform = frame.camera.viewMatrix(for: .portrait).inverse * rotateToARCamera
