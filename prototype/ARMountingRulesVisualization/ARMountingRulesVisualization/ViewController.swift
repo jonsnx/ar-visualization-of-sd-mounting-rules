@@ -58,7 +58,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         for anchor in anchors {
             guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
             let plane: Plane? = planes.filter { pln in
-                pln.planeAnchor.identifier == planeAnchor.identifier }[0]
+                pln.planeAnchor.identifier == planeAnchor.identifier }.first
             guard let updatedPlane: Plane = plane else { continue }
             updatedPlane.didUpdate(anchor: planeAnchor)
         }
