@@ -45,6 +45,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         print("didAdd anchors: \(anchors)")
         for anchor in anchors {
             guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
+            print("didAdd planeAnchor: width=\(planeAnchor.planeExtent.width), height=\(planeAnchor.planeExtent.height)")
             if planeAnchor.classification != .ceiling { continue }
             let plane = Plane(planeAnchor: planeAnchor)
             plane.transform.matrix = planeAnchor.transform
@@ -60,6 +61,7 @@ class ViewController: UIViewController, ARSessionDelegate {
             let plane: Plane? = planes.filter { pln in
                 pln.planeAnchor.identifier == planeAnchor.identifier }.first
             guard let updatedPlane: Plane = plane else { continue }
+            print("didUpdate planeAnchor: width=\(updatedPlane.planeAnchor.planeExtent.width), height=\(updatedPlane.planeAnchor.planeExtent.height), newWidth=\(planeAnchor.planeExtent.width), newHeight=\(planeAnchor.planeExtent.height)")
             updatedPlane.didUpdate(anchor: planeAnchor)
         }
     }
