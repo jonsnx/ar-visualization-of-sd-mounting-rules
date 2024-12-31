@@ -176,3 +176,125 @@
 - ARKit Dokumentation gelesen (ARMeshGeometry, ARMeshAnchor, Scene Understanding, Scene Reconstruction)
 
 ---
+
+## Woche [2024-12-23] bis [2024-12-29]
+
+### Daily Protocol
+
+#### Datum: [2024-12-23]
+- Versuch der Identifikation von "Extrempunkten" in der Point Cloud
+- Recherche zu Point Clouds und Meshes
+
+#### Datum: [2024-12-24]
+- Neuimplementierung einer Point Cloud-Visualisierung
+- ARKit-Dokumentation gelesen: ARMeshGeometry, ARMeshAnchor, Scene Understanding, Scene Reconstruction
+
+#### Datum: [2024-12-25]
+- Start mit der Implementierung des Prototypen
+
+#### Datum: [2024-12-26]
+- Implementierung des Prototypen fortgesetzt
+
+#### Datum: [2024-12-27]
+- Implementierung des Prototypen fortgesetzt
+- Mit ARSession-Stream und ARSession-Objekt experimentiert
+- Returnte Daten gesichtet und untersucht
+- Dokumentation gelesen
+
+#### Datum: [2024-12-28]
+- Implementierung der Flächenberechnung versucht
+- Dokumentation gelesen
+- Problem bei Flächenberechnung: Wahrscheinlich Doppeltzugriff auf Speicher
+
+#### Datum: [2024-12-29]
+- Implementierung der Visualisierung der Deckenfläche mithilfe von ARPlaneAnchors und einem ARSessionDelegates
+- ARKit Dokumentation gelesen: ARSession-Delegates, ARPlaneAnchors, ARPlaneGeometry, ...
+- ARPlaneAnchors recherchiert
+- Matrix- und Vektor-Mathematik wiederholt
+
+### Zusammenfassung der Woche
+- Mit der Implementierung des Prototypen begonnen
+- ARKit-Dokumentation gelesen: ARMeshGeometry, ARMeshAnchor, Scene Understanding, Scene Reconstruction, ARPlaneAnchor, ARPlaneGeometry
+- Recherche zu Point Clouds und Meshes
+- Weitere Recherchen
+- Implementierung der Visualisierung der Deckenfläche mithilfe von ARPlaneAnchors und einem ARSessionDelegates
+- Implementierung der Flächenberechnung versucht
+
+---
+
+## Woche [2024-12-30] bis [2024-01-5]
+
+### Daily Protocol
+
+#### Datum: [2024-12-30]
+- Implementierung der Visualisierung von AR-Planes mithilfe von ARPlaneAnchors fortgesetzt
+- Versuch der Problemlösung: AR-Plane aligned nicht mit der Decke; AR-Plane ist kleiner als die Decke
+- Ähnliche Problemlösungen recherchiert
+
+#### Datum: [2024-12-31]
+- Bugfix implementiert: extent und rotation der Plane wird nun korrekt gesetzt
+- Recherche zu ARKit-Plane-Alignment, Quaternions, Transformationsmatrix in ARKit durchgeführt
+
+#### Datum: [2025-01-01]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-02]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-03]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-04]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-05]
+- [Task]
+- [Task]
+
+### Zusammenfassung der Woche
+- [Task]
+- [Task]
+
+---
+
+## Woche [YYYY-MM-DD] bis [YYYY-MM-DD]
+
+### Daily Protocol
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+### Zusammenfassung der Woche
+- [Task]
+- [Task]
+
+---
