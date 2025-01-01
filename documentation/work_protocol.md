@@ -236,8 +236,9 @@
 - Recherche zu ARKit-Plane-Alignment, Quaternions, Transformationsmatrix in ARKit durchgeführt
 
 #### Datum: [2025-01-01]
-- [Task]
-- [Task]
+- Erstellung eines Konzepts für die Anwendung der Regeln auf die vorhanden Messdaten
+- Recherche bezüglich Matrix-Arithmetik und Koordinatensystemen in ARKit
+- Recherche bezüglich Design-Patterns, welche evtl. in Frage kämen
 
 #### Datum: [2025-01-02]
 - [Task]
