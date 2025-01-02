@@ -241,8 +241,9 @@
 - Recherche bezüglich Design-Patterns, welche evtl. in Frage kämen
 
 #### Datum: [2025-01-02]
-- [Task]
-- [Task]
+- Implementierung eines Frameworks für die leichte Manipulation der AR-Planes und somit leichtere Anwendung der Regeln
+- Overloading von Operatoren in Swift recherchiert
+- ARKit Dokumentation gelesen
 
 #### Datum: [2025-01-03]
 - [Task]
