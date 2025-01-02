@@ -4,65 +4,62 @@ import RealityKit
 class Plane: Entity, HasModel, HasAnchoring {
     var planeAnchor: ARPlaneAnchor
     
+    required init() { fatalError("No implementation for default initializer") }
+    
     init(planeAnchor: ARPlaneAnchor) {
         self.planeAnchor = planeAnchor
         super.init()
-        self.didSetup()
-    }
-    
-    func didSetup() {
-        let planeGeometry: MeshResource = .generatePlane(width: planeAnchor.planeExtent.width,
-                                                         depth: planeAnchor.planeExtent.height)
-        let material: UnlitMaterial = .init(color: .red)
-        let model = ModelEntity(mesh: planeGeometry, materials: [material])
-        model.position = [planeAnchor.center.x, 0, planeAnchor.center.z]
-        self.addChild(model)
+        let planeAnchorRotation = planeAnchor.planeExtent.rotationOnYAxis
+        
+        let validPlaneModel = ModelEntity(
+            mesh: generatePlaneGeometry(SIMD3<Float>(0.5,0,0.5)),
+            materials: [generateUnlitMaterial(color: .green, opacity: 0.5)]
+        )
+        validPlaneModel.position = getCenterPosition()
+        validPlaneModel.transform.rotation = getQuaternionAroundYAxis(from: planeAnchorRotation)
+        self.addChild(validPlaneModel)
+        
+        let invalidPlaneModel = ModelEntity(
+            mesh: generatePlaneGeometry(),
+            materials: [generateUnlitMaterial(color: .red, opacity: 0.5)]
+        )
+        invalidPlaneModel.position = getCenterPosition(y: -0.01)
+        invalidPlaneModel.transform.rotation = getQuaternionAroundYAxis(from: planeAnchorRotation)
+        self.addChild(invalidPlaneModel)
     }
     
     func didUpdate(anchor: ARPlaneAnchor) {
         planeAnchor = anchor
-        let planeGeometry: MeshResource = .generatePlane(width: anchor.planeExtent.width,
-                                                         depth: anchor.planeExtent.height)
-        let pose: SIMD3<Float> = [anchor.center.x, 0, anchor.center.z]
+        let planeAnchorRotation = planeAnchor.planeExtent.rotationOnYAxis
         let model = self.children[0] as! ModelEntity
-        let planeRotation = planeAnchor.planeExtent.rotationOnYAxis
-        let modelRotation = model.transform.rotation
-        print("Anchor rotation: \(planeRotation), Model rotation \(modelRotation)")
-        model.model?.mesh = planeGeometry
-        model.position = pose
-        model.transform.rotation = simd_quatf(angle: planeRotation, axis: SIMD3<Float>(0, 1, 0))
+        model.model?.mesh = generatePlaneGeometry(SIMD3<Float>(0.5,0,0.5))
+        model.position = getCenterPosition()
+        model.transform.rotation = getQuaternionAroundYAxis(from: planeAnchorRotation)
         
-    }
-    required init() { fatalError("Hasn't been implemented yet") }
-    
-    private func angleBetweenQuaternions(_ q1: simd_quatf, _ q2: simd_quatf) -> Float {
-        let dotProduct = simd_dot(q1, q2)
-        let angle = 2 * acos(abs(dotProduct))  // acos returns a value in radians
-        return angle
-    }
-
-    // Function to rotate one quaternion to match another (relative rotation)
-    func rotateQuaternion(_ q1: simd_quatf, toMatch q2: simd_quatf) -> simd_quatf {
-        // Inverse of the second quaternion
-        let q2Inverse = simd_inverse(q2)
-        
-        // Compute the relative rotation quaternion
-        let qRelative = q2 * q2Inverse
-        
-        return qRelative
-    }
-}
-
-extension float4x4 {
-    
-    /// Returns the translation components of the matrix
-    func toTranslation() -> SIMD3<Float> {
-        return [self[3,0], self[3,1], self[3,2]]
+        let model2 = self.children[1] as! ModelEntity
+        model2.model?.mesh = generatePlaneGeometry()
+        model2.position = getCenterPosition(y: -0.01)
+        model2.transform.rotation = getQuaternionAroundYAxis(from: planeAnchorRotation)
     }
     
-    /// Returns a quaternion representing the
-    /// rotation component of the matrix
-    func toQuaternion() -> simd_quatf {
-        return simd_quatf(self)
+    private func getCenterPosition(y: Float = 0) -> SIMD3<Float> {
+        return [planeAnchor.center.x, y, planeAnchor.center.z]
+    }
+    
+    private func generatePlaneGeometry(_ boundaries: SIMD3<Float> = [0, 0, 0]) -> MeshResource {
+        return MeshResource.generatePlane(
+            width: self.planeAnchor.planeExtent.width - 2 * boundaries[0],
+            depth: self.planeAnchor.planeExtent.height - 2 * boundaries[2]
+        )
+    }
+    
+    private func generateUnlitMaterial(color: UIColor, opacity: PhysicallyBasedMaterial.Opacity) -> UnlitMaterial {
+        var material = UnlitMaterial(color: color)
+        material.blending = .transparent(opacity: opacity)
+        return material
+    }
+    
+    private func getQuaternionAroundYAxis(from angle: Float) -> simd_quatf {
+        return simd_quatf(angle: angle, axis: SIMD3<Float>(0, 1, 0))
     }
 }
