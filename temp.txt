@@ -1,5 +1,13 @@
 sources:
 https://stackoverflow.com/questions/58375806/getting-rotation-of-aranchor-from-didadd-anchors
+https://medium.com/@egzonpllana/understanding-concurrency-in-swift-6-with-sendable-protocol-mainactor-and-async-await-5ccfdc0ca2b6
+https://developer.apple.com/documentation/arkit/arconfiguration/worldalignment/gravity
+https://developer.apple.com/documentation/arkit/arkit_in_ios/configuration_objects/understanding_world_tracking
+https://developer.apple.com/videos/play/tech-talks/609/
+https://stackoverflow.com/questions/71347327/realitykit-visualizing-grid-on-detected-planes
+https://medium.com/@yatchoi/getting-started-with-arkit-real-life-waypoints-1707e3cb1da2
+https://shiru99.medium.com/ar-with-ios-swiftui-arkit-realitykit-part-v-c3c89ad95b38
+https://developer.apple.com/videos/play/wwdc2024/10100/?time=150
 
 import UIKit
 import RealityKit
