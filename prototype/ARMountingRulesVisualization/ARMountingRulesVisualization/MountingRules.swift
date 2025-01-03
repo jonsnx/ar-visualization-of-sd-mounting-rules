@@ -1,4 +1,5 @@
 struct MountingRules {
     // 1 Float equals 1 Meter in ARKit
-    static let generalSpacing = 0.5
+    static let minDistanceToWalls: Float = 0.6
+    static let minDistanceToObjects: Float = 0.6
 }
