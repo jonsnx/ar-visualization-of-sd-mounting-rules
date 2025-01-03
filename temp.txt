@@ -8,6 +8,9 @@ https://stackoverflow.com/questions/71347327/realitykit-visualizing-grid-on-dete
 https://medium.com/@yatchoi/getting-started-with-arkit-real-life-waypoints-1707e3cb1da2
 https://shiru99.medium.com/ar-with-ios-swiftui-arkit-realitykit-part-v-c3c89ad95b38
 https://developer.apple.com/videos/play/wwdc2024/10100/?time=150
+https://medium.com/@ivkuznetsov/arkit-lidar-building-point-clouds-in-swift-a4a948fe0cd2
+https://medium.com/@d4sontiovino/implementing-focus-entity-in-swift-ar-a-simple-approach-0857d7dc7a10
+https://shiru99.medium.com/ar-with-ios-swiftui-arkit-realitykit-part-v-c3c89ad95b38
 
 import UIKit
 import RealityKit
