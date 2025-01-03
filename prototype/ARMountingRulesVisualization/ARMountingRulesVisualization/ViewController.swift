@@ -41,40 +41,13 @@ class ViewController: UIViewController, ARSessionDelegate {
 
     func processAnchors(anchors: [ARAnchor]) async {
         if arManager.isProcessing { return }
-        arManager.isProcessing = true
+        arManager.toggleIsProcessing()
         
-        let (addedAnchors, updatedAnchors, removedAnchors) = await arManager.process(anchors: anchors)
-
-        addAnchorsToScene(addedAnchors)
-        updateAnchorsInScene(updatedAnchors)
-        removeAnchorsInScene(removedAnchors)
+        let (addedAnchors, removedAnchors) = await arManager.process(anchors: anchors)
         
-        arManager.isProcessing = false
-    }
-    
-    func addAnchorsToScene(_ anchors: [ARPlaneAnchor]) {
-        for anchor in anchors {
-            let anchorEntity = Plane(planeAnchor: anchor)
-            anchorEntity.transform.matrix = anchor.transform
-            arManager.sceneAnchors[anchorEntity.planeAnchor.identifier] = anchorEntity
-            arView.scene.anchors.append(anchorEntity)
-        }
-    }
-    
-    func updateAnchorsInScene(_ anchors: [ARPlaneAnchor]) {
-        for anchor in anchors {
-            if let updatedAnchorEntity = arManager.sceneAnchors[anchor.identifier] {
-                updatedAnchorEntity.didUpdate(anchor: anchor)
-            }
-        }
-    }
-    
-    func removeAnchorsInScene(_ anchors: [ARPlaneAnchor]) {
-        for anchor in anchors {
-            if let removedAnchorEntity = arManager.sceneAnchors[anchor.identifier] {
-                arView.scene.anchors.remove(removedAnchorEntity)
-                arManager.sceneAnchors.removeValue(forKey: removedAnchorEntity.planeAnchor.identifier)
-            }
-        }
+        addedAnchors.forEach({ arView.scene.addAnchor($0) })
+        removedAnchors.forEach({ arView.scene.anchors.remove($0) })
+        
+        arManager.toggleIsProcessing()
     }
 }
