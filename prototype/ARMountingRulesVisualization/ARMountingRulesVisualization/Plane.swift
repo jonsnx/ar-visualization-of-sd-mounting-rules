@@ -12,7 +12,7 @@ class Plane: Entity, HasModel, HasAnchoring {
         let planeAnchorRotation = planeAnchor.planeExtent.rotationOnYAxis
         
         let validPlaneModel = ModelEntity(
-            mesh: generatePlaneGeometry(SIMD3<Float>(0.5,0,0.5)),
+            mesh: generatePlaneGeometry(SIMD3<Float>(MountingRules.minDistanceToWalls,0,MountingRules.minDistanceToWalls)),
             materials: [generateUnlitMaterial(color: .green, opacity: 0.5)]
         )
         validPlaneModel.position = getCenterPosition()
@@ -32,7 +32,7 @@ class Plane: Entity, HasModel, HasAnchoring {
         planeAnchor = anchor
         let planeAnchorRotation = planeAnchor.planeExtent.rotationOnYAxis
         let model = self.children[0] as! ModelEntity
-        model.model?.mesh = generatePlaneGeometry(SIMD3<Float>(0.5,0,0.5))
+        model.model?.mesh = generatePlaneGeometry(SIMD3<Float>(MountingRules.minDistanceToWalls,0,MountingRules.minDistanceToWalls))
         model.position = getCenterPosition()
         model.transform.rotation = getQuaternionAroundYAxis(from: planeAnchorRotation)
         

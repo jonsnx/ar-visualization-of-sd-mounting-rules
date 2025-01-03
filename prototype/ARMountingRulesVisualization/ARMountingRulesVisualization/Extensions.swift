@@ -35,7 +35,6 @@ extension ARPlaneAnchor {
             let vi = boundary[i]
             let vj = boundary[j]
             
-            // Check if the point intersects with the edge of the polygon
             if ((vi.z > point.z) != (vj.z > point.z)) &&
                 (point.x < (vj.x - vi.x) * (point.z - vi.z) / (vj.z - vi.z) + vi.x) {
                 inside.toggle()
@@ -47,28 +46,24 @@ extension ARPlaneAnchor {
         return inside
     }
     
-    // Comparison operator "<" (less than)
     static func < (lhs: ARPlaneAnchor, rhs: ARPlaneAnchor) -> Bool {
         let lhsArea = lhs.planeExtent.width * lhs.planeExtent.height
         let rhsArea = rhs.planeExtent.width * rhs.planeExtent.height
         return lhsArea < rhsArea
     }
     
-    // Comparison operator ">" (greater than)
     static func > (lhs: ARPlaneAnchor, rhs: ARPlaneAnchor) -> Bool {
         let lhsArea = lhs.planeExtent.width * lhs.planeExtent.height
         let rhsArea = rhs.planeExtent.width * rhs.planeExtent.height
         return lhsArea > rhsArea
     }
     
-    // Comparison operator "<=" (less than or equal)
     static func <= (lhs: ARPlaneAnchor, rhs: ARPlaneAnchor) -> Bool {
         let lhsArea = lhs.planeExtent.width * lhs.planeExtent.height
         let rhsArea = rhs.planeExtent.width * rhs.planeExtent.height
         return lhsArea <= rhsArea
     }
     
-    // Comparison operator ">=" (greater than or equal)
     static func >= (lhs: ARPlaneAnchor, rhs: ARPlaneAnchor) -> Bool {
         let lhsArea = lhs.planeExtent.width * lhs.planeExtent.height
         let rhsArea = rhs.planeExtent.width * rhs.planeExtent.height

@@ -19,7 +19,7 @@ actor ARManager {
             for a2 in anchorsToProcess {
                 if a1.identifier == a2.identifier { continue }
                 if !a1.intersects(a2) { continue }
-                if a1 < a2 {
+                if a1 <= a2 {
                     isNonDominant = true
                     guard let plane = await self.sceneAnchors[a1.identifier] else { break }
                     anchorsToBeRemoved.append(plane)
@@ -30,7 +30,6 @@ actor ARManager {
                 }
             }
             if isNonDominant { continue }
-            
             if await self.sceneAnchors.contains(where: { $0.key == a1.identifier }) {
                 await self.sceneAnchors[a1.identifier]!.didUpdate(anchor: a1)
             } else {
