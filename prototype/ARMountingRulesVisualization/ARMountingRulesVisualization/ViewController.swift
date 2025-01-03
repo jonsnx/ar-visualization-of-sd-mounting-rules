@@ -35,7 +35,6 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         Task {
-            print("\(Thread.current)")
             await processAnchors(anchors: anchors)
         }
     }
@@ -45,19 +44,16 @@ class ViewController: UIViewController, ARSessionDelegate {
         arManager.isProcessing = true
         
         print("Processing anchors...")
-
-        // Process the anchors using ARManager
+        
         let (addedAnchors, updatedAnchors) = await arManager.process(anchors: anchors)
 
-        // Update the scene with the processed anchors
         addAnchorsToScene(addedAnchors)
         updateAnchorsInScene(updatedAnchors)
         
         arManager.isProcessing = false
         print("Anchor processing finished.")
     }
-
-    // Method to add anchors to the scene
+    
     func addAnchorsToScene(_ anchors: [ARPlaneAnchor]) {
         for anchor in anchors {
             let anchorEntity = Plane(planeAnchor: anchor)
@@ -67,7 +63,6 @@ class ViewController: UIViewController, ARSessionDelegate {
         }
     }
     
-    // Method to update existing anchors in the scene
     func updateAnchorsInScene(_ anchors: [ARPlaneAnchor]) {
         for anchor in anchors {
             if let updatedAnchorEntity = arManager.sceneAnchors[anchor.identifier] {

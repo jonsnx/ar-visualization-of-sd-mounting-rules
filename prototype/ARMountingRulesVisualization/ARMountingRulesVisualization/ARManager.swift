@@ -7,8 +7,6 @@ actor ARManager {
     @MainActor var sceneAnchors = [UUID : Plane]()
 
     func process(anchors: [ARAnchor]) async -> ([ARPlaneAnchor], [ARPlaneAnchor]) {
-        try? await Task.sleep(for: Duration.seconds(10.0))
-        
         var anchorsToProcess = [ARPlaneAnchor]()
         var anchorsToBeAdded = [ARPlaneAnchor]()
         var anchorsToBeUpdated = [ARPlaneAnchor]()
