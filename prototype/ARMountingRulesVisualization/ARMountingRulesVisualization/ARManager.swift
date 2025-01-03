@@ -1,5 +1,3 @@
-import UIKit
-import RealityKit
 import ARKit
 
 actor ARManager {
@@ -10,7 +8,7 @@ actor ARManager {
         var anchorsToBeAdded = [Plane]()
         var anchorsToBeRemoved = [Plane]()
         
-        var anchorsToProcess = getProcessableAnchors(anchors: anchors)
+        let anchorsToProcess = getProcessableAnchors(anchors: anchors)
         
         if anchorsToProcess.isEmpty { return ([], []) }
         

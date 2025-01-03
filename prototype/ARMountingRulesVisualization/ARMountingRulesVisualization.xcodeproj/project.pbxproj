@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B95405FF2D2834FD000319FD /* FocusEntity in Frameworks */ = {isa = PBXBuildFile; productRef = B95405FE2D2834FD000319FD /* FocusEntity */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B9047E452D1D6A0C00B083F1 /* ARMountingRulesVisualization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARMountingRulesVisualization.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B95405FF2D2834FD000319FD /* FocusEntity in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = ARMountingRulesVisualization;
 			packageProductDependencies = (
+				B95405FE2D2834FD000319FD /* FocusEntity */,
 			);
 			productName = ARMountingRulesVisualization;
 			productReference = B9047E452D1D6A0C00B083F1 /* ARMountingRulesVisualization.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = B9047E3C2D1D6A0C00B083F1;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B95405FD2D2834FD000319FD /* XCRemoteSwiftPackageReference "FocusEntity" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B9047E462D1D6A0C00B083F1 /* Products */;
 			projectDirPath = "";
@@ -255,8 +264,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -285,8 +292,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -326,6 +331,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B95405FD2D2834FD000319FD /* XCRemoteSwiftPackageReference "FocusEntity" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maxxfrazer/FocusEntity";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B95405FE2D2834FD000319FD /* FocusEntity */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B95405FD2D2834FD000319FD /* XCRemoteSwiftPackageReference "FocusEntity" */;
+			productName = FocusEntity;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B9047E3D2D1D6A0C00B083F1 /* Project object */;
 }

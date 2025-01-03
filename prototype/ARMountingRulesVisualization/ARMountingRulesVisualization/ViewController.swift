@@ -1,16 +1,18 @@
-import UIKit
 import RealityKit
 import ARKit
+import FocusEntity
 
 class ViewController: UIViewController, ARSessionDelegate {
-    @IBOutlet var arView: ARView!
+    private var focusEntity: FocusEntity!
+    private var arView: ARView!
     
     var arManager = ARManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        arView = ARView(frame: view.bounds)
         arView.session.delegate = self
+        view.addSubview(arView)
         
         arView.environment.sceneUnderstanding.options = []
         arView.environment.sceneUnderstanding.options.insert(.physics)
@@ -25,6 +27,8 @@ class ViewController: UIViewController, ARSessionDelegate {
         if ARWorldTrackingConfiguration.supportsSceneReconstruction(.meshWithClassification) {
             arView.session.run(configuration)
         }
+        
+        focusEntity = FocusEntity(on: arView, style: .classic(color: .white))
     }
     
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {

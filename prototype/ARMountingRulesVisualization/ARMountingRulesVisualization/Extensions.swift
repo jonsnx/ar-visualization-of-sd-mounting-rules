@@ -1,5 +1,4 @@
 import ARKit
-import RealityKit
 
 extension ARPlaneAnchor {
     func intersects(_ other: ARPlaneAnchor) -> Bool {
