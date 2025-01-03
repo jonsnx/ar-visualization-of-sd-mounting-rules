@@ -43,15 +43,13 @@ class ViewController: UIViewController, ARSessionDelegate {
         if arManager.isProcessing { return }
         arManager.isProcessing = true
         
-        print("Processing anchors...")
-        
-        let (addedAnchors, updatedAnchors) = await arManager.process(anchors: anchors)
+        let (addedAnchors, updatedAnchors, removedAnchors) = await arManager.process(anchors: anchors)
 
         addAnchorsToScene(addedAnchors)
         updateAnchorsInScene(updatedAnchors)
+        removeAnchorsInScene(removedAnchors)
         
         arManager.isProcessing = false
-        print("Anchor processing finished.")
     }
     
     func addAnchorsToScene(_ anchors: [ARPlaneAnchor]) {
@@ -67,6 +65,15 @@ class ViewController: UIViewController, ARSessionDelegate {
         for anchor in anchors {
             if let updatedAnchorEntity = arManager.sceneAnchors[anchor.identifier] {
                 updatedAnchorEntity.didUpdate(anchor: anchor)
+            }
+        }
+    }
+    
+    func removeAnchorsInScene(_ anchors: [ARPlaneAnchor]) {
+        for anchor in anchors {
+            if let removedAnchorEntity = arManager.sceneAnchors[anchor.identifier] {
+                arView.scene.anchors.remove(removedAnchorEntity)
+                arManager.sceneAnchors.removeValue(forKey: removedAnchorEntity.planeAnchor.identifier)
             }
         }
     }

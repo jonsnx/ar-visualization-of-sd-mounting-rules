@@ -6,21 +6,14 @@ actor ARManager {
     @MainActor var isProcessing = false
     @MainActor var sceneAnchors = [UUID : Plane]()
 
-    func process(anchors: [ARAnchor]) async -> ([ARPlaneAnchor], [ARPlaneAnchor]) {
-        var anchorsToProcess = [ARPlaneAnchor]()
+    func process(anchors: [ARAnchor]) async -> ([ARPlaneAnchor], [ARPlaneAnchor], [ARPlaneAnchor]) {
         var anchorsToBeAdded = [ARPlaneAnchor]()
         var anchorsToBeUpdated = [ARPlaneAnchor]()
+        var anchorsToBeRemoved = [ARPlaneAnchor]()
         
-        for anchor in anchors {
-            guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
-            if planeAnchor.classification == .ceiling {
-                anchorsToProcess.append(planeAnchor)
-            }
-        }
+        var anchorsToProcess = getProcessableAnchors(anchors: anchors)
         
-        print("\(anchorsToProcess.count) anchors to process")
-        
-        if anchorsToProcess.isEmpty { return ([], []) }
+        if anchorsToProcess.isEmpty { return ([], [], []) }
         
         for a1 in anchorsToProcess {
             var isNonDominant = false
@@ -29,11 +22,11 @@ actor ARManager {
                 if !a1.intersects(a2) { continue }
                 if a1 < a2 {
                     isNonDominant = true
+                    anchorsToBeRemoved.append(a1)
                     break
                 }
             }
             if isNonDominant { continue }
-
             if await self.sceneAnchors.contains(where: { $0.key == a1.identifier }) {
                 anchorsToBeUpdated.append(a1)
             } else {
@@ -41,6 +34,17 @@ actor ARManager {
             }
         }
         
-        return (anchorsToBeAdded, anchorsToBeUpdated)
+        return (anchorsToBeAdded, anchorsToBeUpdated, anchorsToBeRemoved)
+    }
+    
+    private func getProcessableAnchors(anchors: [ARAnchor]) -> [ARPlaneAnchor] {
+        var anchorsToProcess = [ARPlaneAnchor]()
+        for anchor in anchors {
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
+            if planeAnchor.classification == .ceiling {
+                anchorsToProcess.append(planeAnchor)
+            }
+        }
+        return anchorsToProcess
     }
 }
