@@ -11,6 +11,7 @@ https://developer.apple.com/videos/play/wwdc2024/10100/?time=150
 https://medium.com/@ivkuznetsov/arkit-lidar-building-point-clouds-in-swift-a4a948fe0cd2
 https://medium.com/@d4sontiovino/implementing-focus-entity-in-swift-ar-a-simple-approach-0857d7dc7a10
 https://shiru99.medium.com/ar-with-ios-swiftui-arkit-realitykit-part-v-c3c89ad95b38
+https://developer.apple.com/documentation/arkit/arkit_in_ios/environmental_analysis/placing_objects_and_handling_3d_interaction
 
 import UIKit
 import RealityKit
