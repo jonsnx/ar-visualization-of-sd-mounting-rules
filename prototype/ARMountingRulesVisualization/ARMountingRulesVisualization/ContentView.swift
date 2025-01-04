@@ -7,7 +7,7 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 Button(action: {
-                  // Place Model
+                    ActionManager.shared.actionStream.send(.place3DModel)
                 }){
                     Image(systemName: "plus")
                         .font(.headline)
