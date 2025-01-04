@@ -246,8 +246,10 @@
 - ARKit Dokumentation gelesen
 
 #### Datum: [2025-01-03]
-- [Task]
-- [Task]
+- Programmablauf multithreaded gestaltet: Verarbeitung der Daten der ARSession passiert nun asynchron
+- Verschiedene Refactorings durchgeführt: ARManager eingeführt, von Storyboards auf SwiftUI gewechselt, kleinere Codequalitätsverbesserungen
+- ARKit Dokumentation gelesen
+- Implementierung einer FocusEntity und hinzufügen von UI-Elementen
 
 #### Datum: [2025-01-04]
 - [Task]
