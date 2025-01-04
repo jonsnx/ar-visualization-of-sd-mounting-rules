@@ -24,3 +24,7 @@ Abschlussarbeit-mitR.tex
 *.Rproj
 .Rproj.user/**
 /tmp/
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+.DS_Store
