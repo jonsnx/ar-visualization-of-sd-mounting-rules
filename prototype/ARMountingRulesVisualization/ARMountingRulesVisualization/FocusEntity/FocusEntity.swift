@@ -189,10 +189,10 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
                 } else {
                     entityOffPlane(raycastResult, camera)
                 }
-                if self.scaleEntityBasedOnDistance,
-                   let cameraTransform = self.arView?.cameraTransform {
-                    self.scale = .one * scaleBasedOnDistance(cameraTransform: cameraTransform)
-                }
+                // if self.scaleEntityBasedOnDistance,
+                   // let cameraTransform = self.arView?.cameraTransform {
+                    // self.scale = .one * scaleBasedOnDistance(cameraTransform: cameraTransform)
+                // }
 
                 defer { currentPlaneAnchor = planeAnchor }
                 if stateChanged {
@@ -253,6 +253,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     /// The primary node that controls the position of other `FocusEntity` nodes.
     internal let positioningEntity = Entity()
     internal var fillPlane: ModelEntity?
+    internal var ringPlane: ModelEntity?
 
     /// Modify the scale of the FocusEntity to make it slightly bigger when further away.
     public var scaleEntityBasedOnDistance = true
@@ -298,10 +299,15 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
             else { return }
             self.setupClassic(classicStyle)
         case .custom(_, _, let mesh):
+            if let ringPlane = try? ModelEntity.loadModel(named: "flat_ring") {
+                self.positioningEntity.addChild(ringPlane)
+                self.ringPlane = ringPlane
+            }
+            
             let fillPlane = ModelEntity(mesh: mesh)
             self.positioningEntity.addChild(fillPlane)
             self.fillPlane = fillPlane
-            self.coloredStateChanged()
+            self.customStateChanged()
         }
     }
 

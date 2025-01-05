@@ -7,7 +7,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     private var focusEntity: FocusEntity!
     private var arView: ARView!
     private var cancellables: Set<AnyCancellable> = []
-    private var detector: AnchorEntity?
+    private var detector: SmokeDetector?
     
     var arManager = ARManager()
     
@@ -22,6 +22,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         arView.environment.sceneUnderstanding.options = []
         arView.environment.sceneUnderstanding.options.insert(.physics)
+        arView.environment.sceneUnderstanding.options.insert(.occlusion)
         //arView.debugOptions.insert(.showSceneUnderstanding)
         arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur]
         
@@ -31,7 +32,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.sceneReconstruction = .meshWithClassification
         arView.session.run(configuration)
-        focusEntity = FocusEntity.init(on: arView, focus: FocusEntityComponent.detector)
+        focusEntity = .init(on: arView, focus: FocusEntityComponent.detector)
     }
     
     /*
@@ -60,22 +61,23 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         arManager.toggleIsProcessing()
     }
-    
-    func placeDetector() {
-        guard let focusEntity = self.focusEntity else { return }
-        removeDetector()
-        let modelEntity = ModelEntity.init(mesh: MeshResource.generateCylinder(height: 0.05, radius: 0.05), materials: [SimpleMaterial(color: .white, roughness: 0.5, isMetallic: true)])
-        let anchorEntity = AnchorEntity(world: focusEntity.position)
-        anchorEntity.addChild(modelEntity)
-        detector = anchorEntity
-        arView.scene.addAnchor(detector!)
-    }
     */
     
+    func placeDetector() {
+        guard let focusEntity = focusEntity else { return }
+        if !focusEntity.onPlane { return }
+        if self.detector == nil {
+            self.detector = SmokeDetector(worldPosition: focusEntity.position)
+            arView.scene.addAnchor(self.detector!)
+            return
+        }
+        self.detector?.moveTo(worldPosition: focusEntity.position)
+    }
+    
     func removeDetector() {
-        guard let detector else { return }
+        if self.detector == nil { return }
+        guard let detector = self.detector else { return }
         arView.scene.anchors.remove(detector)
-        self.detector = nil
     }
     
     func subscribeToActionStream() {

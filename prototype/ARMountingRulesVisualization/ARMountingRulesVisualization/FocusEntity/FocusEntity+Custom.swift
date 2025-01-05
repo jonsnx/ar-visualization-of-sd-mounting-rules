@@ -24,6 +24,9 @@ public extension FocusEntity {
         if self.fillPlane?.model?.materials.count == 0 {
             self.fillPlane?.model?.materials = [SimpleMaterial()]
         }
+        if self.ringPlane?.model?.materials.count == 0 {
+            self.ringPlane?.model?.materials = [SimpleMaterial()]
+        }
         var modelMaterial: Material!
         if #available(iOS 15, macOS 12, *) {
             switch endColor {
@@ -46,5 +49,6 @@ public extension FocusEntity {
             modelMaterial = mat
         }
         self.fillPlane?.model?.materials[0] = modelMaterial
+        self.ringPlane?.model?.materials[0] = modelMaterial
     }
 }
