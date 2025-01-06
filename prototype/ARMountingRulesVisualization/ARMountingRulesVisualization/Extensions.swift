@@ -68,4 +68,11 @@ extension ARPlaneAnchor {
         let rhsArea = rhs.planeExtent.width * rhs.planeExtent.height
         return lhsArea >= rhsArea
     }
+    
+    func calculateNormalVetor() -> simd_float3 {
+        let transform = self.transform
+        let localNormal = SIMD3<Float>(0, 1, 0)
+        let worldNormal = simd_mul(transform, SIMD4<Float>(localNormal.x, localNormal.y, localNormal.z, 0))
+        return SIMD3<Float>(worldNormal.x, worldNormal.y, worldNormal.z)
+    }
 }

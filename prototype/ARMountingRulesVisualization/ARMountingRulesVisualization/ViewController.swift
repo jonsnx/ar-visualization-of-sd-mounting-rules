@@ -8,6 +8,8 @@ class ViewController: UIViewController, ARSessionDelegate {
     private var arView: ARView!
     private var cancellables: Set<AnyCancellable> = []
     private var detector: SmokeDetector?
+    private var distanceIndicators: DistanceIndicators?
+    private var isCeilingPlaneVisible: Bool = false
     
     var arManager = ARManager()
     
@@ -22,8 +24,8 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         arView.environment.sceneUnderstanding.options = []
         arView.environment.sceneUnderstanding.options.insert(.physics)
-        arView.environment.sceneUnderstanding.options.insert(.occlusion)
-        //arView.debugOptions.insert(.showSceneUnderstanding)
+        //arView.environment.sceneUnderstanding.options.insert(.occlusion)
+        arView.debugOptions.insert(.showSceneUnderstanding)
         arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur]
         
         arView.automaticallyConfigureSession = false
@@ -35,19 +37,21 @@ class ViewController: UIViewController, ARSessionDelegate {
         focusEntity = .init(on: arView, focus: FocusEntityComponent.detector)
     }
     
-    /*
+    
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-         Task {
-         await processAnchors(anchors: anchors)
-         }
+        if isCeilingPlaneVisible {
+            Task {
+                await processAnchors(anchors: anchors)
+            }
+        }
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        /*
-         Task {
-         await processAnchors(anchors: anchors)
-         }
-         */
+        if isCeilingPlaneVisible {
+            Task {
+                await processAnchors(anchors: anchors)
+            }
+        }
     }
     
     func processAnchors(anchors: [ARAnchor]) async {
@@ -61,23 +65,34 @@ class ViewController: UIViewController, ARSessionDelegate {
         
         arManager.toggleIsProcessing()
     }
-    */
     
     func placeDetector() {
         guard let focusEntity = focusEntity else { return }
         if !focusEntity.onPlane { return }
-        if self.detector == nil {
+        let position = focusEntity.position
+        if self.detector == nil && self.distanceIndicators == nil {
             self.detector = SmokeDetector(worldPosition: focusEntity.position)
             arView.scene.addAnchor(self.detector!)
+            let raycastData = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
+            self.distanceIndicators = DistanceIndicators(from: focusEntity.position, around: raycastData)
+            arView.scene.anchors.remove(self.distanceIndicators!)
             return
         }
+        updateDistanceIndicators(position: position)
         self.detector?.moveTo(worldPosition: focusEntity.position)
     }
     
     func removeDetector() {
-        if self.detector == nil { return }
         guard let detector = self.detector else { return }
         arView.scene.anchors.remove(detector)
+    }
+    
+    func updateDistanceIndicators(position: SIMD3<Float>) {
+        guard let distanceIndicators = self.distanceIndicators else { return }
+        arView.scene.anchors.remove(distanceIndicators)
+        let raycastData = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
+        self.distanceIndicators = DistanceIndicators(from: focusEntity.position, around: raycastData)
+        arView.scene.addAnchor(self.distanceIndicators!)
     }
     
     func subscribeToActionStream() {

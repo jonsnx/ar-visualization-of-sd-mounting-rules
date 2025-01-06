@@ -38,77 +38,8 @@ extension FocusEntity {
         }
         
         if self.onPlane {
-            var position = self.position
-            position.y -= 0.2 // Adjust position slightly downward
-            let raycastDistanceThreshold: Float = 0.6 // Distance threshold for blocking placement
-            let numberOfRays = 30 // Number of rays around 360 degrees
-            let angleIncrement = 2 * Float.pi / Float(numberOfRays) // 360 degrees divided by the number of rays
-            for i in 0..<numberOfRays {
-                let angle = angleIncrement * Float(i)
-                
-                // Create direction based on angle
-                let direction = SIMD3<Float>(cos(angle), 0, sin(angle)) // In XZ plane
-                
-                // Perform the raycast
-                if let raycastResult = self.smartRaycast(position, direction) {
-                    let distance = simd_distance(position, raycastResult.worldTransform.translation)
-                    
-                    // If too close, we can't place the smoke detector
-                    if distance < raycastDistanceThreshold {
-                        guard let targetPlane = raycastResult.anchor as? ARPlaneAnchor else { continue }
-                        // Assume `planeAnchor` is your ARPlaneAnchor
-                        let localNormal = SIMD3<Float>(0, 1, 0) // Normal in the local plane coordinate system
-
-                        // Get the transform matrix from the plane anchor
-                        let transform = targetPlane.transform
-
-                        // Transform the normal to world coordinates by applying the plane's rotation
-                        let worldNormal = simd_mul(transform, SIMD4<Float>(localNormal.x, localNormal.y, localNormal.z, 0))
-
-                        // The world normal is the resulting vector (ignoring the w-component)
-                        let finalWorldNormal = SIMD3<Float>(worldNormal.x, worldNormal.y, worldNormal.z)
-                        
-                        let normalizedScalar = simd_dot(direction, finalWorldNormal) / (simd_length(finalWorldNormal) * simd_length(direction))
-
-                        let epsilon: Float = 0.005
-                        
-                        if  normalizedScalar > (1 - epsilon) || normalizedScalar < (-1 + epsilon) {
-                            var targetPosition = raycastResult.worldTransform.translation
-                            targetPosition.y += 0.2
-                            drawLine(from: self.position, to: targetPosition)
-                        }
-                        
-                    }
-                }
-            }
+            
         }
-    }
-    
-    func drawLine(from start: SIMD3<Float>, to end: SIMD3<Float>) {
-        let midPosition = SIMD3(
-            x:(start.x + end.x) / 2,
-            y:(start.y + end.y) / 2,
-            z:(start.z + end.z) / 2
-        )
-        
-        let anchor = AnchorEntity()
-        anchor.position = midPosition
-        anchor.look(at: start, from: midPosition, relativeTo: nil)
-        
-        let meters = simd_distance(start, end)
-        
-        let lineMaterial = UnlitMaterial.init(color: .magenta)
-        
-        let bottomLineMesh = MeshResource.generateBox(width:0.005,
-                                                      height: 0,
-                                                      depth: meters)
-        
-        let bottomLineEntity = ModelEntity(mesh: bottomLineMesh,
-                                           materials: [lineMaterial])
-        
-        bottomLineEntity.position = .init(0, 0.025, 0)
-        anchor.addChild(bottomLineEntity)
-        arView?.scene.addAnchor(anchor)
     }
     
     internal func updateAlignment(for raycastResult: ARRaycastResult) {
