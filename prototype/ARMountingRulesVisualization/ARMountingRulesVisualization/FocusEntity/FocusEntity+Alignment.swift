@@ -41,9 +41,8 @@ extension FocusEntity {
             var position = self.position
             position.y -= 0.2 // Adjust position slightly downward
             let raycastDistanceThreshold: Float = 0.6 // Distance threshold for blocking placement
-            let numberOfRays = 9 // Number of rays around 360 degrees
+            let numberOfRays = 30 // Number of rays around 360 degrees
             let angleIncrement = 2 * Float.pi / Float(numberOfRays) // 360 degrees divided by the number of rays
-            var closestPlanes: [UUID: RaycastInfo] = [:]
             for i in 0..<numberOfRays {
                 let angle = angleIncrement * Float(i)
                 
@@ -57,22 +56,31 @@ extension FocusEntity {
                     // If too close, we can't place the smoke detector
                     if distance < raycastDistanceThreshold {
                         guard let targetPlane = raycastResult.anchor as? ARPlaneAnchor else { continue }
+                        // Assume `planeAnchor` is your ARPlaneAnchor
+                        let localNormal = SIMD3<Float>(0, 1, 0) // Normal in the local plane coordinate system
+
+                        // Get the transform matrix from the plane anchor
+                        let transform = targetPlane.transform
+
+                        // Transform the normal to world coordinates by applying the plane's rotation
+                        let worldNormal = simd_mul(transform, SIMD4<Float>(localNormal.x, localNormal.y, localNormal.z, 0))
+
+                        // The world normal is the resulting vector (ignoring the w-component)
+                        let finalWorldNormal = SIMD3<Float>(worldNormal.x, worldNormal.y, worldNormal.z)
                         
-                        if closestPlanes[targetPlane.identifier] == nil {
-                            closestPlanes[targetPlane.identifier] = RaycastInfo(distance: distance, target: raycastResult.worldTransform.translation)
-                        } else if closestPlanes[targetPlane.identifier]!.distance < distance {
-                            print("new closest distance to \(targetPlane.identifier): \(distance)")
-                            closestPlanes[targetPlane.identifier] = RaycastInfo(distance: distance, target: raycastResult.worldTransform.translation)
+                        let normalizedScalar = simd_dot(direction, finalWorldNormal) / (simd_length(finalWorldNormal) * simd_length(direction))
+
+                        let epsilon: Float = 0.005
+                        
+                        if  normalizedScalar > (1 - epsilon) || normalizedScalar < (-1 + epsilon) {
+                            var targetPosition = raycastResult.worldTransform.translation
+                            targetPosition.y += 0.2
+                            drawLine(from: self.position, to: targetPosition)
                         }
+                        
                     }
                 }
             }
-            
-            closestPlanes.forEach({
-                var targetPosition = $1.target
-                targetPosition.y += 0.2
-                drawLine(from: self.position, to: targetPosition)
-            })
         }
     }
     
@@ -89,9 +97,9 @@ extension FocusEntity {
         
         let meters = simd_distance(start, end)
         
-        let lineMaterial = UnlitMaterial.init(color: .red)
+        let lineMaterial = UnlitMaterial.init(color: .magenta)
         
-        let bottomLineMesh = MeshResource.generateBox(width:0.025,
+        let bottomLineMesh = MeshResource.generateBox(width:0.005,
                                                       height: 0,
                                                       depth: meters)
         
@@ -100,8 +108,6 @@ extension FocusEntity {
         
         bottomLineEntity.position = .init(0, 0.025, 0)
         anchor.addChild(bottomLineEntity)
-        
-        // Add the anchor to the AR scene
         arView?.scene.addAnchor(anchor)
     }
     
