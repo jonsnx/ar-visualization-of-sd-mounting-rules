@@ -41,9 +41,9 @@ extension FocusEntity {
             var position = self.position
             position.y -= 0.2 // Adjust position slightly downward
             let raycastDistanceThreshold: Float = 0.6 // Distance threshold for blocking placement
-            let numberOfRays = 36 // Number of rays around 360 degrees
+            let numberOfRays = 9 // Number of rays around 360 degrees
             let angleIncrement = 2 * Float.pi / Float(numberOfRays) // 360 degrees divided by the number of rays
-
+            var closestPlanes: [UUID: RaycastInfo] = [:]
             for i in 0..<numberOfRays {
                 let angle = angleIncrement * Float(i)
                 
@@ -53,16 +53,56 @@ extension FocusEntity {
                 // Perform the raycast
                 if let raycastResult = self.smartRaycast(position, direction) {
                     let distance = simd_distance(position, raycastResult.worldTransform.translation)
-                    print("Distance in direction \(direction): \(distance)")
                     
                     // If too close, we can't place the smoke detector
                     if distance < raycastDistanceThreshold {
-                        self.onPlane = false
-                        print("SmokeDetector not placeable. Too close in direction \(direction).")
+                        guard let targetPlane = raycastResult.anchor as? ARPlaneAnchor else { continue }
+                        
+                        if closestPlanes[targetPlane.identifier] == nil {
+                            closestPlanes[targetPlane.identifier] = RaycastInfo(distance: distance, target: raycastResult.worldTransform.translation)
+                        } else if closestPlanes[targetPlane.identifier]!.distance < distance {
+                            print("new closest distance to \(targetPlane.identifier): \(distance)")
+                            closestPlanes[targetPlane.identifier] = RaycastInfo(distance: distance, target: raycastResult.worldTransform.translation)
+                        }
                     }
                 }
             }
+            
+            closestPlanes.forEach({
+                var targetPosition = $1.target
+                targetPosition.y += 0.2
+                drawLine(from: self.position, to: targetPosition)
+            })
         }
+    }
+    
+    func drawLine(from start: SIMD3<Float>, to end: SIMD3<Float>) {
+        let midPosition = SIMD3(
+            x:(start.x + end.x) / 2,
+            y:(start.y + end.y) / 2,
+            z:(start.z + end.z) / 2
+        )
+        
+        let anchor = AnchorEntity()
+        anchor.position = midPosition
+        anchor.look(at: start, from: midPosition, relativeTo: nil)
+        
+        let meters = simd_distance(start, end)
+        
+        let lineMaterial = UnlitMaterial.init(color: .red)
+        
+        let bottomLineMesh = MeshResource.generateBox(width:0.025,
+                                                      height: 0,
+                                                      depth: meters)
+        
+        let bottomLineEntity = ModelEntity(mesh: bottomLineMesh,
+                                           materials: [lineMaterial])
+        
+        bottomLineEntity.position = .init(0, 0.025, 0)
+        anchor.addChild(bottomLineEntity)
+        
+        // Add the anchor to the AR scene
+        arView?.scene.addAnchor(anchor)
     }
     
     internal func updateAlignment(for raycastResult: ARRaycastResult) {
@@ -204,4 +244,9 @@ extension FocusEntity {
         }
     }
 #endif
+}
+
+struct RaycastInfo {
+    let distance: Float
+    let target: SIMD3<Float>
 }
