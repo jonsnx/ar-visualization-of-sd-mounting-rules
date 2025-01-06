@@ -252,10 +252,52 @@
 - Implementierung einer FocusEntity und hinzufügen von UI-Elementen
 
 #### Datum: [2025-01-04]
+- "isSDPlaceable" implementiert -> ColorChange der FocusEntity
+- SmokeDetector als custom Entity implementiert
+- ActionManager zum handlen von ButtonPresses und zum Platzieren des SmokeDetectors implementiert
+
+#### Datum: [2025-01-05]
+- Erstellung eines RingIndicator-Meshes in Blender
+- Implementierung von 360°-Raycasts für die Abstandsmessung zu den umgebenden Wänden
+
+### Zusammenfassung der Woche
+- AR-Plane-Visualisierung: Weiterentwicklung und Fehlerbehebung bei Plane-Alignment, Rotation und Extent
+- Konzeptentwicklung: Anwendung von Regeln auf Messdaten, Recherche zu Matrix-Arithmetik und Design-Patterns
+- Framework und Refactoring: Einführung eines Frameworks für Plane-Manipulation, Multithreading für ARSession-Datenverarbeitung, Wechsel zu SwiftUI, Code-Optimierungen
+- Neue Features: Implementierung einer FocusEntity, UI-Elemente, ActionManager, und SmokeDetector als custom Entity
+- Raycasting und Mesh-Erstellung: Blender-Modellierung eines RingIndicators, Implementierung von 360°-Raycasts für Wandabstandsmessung
+
+---
+
+## Woche [2025-01-06] bis [2025-01-12]
+
+### Daily Protocol
+
+#### Datum: [2025-01-06]
+- Berechnung der Normalenvektoren der Target-Planes der Raycasts
+- Visualisierung der Abstände zu den Wänden mithilfe von Linien implementiert
+
+#### Datum: [2025-01-07]
 - [Task]
 - [Task]
 
-#### Datum: [2025-01-05]
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
+- [Task]
+- [Task]
+
+#### Datum: [YYYY-MM-DD]
 - [Task]
 - [Task]
 
