@@ -26,6 +26,9 @@ extension FocusEntity {
             SIMD3<Float>.zero, { $0 + $1 }
         ) / Float(recentFocusEntityPositions.count)
         self.position = average
+        if self.onPlane {
+            checkMinimumDistance(average)
+        }
     }
     
 #if canImport(ARKit)
@@ -35,10 +38,6 @@ extension FocusEntity {
         
         if state != .initializing {
             updateAlignment(for: raycastResult)
-        }
-        
-        if self.onPlane {
-            
         }
     }
     

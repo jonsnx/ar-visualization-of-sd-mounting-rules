@@ -16,7 +16,7 @@ public extension FocusEntity {
             return
         }
         var endColor: MaterialColorParameter
-        if self.onPlane {
+        if self.isPlaceable {
             endColor = customStyle.onColor
         } else {
             endColor = customStyle.offColor

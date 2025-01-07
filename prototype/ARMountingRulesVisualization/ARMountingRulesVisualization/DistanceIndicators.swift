@@ -24,12 +24,12 @@ class DistanceIndicators: Entity, HasModel, HasAnchoring {
             if  normalizedScalar > (1 - epsilon) || normalizedScalar < (-1 + epsilon) {
                 var targetPosition = data.result.worldTransform.translation
                 targetPosition.y += 0.2
-                addLineEntity(from: position, to: targetPosition)
+                addLineEntity(from: position, to: targetPosition, showDistanceLabel: true)
             }
         }
     }
     
-    private func addLineEntity(from start: SIMD3<Float>, to end: SIMD3<Float>) {
+    private func addLineEntity(from start: SIMD3<Float>, to end: SIMD3<Float>, showDistanceLabel: Bool = false) {
         let midPosition = SIMD3(
             x:(start.x + end.x) / 2,
             y:(start.y + end.y) / 2,
@@ -44,6 +44,16 @@ class DistanceIndicators: Entity, HasModel, HasAnchoring {
         let bottomLineEntity = ModelEntity(mesh: bottomLineMesh, materials: [lineMaterial])
         bottomLineEntity.position = .init(0, 0.025, 0)
         anchor.addChild(bottomLineEntity)
+        if showDistanceLabel {
+            let font = MeshResource.Font.systemFont(ofSize: 0.05)
+            let textMesh = MeshResource.generateText("\(String(format: "%.2f", meters))m", extrusionDepth: 0, font: font)
+            let textEntity = ModelEntity(mesh: textMesh, materials: [lineMaterial])
+            // TODDO: fix orientation of text
+            textEntity.transform.rotation *= simd_quatf(angle: 90.0 * .pi/180.0, axis: SIMD3<Float>(0, 1, 0))
+            textEntity.transform.rotation *= simd_quatf(angle: 90.0 * .pi/180.0, axis: SIMD3<Float>(1, 0, 0))
+            textEntity.position.x -= textEntity.visualBounds(relativeTo: nil).extents.x / 2
+            anchor.addChild(textEntity)
+        }
         self.lines.append(bottomLineEntity)
         self.addChild(anchor)
     }

@@ -5,17 +5,52 @@ struct ContentView: View {
         ZStack {
             ARViewContainer().edgesIgnoringSafeArea(.all)
             VStack {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        // TODO
+                    }){
+                        Image(systemName: "info.circle.fill")
+                            .imageScale(.large)
+                            .foregroundStyle(.white)
+                            .padding()
+                    }
+                }
                 Spacer()
-                Button(action: {
-                    ActionManager.shared.actionStream.send(.place3DModel)
-                }){
-                    Image(systemName: "plus")
-                        .font(.headline)
-                        .foregroundStyle(.black)
-                        .padding()
-                        .background(.white)
-                        .clipShape(Circle())
-                        .padding()
+                HStack {
+                    Button(action: {
+                        // TODO
+                    }){
+                        Image(systemName: "arrow.clockwise")
+                            .font(.headline)
+                            .foregroundStyle(.black)
+                            .padding()
+                            .background(.white)
+                            .clipShape(Circle())
+                            .padding()
+                    }
+                    Button(action: {
+                        ActionManager.shared.actionStream.send(.place3DModel)
+                    }){
+                        Image(systemName: "plus")
+                            .font(.headline)
+                            .foregroundStyle(.black)
+                            .padding()
+                            .background(.white)
+                            .clipShape(Circle())
+                            .padding()
+                    }
+                    Button(action: {
+                        // TODO
+                    }){
+                        Image(systemName: "trash")
+                            .font(.headline)
+                            .foregroundStyle(.black)
+                            .padding()
+                            .background(.white)
+                            .clipShape(Circle())
+                            .padding()
+                    }
                 }
             }
         }

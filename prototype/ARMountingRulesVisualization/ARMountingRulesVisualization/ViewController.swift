@@ -68,14 +68,14 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     func placeDetector() {
         guard let focusEntity = focusEntity else { return }
-        if !focusEntity.onPlane { return }
+        if !focusEntity.isPlaceable { return }
         let position = focusEntity.position
         if self.detector == nil && self.distanceIndicators == nil {
             self.detector = SmokeDetector(worldPosition: focusEntity.position)
             arView.scene.addAnchor(self.detector!)
             let raycastData = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
             self.distanceIndicators = DistanceIndicators(from: focusEntity.position, around: raycastData)
-            arView.scene.anchors.remove(self.distanceIndicators!)
+            arView.scene.addAnchor(self.distanceIndicators!)
             return
         }
         updateDistanceIndicators(position: position)
@@ -112,3 +112,14 @@ class ViewController: UIViewController, ARSessionDelegate {
             .store(in: &cancellables)
     }
 }
+
+// TODO:
+// [X] add UI-Elements (Buttons, Text, etc.)
+// [ ] Refactorings: remove unnecessary FocusEntity code; overhaul ARManager; general Architecture
+// [ ] think of concept for placed detector screen
+// [X] detect distance indicator touching walls
+// [ ] implement classification of windows and doors
+// [ ] implement distance indicator for windows and doors
+// [X] fix bug where distance indicators are not visible on first placement
+// [ ] reconsider mounting rules
+// [ ] add infos for various actions such as placedDetector, detectorNotPlaceable
