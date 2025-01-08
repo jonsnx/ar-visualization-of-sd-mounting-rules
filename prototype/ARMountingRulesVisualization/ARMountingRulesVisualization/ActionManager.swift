@@ -1,8 +1,8 @@
 import Combine
 
 enum Actions {
-    case place3DModel
-    case remove3DModel
+    case placeDetector
+    case removeDetector
 }
 
 class ActionManager {
