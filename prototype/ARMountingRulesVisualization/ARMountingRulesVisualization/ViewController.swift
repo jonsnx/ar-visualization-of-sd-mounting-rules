@@ -129,5 +129,5 @@ class ViewController: UIViewController, ARSessionDelegate {
 // [ ] implement partially indication of distance error
 // [ ] implement transition of scale animation for crosshair when moved to ceiling
 // [ ] implement reset
-// [ ] implement delete
+// [X] implement delete
 // [ ] implement info screen
