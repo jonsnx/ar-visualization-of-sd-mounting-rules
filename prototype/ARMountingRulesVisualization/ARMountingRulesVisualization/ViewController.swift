@@ -70,7 +70,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         guard let focusEntity = focusEntity else { return }
         if !focusEntity.isPlaceable { return }
         let position = focusEntity.position
-        if detector == nil && self.distanceIndicators == nil {
+        if detector == nil && distanceIndicators == nil {
             detector = SmokeDetector(worldPosition: focusEntity.position)
             arView.scene.addAnchor(detector!)
             let raycastData = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
@@ -83,9 +83,12 @@ class ViewController: UIViewController, ARSessionDelegate {
     }
     
     func removeDetector() {
-        guard let detector = self.detector else { return }
+        guard let detector = self.detector,
+        let distanceIndicators = self.distanceIndicators else { return }
         arView.scene.anchors.remove(detector)
         self.detector = nil
+        arView.scene.anchors.remove(distanceIndicators)
+        self.distanceIndicators = nil
     }
     
     func updateDistanceIndicators(position: SIMD3<Float>) {
