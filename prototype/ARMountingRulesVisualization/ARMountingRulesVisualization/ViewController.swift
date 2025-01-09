@@ -22,8 +22,8 @@ class ViewController: UIViewController, ARSessionDelegate {
         configuration.sceneReconstruction = .meshWithClassification
         arView.session.run(configuration)
         let focusEntityComponent: FocusEntityComponent = .init(
-            onColor: .color(.green),
-            offColor: .color(.red),
+            onColor: .green,
+            offColor: .red,
             mesh: .generateCylinder(height: 0.05, radius: 0.05)
         )
         focusEntity = .init(on: arView, focus: focusEntityComponent)

@@ -371,7 +371,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     ///
     /// - Parameter newPlane: If the entity is directly on a plane, is it a new plane to track
     public func stateChanged(newPlane: Bool = false) {
-        var endColor: MaterialColorParameter
+        var endColor: UIColor
         if self.isPlaceable {
             endColor = focus.onColor
         } else {
@@ -383,28 +383,12 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         if self.ringIndicatorEntity?.model?.materials.count == 0 {
             self.ringIndicatorEntity?.model?.materials = [SimpleMaterial()]
         }
-        var modelMaterial: Material!
-        if #available(iOS 15, macOS 12, *) {
-            switch endColor {
-            case .color(let uikitColour):
-                var mat = PhysicallyBasedMaterial()
-                mat.baseColor = .init(tint: .black.withAlphaComponent(uikitColour.cgColor.alpha))
-                mat.emissiveColor = .init(color: uikitColour)
-                mat.emissiveIntensity = 2
-                modelMaterial = mat
-            case .texture(let tex):
-                var mat = UnlitMaterial()
-                mat.color = .init(tint: .white.withAlphaComponent(0.9999), texture: .init(tex))
-                modelMaterial = mat
-            @unknown default: break
-            }
-        } else {
-            var mat = UnlitMaterial(color: .clear)
-            mat.baseColor = endColor
-            mat.tintColor = .white.withAlphaComponent(0.9999)
-            modelMaterial = mat
-        }
+        var modelMaterial = PhysicallyBasedMaterial()
+        modelMaterial.baseColor = .init(tint: endColor)
+        modelMaterial.emissiveColor = .init(color: endColor)
+        modelMaterial.emissiveIntensity = 2
         self.detectorEntity?.model?.materials[0] = modelMaterial
+        modelMaterial.blending = .transparent(opacity: 0.2)
         self.ringIndicatorEntity?.model?.materials[0] = modelMaterial
     }
     
