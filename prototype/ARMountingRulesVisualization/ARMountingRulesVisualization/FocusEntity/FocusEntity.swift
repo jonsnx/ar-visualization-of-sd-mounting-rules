@@ -161,7 +161,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     
 #if canImport(ARKit)
     fileprivate func entityOffPlane(_ raycastResult: ARRaycastResult, _ camera: ARCamera?) {
-        self.onCeiling = false
+        self.isOnCeiling = false
         displayOffPlane(for: raycastResult)
     }
 #endif
@@ -220,7 +220,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     }
     
     /// Whether FocusEntity is on a plane or not.
-    public internal(set) var onCeiling: Bool = false
+    public internal(set) var isOnCeiling: Bool = false
     /// Indicates if the square is currently being animated.
     public internal(set) var isAnimating = false
     /// Indicates if the square is currently changing its alignment.
@@ -299,7 +299,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     
     /// Displays the focus square parallel to the camera plane.
     private func displayAsBillboard() {
-        self.onCeiling = false
+        self.isOnCeiling = false
         self.isPlaceable = false
 #if canImport(ARKit)
         self.currentAlignment = .none
@@ -353,7 +353,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     private func entityOnPlane(
         for raycastResult: ARRaycastResult, planeAnchor: ARPlaneAnchor
     ) {
-        self.onCeiling = planeAnchor.classification == .ceiling
+        self.isOnCeiling = planeAnchor.classification == .ceiling
         self.stateChangedSetup(newPlane: !anchorsOfVisitedPlanes.contains(planeAnchor))
         anchorsOfVisitedPlanes.insert(planeAnchor)
         let position = raycastResult.worldTransform.translation

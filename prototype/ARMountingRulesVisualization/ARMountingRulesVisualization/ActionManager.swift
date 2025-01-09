@@ -3,6 +3,8 @@ import Combine
 enum Actions {
     case placeDetector
     case removeDetector
+    case showInfoText(text: String)
+    case hideInfoText
 }
 
 class ActionManager {

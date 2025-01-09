@@ -11,11 +11,21 @@ class ViewController: UIViewController, ARSessionDelegate {
     private var distanceIndicators: DistanceIndicators?
     private var showCeilingPlane: Bool = false
     
+    
+    var isOnCeiling: Bool {
+        return focusEntity?.isOnCeiling ?? false
+    }
+    
+    var isPlaceable: Bool {
+        return focusEntity?.isPlaceable ?? false
+    }
+    
     var arManager = ARManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         subscribeToActionStream()
+        subscribeToFocusEntity()
         setupARView()
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
@@ -99,6 +109,23 @@ class ViewController: UIViewController, ARSessionDelegate {
         arView.scene.addAnchor(self.distanceIndicators!)
     }
     
+    private func updateInfoCardText() {
+        if !isOnCeiling && !isPlaceable {
+            ActionManager.shared.actionStream.send(.showInfoText(text: "Point the camera to the ceiling!"))
+        } else if isOnCeiling && !isPlaceable {
+            ActionManager.shared.actionStream.send(.showInfoText(text: "Mounting of SmokeDetector is not possible here!"))
+        } else {
+            ActionManager.shared.actionStream.send(.hideInfoText)
+        }
+    }
+    
+    private func subscribeToFocusEntity() {
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateInfoCardText()
+        }
+    }
+    
     func subscribeToActionStream() {
         ActionManager.shared
             .actionStream
@@ -108,6 +135,8 @@ class ViewController: UIViewController, ARSessionDelegate {
                     self?.placeDetector()
                 case .removeDetector:
                     self?.removeDetector()
+                case .showInfoText, .hideInfoText:
+                    return
                 }
             }
             .store(in: &cancellables)

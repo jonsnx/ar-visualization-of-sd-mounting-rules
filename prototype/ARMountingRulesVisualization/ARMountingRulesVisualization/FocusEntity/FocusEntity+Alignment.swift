@@ -27,7 +27,7 @@ extension FocusEntity {
         ) / Float(recentFocusEntityPositions.count)
         self.position = average
         self.ringIndicatorEntity?.transform.scale = SIMD3<Float>(0.15, 0.15, 0.15)
-        if self.onCeiling {
+        if self.isOnCeiling {
             self.ringIndicatorEntity?.transform.scale = SIMD3<Float>(1, 1 , 1)
             checkMinimumDistance(average)
         }
