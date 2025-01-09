@@ -1,4 +1,5 @@
 import ARKit
+import RealityKit
 
 extension ARPlaneAnchor {
     func intersects(_ other: ARPlaneAnchor) -> Bool {
@@ -109,4 +110,15 @@ internal extension float4x4 {
     var orientation: simd_quatf {
         return simd_quaternion(self)
     }
+}
+
+extension ModelEntity {
+    func scaleAnimated(with value: SIMD3<Float>, duration: CGFloat) {
+        var scaleTransform = Transform()
+        scaleTransform.rotation = self.orientation
+        scaleTransform.scale = value
+        self.move(to: scaleTransform, relativeTo: self.parent, duration: duration)
+        
+    }
+    
 }

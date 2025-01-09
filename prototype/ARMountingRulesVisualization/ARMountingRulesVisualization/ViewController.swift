@@ -156,7 +156,7 @@ class ViewController: UIViewController, ARSessionDelegate {
 // [ ] reconsider mounting rules
 // [X] add infos for various actions such as placedDetector, detectorNotPlaceable
 // [ ] implement partially indication of distance error
-// [ ] implement transition of scale animation for crosshair when moved to ceiling
+// [X] implement transition of scale animation for crosshair when moved to ceiling
 // [ ] implement reset
 // [X] implement delete
 // [ ] implement info screen

@@ -26,10 +26,13 @@ extension FocusEntity {
             SIMD3<Float>.zero, { $0 + $1 }
         ) / Float(recentFocusEntityPositions.count)
         self.position = average
-        self.ringIndicatorEntity?.transform.scale = SIMD3<Float>(0.15, 0.15, 0.15)
         if self.isOnCeiling {
-            self.ringIndicatorEntity?.transform.scale = SIMD3<Float>(1, 1 , 1)
             checkMinimumDistance(average)
+        }
+        if self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(1.0, 1.0, 1.0) {
+            self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(1.0, 1.0, 1.0), duration: 0.5)
+        } else if !self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(0.12, 0.12, 0.12) {
+            self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(0.12, 0.12, 0.12), duration: 0.5)
         }
     }
     
