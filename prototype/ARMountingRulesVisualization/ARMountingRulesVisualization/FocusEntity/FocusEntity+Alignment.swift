@@ -26,7 +26,9 @@ extension FocusEntity {
             SIMD3<Float>.zero, { $0 + $1 }
         ) / Float(recentFocusEntityPositions.count)
         self.position = average
-        if self.onPlane {
+        self.ringIndicatorEntity?.transform.scale = SIMD3<Float>(0.15, 0.15, 0.15)
+        if self.onCeiling {
+            self.ringIndicatorEntity?.transform.scale = SIMD3<Float>(1, 1 , 1)
             checkMinimumDistance(average)
         }
     }
@@ -117,32 +119,6 @@ extension FocusEntity {
         let camDirection = camTransform.matrix.columns.2
         return (camTransform.translation, -[camDirection.x, camDirection.y, camDirection.z])
     }
-    
-#if canImport(ARKit)
-    /// - Parameters:
-    /// - Returns: ARRaycastResult if an existing plane geometry or an estimated plane are found, otherwise nil.
-    internal func smartRaycast(_ customPos: SIMD3<Float>? = nil, _ customDir: SIMD3<Float>? = nil) -> ARRaycastResult? {
-        // Perform the hit test.
-        guard let (camPos, camDir) = self.getCamVector() else {
-            return nil
-        }
-        let origin = customPos ?? camPos
-        let direction = customDir ?? camDir
-        for target in self.allowedRaycasts {
-            let rcQuery = ARRaycastQuery(
-                origin: origin, direction: direction,
-                allowing: target, alignment: .any
-            )
-            let results = self.arView?.session.raycast(rcQuery) ?? []
-            
-            // Check for a result matching target
-            if let result = results.first(
-                where: { $0.target == target }
-            ) { return result }
-        }
-        return nil
-    }
-#endif
     
     /// Uses interpolation between orientations to create a smooth `easeOut` orientation adjustment animation.
     internal func performAlignmentAnimation(to newOrientation: simd_quatf) {

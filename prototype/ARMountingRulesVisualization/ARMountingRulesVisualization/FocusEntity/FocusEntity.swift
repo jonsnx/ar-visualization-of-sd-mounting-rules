@@ -161,7 +161,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     
 #if canImport(ARKit)
     fileprivate func entityOffPlane(_ raycastResult: ARRaycastResult, _ camera: ARCamera?) {
-        self.onPlane = false
+        self.onCeiling = false
         displayOffPlane(for: raycastResult)
     }
 #endif
@@ -220,13 +220,12 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     }
     
     /// Whether FocusEntity is on a plane or not.
-    public internal(set) var onPlane: Bool = false
+    public internal(set) var onCeiling: Bool = false
     /// Indicates if the square is currently being animated.
     public internal(set) var isAnimating = false
     /// Indicates if the square is currently changing its alignment.
     public internal(set) var isChangingAlignment = false
     public internal(set) var isPlaceable = false
-    public internal(set) var isRaycasting = false
     
     /// A camera anchor used for placing the focus entity in front of the camera.
     internal var cameraAnchor: AnchorEntity!
@@ -254,21 +253,13 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     internal var recentFocusEntityPositions: [SIMD3<Float>] = []
     /// The primary node that controls the position of other `FocusEntity` nodes.
     internal let positioningEntity = Entity()
-    internal var fillPlane: ModelEntity?
-    internal var ringPlane: ModelEntity?
+    internal var detectorEntity: ModelEntity?
+    internal var ringIndicatorEntity: ModelEntity?
     
     /// Modify the scale of the FocusEntity to make it slightly bigger when further away.
     public var scaleEntityBasedOnDistance = true
     
     // MARK: - Initialization
-    
-    /// Create a new ``FocusEntity`` instance.
-    /// - Parameters:
-    ///   - arView: ARView containing the scene where the FocusEntity should be added.
-    ///   - style: Style of the ``FocusEntity``.
-    public convenience init(on arView: ARView, style: FocusEntityComponent.Style) {
-        self.init(on: arView, focus: FocusEntityComponent(style: style))
-    }
     
     /// Create a new ``FocusEntity`` instance using the full ``FocusEntityComponent`` object.
     /// - Parameters:
@@ -290,27 +281,14 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         self.delegate?.focusEntity(self, trackingUpdated: .initializing, oldState: nil)
         arView.scene.addAnchor(self)
         self.setAutoUpdate(to: true)
-        switch self.focus.style {
-        case .colored(_, _, _, let mesh):
-            let fillPlane = ModelEntity(mesh: mesh)
-            self.positioningEntity.addChild(fillPlane)
-            self.fillPlane = fillPlane
-            self.coloredStateChanged()
-        case .classic:
-            guard let classicStyle = self.focus.classicStyle
-            else { return }
-            self.setupClassic(classicStyle)
-        case .custom(_, _, let mesh):
-            if let ringPlane = try? ModelEntity.loadModel(named: "flat_ring") {
-                self.positioningEntity.addChild(ringPlane)
-                self.ringPlane = ringPlane
-            }
-            
-            let fillPlane = ModelEntity(mesh: mesh)
-            self.positioningEntity.addChild(fillPlane)
-            self.fillPlane = fillPlane
-            self.customStateChanged()
+        if let ringPlane = try? ModelEntity.loadModel(named: "flat_ring") {
+            self.positioningEntity.addChild(ringPlane)
+            self.ringIndicatorEntity = ringPlane
         }
+        let detectorEntity = ModelEntity(mesh: focus.mesh)
+        self.positioningEntity.addChild(detectorEntity)
+        self.detectorEntity = detectorEntity
+        self.stateChanged()
     }
     
     required public init() {
@@ -321,11 +299,11 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     
     /// Displays the focus square parallel to the camera plane.
     private func displayAsBillboard() {
-        self.onPlane = false
+        self.onCeiling = false
         self.isPlaceable = false
-        #if canImport(ARKit)
+#if canImport(ARKit)
         self.currentAlignment = .none
-        #endif
+#endif
         stateChangedSetup()
     }
     
@@ -342,7 +320,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         performAlignmentAnimation(to: newRotation)
     }
     
-    #if canImport(ARKit)
+#if canImport(ARKit)
     /// Called when a surface has been detected.
     private func displayOffPlane(for raycastResult: ARRaycastResult) {
         self.stateChangedSetup()
@@ -375,7 +353,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     private func entityOnPlane(
         for raycastResult: ARRaycastResult, planeAnchor: ARPlaneAnchor
     ) {
-        self.onPlane = planeAnchor.classification == .ceiling
+        self.onCeiling = planeAnchor.classification == .ceiling
         self.stateChangedSetup(newPlane: !anchorsOfVisitedPlanes.contains(planeAnchor))
         anchorsOfVisitedPlanes.insert(planeAnchor)
         let position = raycastResult.worldTransform.translation
@@ -387,22 +365,31 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         }
         updateTransform(raycastResult: raycastResult)
     }
-    #endif
+#endif
     
     /// Called whenever the state of the focus entity changes
     ///
     /// - Parameter newPlane: If the entity is directly on a plane, is it a new plane to track
     public func stateChanged(newPlane: Bool = false) {
-        switch self.focus.style {
-        case .colored:
-            self.coloredStateChanged()
-        case .custom:
-            self.customStateChanged()
-        case .classic:
-            if self.onPlane {
-                self.onPlaneAnimation(newPlane: newPlane)
-            } else { self.offPlaneAniation() }
+        var endColor: UIColor
+        if self.isPlaceable {
+            endColor = focus.onColor
+        } else {
+            endColor = focus.offColor
         }
+        if self.detectorEntity?.model?.materials.count == 0 {
+            self.detectorEntity?.model?.materials = [SimpleMaterial()]
+        }
+        if self.ringIndicatorEntity?.model?.materials.count == 0 {
+            self.ringIndicatorEntity?.model?.materials = [SimpleMaterial()]
+        }
+        var modelMaterial = PhysicallyBasedMaterial()
+        modelMaterial.baseColor = .init(tint: endColor)
+        modelMaterial.emissiveColor = .init(color: endColor)
+        modelMaterial.emissiveIntensity = 2
+        self.detectorEntity?.model?.materials[0] = modelMaterial
+        modelMaterial.blending = .transparent(opacity: 0.2)
+        self.ringIndicatorEntity?.model?.materials[0] = modelMaterial
     }
     
     private func stateChangedSetup(newPlane: Bool = false) {
@@ -410,12 +397,14 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         self.stateChanged(newPlane: newPlane)
     }
     
-    #if canImport(ARKit)
+#if canImport(ARKit)
     public func updateFocusEntity(event: SceneEvents.Update? = nil) {
         // Perform hit testing only when ARKit tracking is in a good state.
         guard let camera = self.arView?.session.currentFrame?.camera,
               case .normal = camera.trackingState,
-              let result = self.smartRaycast()
+              let (camPos, camDir) = self.getCamVector(),
+              let session = self.arView?.session,
+              let result = RaycastUtil.smartRaycast(in: session, from: camPos, to: camDir)
         else {
             // We should place the focus entity in front of the camera instead of on a plane.
             putInFrontOfCamera()
@@ -425,5 +414,5 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         
         self.state = .tracking(raycastResult: result, camera: camera)
     }
-    #endif
+#endif
 }
