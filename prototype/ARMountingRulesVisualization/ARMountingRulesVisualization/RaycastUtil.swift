@@ -25,7 +25,7 @@ class RaycastUtil {
         let numberOfRays = 30
         let angleIncrement: Float = 2 * Float.pi / Float(numberOfRays)
         var origin = position
-        origin.y -= 0.2
+        origin.y -= 0.5
         for i in 0..<numberOfRays {
             let angle = angleIncrement * Float(i)
             let direction = SIMD3<Float>(cos(angle), 0, sin(angle))

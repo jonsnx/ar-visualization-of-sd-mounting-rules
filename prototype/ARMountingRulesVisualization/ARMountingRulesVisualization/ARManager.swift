@@ -3,12 +3,13 @@ import ARKit
 actor ARManager {
     @MainActor var isProcessing = false
     @MainActor var sceneAnchors = [UUID : Plane]()
+    @MainActor var specialAnchors = [UUID : ARMeshAnchor]()
     
-    func process(anchors: [ARAnchor]) async -> ([Plane], [Plane]) {
+    func processPlaneAnchors(anchors: [ARAnchor]) async -> ([Plane], [Plane]) {
         var anchorsToBeAdded = [Plane]()
         var anchorsToBeRemoved = [Plane]()
         
-        let anchorsToProcess = getProcessableAnchors(anchors: anchors)
+        let anchorsToProcess = getProcessableData(anchors: anchors)
         
         if anchorsToProcess.isEmpty { return ([], []) }
         
@@ -42,15 +43,17 @@ actor ARManager {
         return (anchorsToBeAdded, anchorsToBeRemoved)
     }
     
-    private func getProcessableAnchors(anchors: [ARAnchor]) -> [ARPlaneAnchor] {
-        var anchorsToProcess = [ARPlaneAnchor]()
+    private func getProcessableData(anchors: [ARAnchor]) -> [ARPlaneAnchor] {
+        var planeAnchors = [ARPlaneAnchor]()
+        var meshAnchors = [ARMeshAnchor]()
+        
         for anchor in anchors {
             guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
             if planeAnchor.classification == .ceiling {
-                anchorsToProcess.append(planeAnchor)
+                planeAnchors.append(planeAnchor)
             }
         }
-        return anchorsToProcess
+        return planeAnchors
     }
     
     @MainActor

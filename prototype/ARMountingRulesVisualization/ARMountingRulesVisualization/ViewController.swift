@@ -45,7 +45,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         view.addSubview(arView)
         arView.environment.sceneUnderstanding.options = []
         arView.environment.sceneUnderstanding.options.insert(.physics)
-        //arView.environment.sceneUnderstanding.options.insert(.occlusion)
+        arView.environment.sceneUnderstanding.options.insert(.occlusion)
         arView.debugOptions.insert(.showSceneUnderstanding)
         arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur]
         arView.automaticallyConfigureSession = false
@@ -70,7 +70,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     func processAnchors(anchors: [ARAnchor]) async {
         if arManager.isProcessing { return }
         arManager.toggleIsProcessing()
-        let (addedAnchors, removedAnchors) = await arManager.process(anchors: anchors)
+        let (addedAnchors, removedAnchors) = await arManager.processPlaneAnchors(anchors: anchors)
         addedAnchors.forEach({ arView.scene.addAnchor($0) })
         removedAnchors.forEach({ arView.scene.anchors.remove($0) })
         arManager.toggleIsProcessing()
@@ -145,12 +145,13 @@ class ViewController: UIViewController, ARSessionDelegate {
 
 // TODO:
 // [X] add UI-Elements (Buttons, Text, etc.)
+// [ ] fix rotation of distance indicator text
 // [ ] overhaul ARManager
 // [ ] fix general Architecture
 // [X] remove unnecessary FocusEntity code
 // [ ] think of concept for placed detector screen
 // [X] detect distance indicator touching walls
-// [ ] implement classification of windows and doors
+// [X] implement classification of windows and doors
 // [ ] implement distance indicator for windows and doors
 // [X] fix bug where distance indicators are not visible on first placement
 // [ ] reconsider mounting rules
@@ -160,3 +161,4 @@ class ViewController: UIViewController, ARSessionDelegate {
 // [ ] implement reset
 // [X] implement delete
 // [ ] implement info screen
+// [ ] implement coaching overlay

@@ -23,7 +23,7 @@ class DistanceIndicators: Entity, HasModel, HasAnchoring {
             
             if  normalizedScalar > (1 - epsilon) || normalizedScalar < (-1 + epsilon) {
                 var targetPosition = data.result.worldTransform.translation
-                targetPosition.y += 0.2
+                targetPosition.y += 0.5
                 addLineEntity(from: position, to: targetPosition, showDistanceLabel: true)
             }
         }
