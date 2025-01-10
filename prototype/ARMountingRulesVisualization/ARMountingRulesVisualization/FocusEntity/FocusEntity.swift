@@ -36,12 +36,12 @@ public extension HasFocusEntity {
         get { self.focus.segments }
         set { self.focus.segments = newValue }
     }
-    #if canImport(ARKit)
+#if canImport(ARKit)
     var allowedRaycasts: [ARRaycastQuery.Target] {
         get { self.focus.allowedRaycasts }
         set { self.focus.allowedRaycasts = newValue }
     }
-    #endif
+#endif
 }
 
 public protocol FocusEntityDelegate: AnyObject {
@@ -49,12 +49,12 @@ public protocol FocusEntityDelegate: AnyObject {
     /// *Deprecated*: use ``focusEntity(_:trackingUpdated:oldState:)-4wx6e`` instead.
     @available(*, deprecated, message: "use focusEntity(_:trackingUpdated:oldState:) instead")
     func toTrackingState()
-
+    
     /// Called when the FocusEntity is tracking the camera
     /// *Deprecated*: use ``focusEntity(_:trackingUpdated:oldState:)-4wx6e`` instead.
     @available(*, deprecated, message: "use focusEntity(_:trackingUpdated:oldState:) instead")
     func toInitializingState()
-
+    
     /// When the tracking state of the FocusEntity updates. This will be called every update frame.
     /// - Parameters:
     ///   - focusEntity: FocusEntity object whose tracking state has changed.
@@ -65,7 +65,7 @@ public protocol FocusEntityDelegate: AnyObject {
         trackingUpdated trackingState: FocusEntity.State,
         oldState: FocusEntity.State?
     )
-
+    
     /// When the plane this focus entity is tracking changes. If the focus entity moves around within one plane anchor there will be no calls.
     /// - Parameters:
     ///   - focusEntity: FocusEntity object whose anchor has changed.
@@ -91,9 +91,9 @@ public extension FocusEntityDelegate {
  An `Entity` which is used to provide uses with visual cues about the status of ARKit world tracking.
  */
 open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
-
+    
     internal weak var arView: ARView?
-
+    
     /// For moving the FocusEntity to a whole new ARView
     /// - Parameter view: The destination `ARView`
     public func moveTo(view: ARView) {
@@ -105,7 +105,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
             self.setAutoUpdate(to: true)
         }
     }
-
+    
     /// Destroy this FocusEntity and its references to any ARViews
     /// Without calling this, your ARView could stay in memory.
     public func destroy() {
@@ -117,10 +117,10 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         }
         self.removeFromParent()
     }
-
+    
     private var updateCancellable: Cancellable?
     public private(set) var isAutoUpdating: Bool = false
-
+    
     /// Auto update the focus entity using `SceneEvents.Update`.
     /// - Parameter autoUpdate: Should update the entity or not.
     public func setAutoUpdate(to autoUpdate: Bool) {
@@ -129,55 +129,55 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         else { return }
         self.updateCancellable?.cancel()
         if autoUpdate {
-            #if canImport(ARKit)
+#if canImport(ARKit)
             self.updateCancellable = self.arView?.scene.subscribe(
                 to: SceneEvents.Update.self, self.updateFocusEntity
             )
-            #endif
+#endif
         }
         self.isAutoUpdating = autoUpdate
     }
     public weak var delegate: FocusEntityDelegate?
-
+    
     // MARK: - Types
     public enum State: Equatable {
         case initializing
-        #if canImport(ARKit)
+#if canImport(ARKit)
         case tracking(raycastResult: ARRaycastResult, camera: ARCamera?)
-        #endif
+#endif
     }
-
+    
     // MARK: - Properties
-
+    
     /// The most recent position of the focus square based on the current state.
     var lastPosition: SIMD3<Float>? {
         switch state {
         case .initializing: return nil
-        #if canImport(ARKit)
+#if canImport(ARKit)
         case .tracking(let raycastResult, _): return raycastResult.worldTransform.translation
-        #endif
+#endif
         }
     }
-
-    #if canImport(ARKit)
+    
+#if canImport(ARKit)
     fileprivate func entityOffPlane(_ raycastResult: ARRaycastResult, _ camera: ARCamera?) {
-        self.onPlane = false
+        self.isOnCeiling = false
         displayOffPlane(for: raycastResult)
     }
-    #endif
-
+#endif
+    
     /// Current state of ``FocusEntity``.
     public var state: State = .initializing {
         didSet {
             guard state != oldValue else { return }
-
+            
             switch state {
             case .initializing:
                 if oldValue != .initializing {
                     displayAsBillboard()
                     self.delegate?.focusEntity(self, trackingUpdated: state, oldState: oldValue)
                 }
-            #if canImport(ARKit)
+#if canImport(ARKit)
             case let .tracking(raycastResult, camera):
                 let stateChanged = oldValue == .initializing
                 if stateChanged && self.anchor != nil {
@@ -190,26 +190,26 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
                     entityOffPlane(raycastResult, camera)
                 }
                 // if self.scaleEntityBasedOnDistance,
-                   // let cameraTransform = self.arView?.cameraTransform {
-                    // self.scale = .one * scaleBasedOnDistance(cameraTransform: cameraTransform)
+                // let cameraTransform = self.arView?.cameraTransform {
+                // self.scale = .one * scaleBasedOnDistance(cameraTransform: cameraTransform)
                 // }
-
+                
                 defer { currentPlaneAnchor = planeAnchor }
                 if stateChanged {
                     self.delegate?.focusEntity(self, trackingUpdated: state, oldState: oldValue)
                 }
-            #endif
+#endif
             }
         }
     }
-
+    
     /**
-    Reduce visual size change with distance by scaling up when close and down when far away.
-
-    These adjustments result in a scale of 1.0x for a distance of 0.7 m or less
-    (estimated distance when looking at a table), and a scale of 1.2x
-    for a distance 1.5 m distance (estimated distance when looking at the floor).
-    */
+     Reduce visual size change with distance by scaling up when close and down when far away.
+     
+     These adjustments result in a scale of 1.0x for a distance of 0.7 m or less
+     (estimated distance when looking at a table), and a scale of 1.2x
+     for a distance 1.5 m distance (estimated distance when looking at the floor).
+     */
     private func scaleBasedOnDistance(cameraTransform: Transform) -> Float {
         let distanceFromCamera = simd_length(self.position(relativeTo: nil) - cameraTransform.translation)
         if distanceFromCamera < 0.7 {
@@ -218,21 +218,22 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
             return 0.25 * distanceFromCamera + 0.825
         }
     }
-
+    
     /// Whether FocusEntity is on a plane or not.
-    public internal(set) var onPlane: Bool = false
+    public internal(set) var isOnCeiling: Bool = false
     /// Indicates if the square is currently being animated.
     public internal(set) var isAnimating = false
     /// Indicates if the square is currently changing its alignment.
     public internal(set) var isChangingAlignment = false
-
+    public internal(set) var isPlaceable = false
+    
     /// A camera anchor used for placing the focus entity in front of the camera.
     internal var cameraAnchor: AnchorEntity!
-
-    #if canImport(ARKit)
+    
+#if canImport(ARKit)
     /// The focus square's current alignment.
     internal var currentAlignment: ARPlaneAnchor.Alignment?
-
+    
     /// The current plane anchor if the focus square is on a plane.
     public internal(set) var currentPlaneAnchor: ARPlaneAnchor? {
         didSet {
@@ -242,32 +243,24 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
             self.delegate?.focusEntity(self, planeChanged: currentPlaneAnchor, oldPlane: oldValue)
         }
     }
-
+    
     /// The focus square's most recent alignments.
     internal var recentFocusEntityAlignments: [ARPlaneAnchor.Alignment] = []
     /// Previously visited plane anchors.
     internal var anchorsOfVisitedPlanes: Set<ARAnchor> = []
-    #endif
+#endif
     /// The focus square's most recent positions.
     internal var recentFocusEntityPositions: [SIMD3<Float>] = []
     /// The primary node that controls the position of other `FocusEntity` nodes.
     internal let positioningEntity = Entity()
-    internal var fillPlane: ModelEntity?
-    internal var ringPlane: ModelEntity?
-
+    internal var detectorEntity: ModelEntity?
+    internal var ringIndicatorEntity: ModelEntity?
+    
     /// Modify the scale of the FocusEntity to make it slightly bigger when further away.
     public var scaleEntityBasedOnDistance = true
-
+    
     // MARK: - Initialization
-
-    /// Create a new ``FocusEntity`` instance.
-    /// - Parameters:
-    ///   - arView: ARView containing the scene where the FocusEntity should be added.
-    ///   - style: Style of the ``FocusEntity``.
-    public convenience init(on arView: ARView, style: FocusEntityComponent.Style) {
-        self.init(on: arView, focus: FocusEntityComponent(style: style))
-    }
-
+    
     /// Create a new ``FocusEntity`` instance using the full ``FocusEntityComponent`` object.
     /// - Parameters:
     ///   - arView: ARView containing the scene where the FocusEntity should be added.
@@ -279,53 +272,41 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         self.name = "FocusEntity"
         self.orientation = simd_quatf(angle: .pi / 2, axis: [1, 0, 0])
         self.addChild(self.positioningEntity)
-
+        
         cameraAnchor = AnchorEntity(.camera)
         arView.scene.addAnchor(cameraAnchor)
-
+        
         // Start the focus square as a billboard.
         displayAsBillboard()
         self.delegate?.focusEntity(self, trackingUpdated: .initializing, oldState: nil)
         arView.scene.addAnchor(self)
         self.setAutoUpdate(to: true)
-        switch self.focus.style {
-        case .colored(_, _, _, let mesh):
-            let fillPlane = ModelEntity(mesh: mesh)
-            self.positioningEntity.addChild(fillPlane)
-            self.fillPlane = fillPlane
-            self.coloredStateChanged()
-        case .classic:
-            guard let classicStyle = self.focus.classicStyle
-            else { return }
-            self.setupClassic(classicStyle)
-        case .custom(_, _, let mesh):
-            if let ringPlane = try? ModelEntity.loadModel(named: "flat_ring") {
-                self.positioningEntity.addChild(ringPlane)
-                self.ringPlane = ringPlane
-            }
-            
-            let fillPlane = ModelEntity(mesh: mesh)
-            self.positioningEntity.addChild(fillPlane)
-            self.fillPlane = fillPlane
-            self.customStateChanged()
+        if let ringPlane = try? ModelEntity.loadModel(named: "flat_ring") {
+            self.positioningEntity.addChild(ringPlane)
+            self.ringIndicatorEntity = ringPlane
         }
+        let detectorEntity = ModelEntity(mesh: focus.mesh)
+        self.positioningEntity.addChild(detectorEntity)
+        self.detectorEntity = detectorEntity
+        self.stateChanged()
     }
-
+    
     required public init() {
         fatalError("init() has not been implemented")
     }
-
+    
     // MARK: - Appearance
-
+    
     /// Displays the focus square parallel to the camera plane.
     private func displayAsBillboard() {
-        self.onPlane = false
-        #if canImport(ARKit)
+        self.isOnCeiling = false
+        self.isPlaceable = false
+#if canImport(ARKit)
         self.currentAlignment = .none
-        #endif
+#endif
         stateChangedSetup()
     }
-
+    
     /// Places the focus entity in front of the camera instead of on a plane.
     private func putInFrontOfCamera() {
         // Works better than arView.ray()
@@ -338,8 +319,8 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         newRotation *= simd_quatf(angle: .pi / 2, axis: [1, 0, 0])
         performAlignmentAnimation(to: newRotation)
     }
-
-    #if canImport(ARKit)
+    
+#if canImport(ARKit)
     /// Called when a surface has been detected.
     private func displayOffPlane(for raycastResult: ARRaycastResult) {
         self.stateChangedSetup()
@@ -353,12 +334,76 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         }
         updateTransform(raycastResult: raycastResult)
     }
-
+    
+    func checkMinimumDistance(_ position: SIMD3<Float>) {
+        if let session = arView?.session {
+            let raycastData: [RaycastData] = RaycastUtil.performRaycastsAroundYAxis(in: session, from: position, numberOfRaycasts: 9)
+            for data in raycastData {
+                nearbyFaceWithClassification(to: data.result.worldTransform.translation) { (centerOfFace, classification) in
+                    if classification == .window || classification == .door {
+                        self.isPlaceable = false
+                        return
+                    }
+                }
+                let targetPosition = data.result.worldTransform.translation
+                if simd_distance(position, targetPosition) <= 0.6 {
+                    self.isPlaceable = false
+                    return
+                }
+            }
+        }
+        
+        
+        self.isPlaceable = true
+    }
+    
+    func nearbyFaceWithClassification(to location: SIMD3<Float>, completionBlock: @escaping (SIMD3<Float>?, ARMeshClassification) -> Void) {
+        guard let currentFrame = arView?.session.currentFrame else {
+            completionBlock(nil, .none)
+            return
+        }
+        
+        var meshAnchors = currentFrame.anchors.compactMap({ $0 as? ARMeshAnchor })
+        
+        // Sort the mesh anchors by distance to the given location and filter out
+        // any anchors that are too far away (4 meters is a safe upper limit).
+        let cutoffDistance: Float = 4.0
+        meshAnchors.removeAll { distance($0.transform.translation, location) > cutoffDistance }
+        meshAnchors.sort { distance($0.transform.translation, location) < distance($1.transform.translation, location) }
+        
+        // Perform the search asynchronously in order not to stall rendering.
+        DispatchQueue.global().async {
+            for anchor in meshAnchors {
+                for index in 0..<anchor.geometry.faces.count {
+                    // Get the center of the face so that we can compare it to the given location.
+                    let geometricCenterOfFace = anchor.geometry.centerOf(faceWithIndex: index)
+                    
+                    // Convert the face's center to world coordinates.
+                    var centerLocalTransform = matrix_identity_float4x4
+                    centerLocalTransform.columns.3 = SIMD4<Float>(geometricCenterOfFace.0, geometricCenterOfFace.1, geometricCenterOfFace.2, 1)
+                    let centerWorldPosition = (anchor.transform * centerLocalTransform).translation
+                    
+                    // We're interested in a classification that is sufficiently close to the given location––within 5 cm.
+                    let distanceToFace = distance(centerWorldPosition, location)
+                    if distanceToFace <= 1.5 {
+                        // Get the semantic classification of the face and finish the search.
+                        let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
+                        completionBlock(centerWorldPosition, classification)
+                        return
+                    }
+                }
+            }
+            
+            // Let the completion block know that no result was found.
+            completionBlock(nil, .none)
+        }
+    }
+    
     /// Called when a plane has been detected.
     private func entityOnPlane(
         for raycastResult: ARRaycastResult, planeAnchor: ARPlaneAnchor
     ) {
-        self.onPlane = planeAnchor.classification == .ceiling
+        self.isOnCeiling = planeAnchor.classification == .ceiling
         self.stateChangedSetup(newPlane: !anchorsOfVisitedPlanes.contains(planeAnchor))
         anchorsOfVisitedPlanes.insert(planeAnchor)
         let position = raycastResult.worldTransform.translation
@@ -370,43 +415,54 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
         }
         updateTransform(raycastResult: raycastResult)
     }
-    #endif
-
+#endif
+    
     /// Called whenever the state of the focus entity changes
     ///
     /// - Parameter newPlane: If the entity is directly on a plane, is it a new plane to track
     public func stateChanged(newPlane: Bool = false) {
-        switch self.focus.style {
-        case .colored:
-            self.coloredStateChanged()
-        case .custom:
-            self.customStateChanged()
-        case .classic:
-            if self.onPlane {
-                self.onPlaneAnimation(newPlane: newPlane)
-            } else { self.offPlaneAniation() }
+        var endColor: UIColor
+        if self.isPlaceable {
+            endColor = focus.onColor
+        } else {
+            endColor = focus.offColor
         }
+        if self.detectorEntity?.model?.materials.count == 0 {
+            self.detectorEntity?.model?.materials = [SimpleMaterial()]
+        }
+        if self.ringIndicatorEntity?.model?.materials.count == 0 {
+            self.ringIndicatorEntity?.model?.materials = [SimpleMaterial()]
+        }
+        var modelMaterial = PhysicallyBasedMaterial()
+        modelMaterial.baseColor = .init(tint: endColor)
+        modelMaterial.emissiveColor = .init(color: endColor)
+        modelMaterial.emissiveIntensity = 2
+        self.detectorEntity?.model?.materials[0] = modelMaterial
+        modelMaterial.blending = .transparent(opacity: 0.2)
+        self.ringIndicatorEntity?.model?.materials[0] = modelMaterial
     }
-
+    
     private func stateChangedSetup(newPlane: Bool = false) {
         guard !isAnimating else { return }
         self.stateChanged(newPlane: newPlane)
     }
-
-    #if canImport(ARKit)
+    
+#if canImport(ARKit)
     public func updateFocusEntity(event: SceneEvents.Update? = nil) {
         // Perform hit testing only when ARKit tracking is in a good state.
         guard let camera = self.arView?.session.currentFrame?.camera,
               case .normal = camera.trackingState,
-              let result = self.smartRaycast()
+              let (camPos, camDir) = self.getCamVector(),
+              let session = self.arView?.session,
+              let result = RaycastUtil.smartRaycast(in: session, from: camPos, to: camDir)
         else {
             // We should place the focus entity in front of the camera instead of on a plane.
             putInFrontOfCamera()
             self.state = .initializing
             return
         }
-
+        
         self.state = .tracking(raycastResult: result, camera: camera)
     }
-    #endif
+#endif
 }

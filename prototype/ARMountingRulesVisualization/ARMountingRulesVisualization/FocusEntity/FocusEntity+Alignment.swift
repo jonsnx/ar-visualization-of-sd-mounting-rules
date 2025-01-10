@@ -26,6 +26,14 @@ extension FocusEntity {
             SIMD3<Float>.zero, { $0 + $1 }
         ) / Float(recentFocusEntityPositions.count)
         self.position = average
+        if self.isOnCeiling {
+            checkMinimumDistance(average)
+        }
+        if self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(1.0, 1.0, 1.0) {
+            self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(1.0, 1.0, 1.0), duration: 0.5)
+        } else if !self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(0.12, 0.12, 0.12) {
+            self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(0.12, 0.12, 0.12), duration: 0.5)
+        }
     }
     
 #if canImport(ARKit)
@@ -35,33 +43,6 @@ extension FocusEntity {
         
         if state != .initializing {
             updateAlignment(for: raycastResult)
-        }
-        
-        if self.onPlane {
-            var position = self.position
-            position.y -= 0.2 // Adjust position slightly downward
-            let raycastDistanceThreshold: Float = 0.6 // Distance threshold for blocking placement
-            let numberOfRays = 36 // Number of rays around 360 degrees
-            let angleIncrement = 2 * Float.pi / Float(numberOfRays) // 360 degrees divided by the number of rays
-
-            for i in 0..<numberOfRays {
-                let angle = angleIncrement * Float(i)
-                
-                // Create direction based on angle
-                let direction = SIMD3<Float>(cos(angle), 0, sin(angle)) // In XZ plane
-                
-                // Perform the raycast
-                if let raycastResult = self.smartRaycast(position, direction) {
-                    let distance = simd_distance(position, raycastResult.worldTransform.translation)
-                    print("Distance in direction \(direction): \(distance)")
-                    
-                    // If too close, we can't place the smoke detector
-                    if distance < raycastDistanceThreshold {
-                        self.onPlane = false
-                        print("SmokeDetector not placeable. Too close in direction \(direction).")
-                    }
-                }
-            }
         }
     }
     
@@ -142,32 +123,6 @@ extension FocusEntity {
         return (camTransform.translation, -[camDirection.x, camDirection.y, camDirection.z])
     }
     
-#if canImport(ARKit)
-    /// - Parameters:
-    /// - Returns: ARRaycastResult if an existing plane geometry or an estimated plane are found, otherwise nil.
-    internal func smartRaycast(_ customPos: SIMD3<Float>? = nil, _ customDir: SIMD3<Float>? = nil) -> ARRaycastResult? {
-        // Perform the hit test.
-        guard let (camPos, camDir) = self.getCamVector() else {
-            return nil
-        }
-        let origin = customPos ?? camPos
-        let direction = customDir ?? camDir
-        for target in self.allowedRaycasts {
-            let rcQuery = ARRaycastQuery(
-                origin: origin, direction: direction,
-                allowing: target, alignment: .any
-            )
-            let results = self.arView?.session.raycast(rcQuery) ?? []
-            
-            // Check for a result matching target
-            if let result = results.first(
-                where: { $0.target == target }
-            ) { return result }
-        }
-        return nil
-    }
-#endif
-    
     /// Uses interpolation between orientations to create a smooth `easeOut` orientation adjustment animation.
     internal func performAlignmentAnimation(to newOrientation: simd_quatf) {
         // Interpolate between current and target orientations.
@@ -204,4 +159,9 @@ extension FocusEntity {
         }
     }
 #endif
+}
+
+struct RaycastInfo {
+    let distance: Float
+    let target: SIMD3<Float>
 }
