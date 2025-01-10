@@ -278,26 +278,30 @@
 - Visualisierung der Abstände zu den Wänden mithilfe von Linien implementiert
 
 #### Datum: [2025-01-07]
+- Implementierung der isPlaceable-Logik
+- Implementierung eines Distance-Indicators-Labels für die Abstandsmessung
+
+#### Datum: [2025-01-08]
+- Modellierung eines RingSegment-Models in Blender
+- Refactors in der FocusEntity-Implementierung
+- Kleine Refactors und Bereinigung nicht mehr benötigter Codezeilen
+- Implementierung der Löschen-Funktion für SmokeDetectors
+- Versuch der Visualisierung von Kollision des RingIndicators mit Wänden partiell, farblich darzustellen
+
+#### Datum: [2025-01-09]
+- Weitere Versuche der Visualisierung von Kollision des RingIndicators mit Wänden
+- Implementierung einer Animation der FocusEntity beim Übergang des Zustands von isPlaceable
+- Kleine Refactors und Bereinigung nicht mehr benötigter Codezeilen
+- Kleine Änderungen des RingSegment-Models in Blender
+
+#### Datum: [2025-01-10]
+- Verwendung der Klassifizierung von Türen und Fenster für die Platzierung von SmokeDetectors
+
+#### Datum: [2025-01-11]
 - [Task]
 - [Task]
 
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
-
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
-
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
-
-#### Datum: [YYYY-MM-DD]
-- [Task]
-- [Task]
-
-#### Datum: [YYYY-MM-DD]
+#### Datum: [2025-01-12]
 - [Task]
 - [Task]
 
