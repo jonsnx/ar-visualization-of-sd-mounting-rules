@@ -4,3 +4,7 @@ struct MountingRules {
     static let minDistanceToObjects: Float = 0.6
     static let minDistanceToWindows: Float = 1
 }
+
+struct RaycastConstants {
+    static let raycastOffset: Float = 0.5
+}

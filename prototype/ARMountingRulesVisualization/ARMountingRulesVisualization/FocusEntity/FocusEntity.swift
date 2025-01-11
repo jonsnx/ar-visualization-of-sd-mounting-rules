@@ -255,6 +255,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     internal let positioningEntity = Entity()
     internal var detectorEntity: ModelEntity?
     internal var ringIndicatorEntity: ModelEntity?
+    internal var quarterRingEntity: ModelEntity?
     
     /// Modify the scale of the FocusEntity to make it slightly bigger when further away.
     public var scaleEntityBasedOnDistance = true
@@ -285,6 +286,9 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
             self.positioningEntity.addChild(ringPlane)
             self.ringIndicatorEntity = ringPlane
         }
+        if let quarterRing = try? ModelEntity.loadModel(named: "quarter_ring") {
+            self.quarterRingEntity = quarterRing
+        }
         let detectorEntity = ModelEntity(mesh: focus.mesh)
         self.positioningEntity.addChild(detectorEntity)
         self.detectorEntity = detectorEntity
@@ -309,6 +313,8 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     
     /// Places the focus entity in front of the camera instead of on a plane.
     private func putInFrontOfCamera() {
+        self.isOnCeiling = false
+        self.isPlaceable = false
         // Works better than arView.ray()
         let newPosition = cameraAnchor.convert(position: [0, 0, -1], to: nil)
         recentFocusEntityPositions.append(newPosition)
@@ -333,70 +339,6 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
             putInFrontOfCamera()
         }
         updateTransform(raycastResult: raycastResult)
-    }
-    
-    func checkMinimumDistance(_ position: SIMD3<Float>) {
-        if let session = arView?.session {
-            let raycastData: [RaycastData] = RaycastUtil.performRaycastsAroundYAxis(in: session, from: position, numberOfRaycasts: 9)
-            for data in raycastData {
-                nearbyFaceWithClassification(to: data.result.worldTransform.translation) { (centerOfFace, classification) in
-                    if classification == .window || classification == .door {
-                        self.isPlaceable = false
-                        return
-                    }
-                }
-                let targetPosition = data.result.worldTransform.translation
-                if simd_distance(position, targetPosition) <= 0.6 {
-                    self.isPlaceable = false
-                    return
-                }
-            }
-        }
-        
-        
-        self.isPlaceable = true
-    }
-    
-    func nearbyFaceWithClassification(to location: SIMD3<Float>, completionBlock: @escaping (SIMD3<Float>?, ARMeshClassification) -> Void) {
-        guard let currentFrame = arView?.session.currentFrame else {
-            completionBlock(nil, .none)
-            return
-        }
-        
-        var meshAnchors = currentFrame.anchors.compactMap({ $0 as? ARMeshAnchor })
-        
-        // Sort the mesh anchors by distance to the given location and filter out
-        // any anchors that are too far away (4 meters is a safe upper limit).
-        let cutoffDistance: Float = 4.0
-        meshAnchors.removeAll { distance($0.transform.translation, location) > cutoffDistance }
-        meshAnchors.sort { distance($0.transform.translation, location) < distance($1.transform.translation, location) }
-        
-        // Perform the search asynchronously in order not to stall rendering.
-        DispatchQueue.global().async {
-            for anchor in meshAnchors {
-                for index in 0..<anchor.geometry.faces.count {
-                    // Get the center of the face so that we can compare it to the given location.
-                    let geometricCenterOfFace = anchor.geometry.centerOf(faceWithIndex: index)
-                    
-                    // Convert the face's center to world coordinates.
-                    var centerLocalTransform = matrix_identity_float4x4
-                    centerLocalTransform.columns.3 = SIMD4<Float>(geometricCenterOfFace.0, geometricCenterOfFace.1, geometricCenterOfFace.2, 1)
-                    let centerWorldPosition = (anchor.transform * centerLocalTransform).translation
-                    
-                    // We're interested in a classification that is sufficiently close to the given location––within 5 cm.
-                    let distanceToFace = distance(centerWorldPosition, location)
-                    if distanceToFace <= 1.5 {
-                        // Get the semantic classification of the face and finish the search.
-                        let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
-                        completionBlock(centerWorldPosition, classification)
-                        return
-                    }
-                }
-            }
-            
-            // Let the completion block know that no result was found.
-            completionBlock(nil, .none)
-        }
     }
     
     /// Called when a plane has been detected.

@@ -4,6 +4,14 @@ actor ARManager {
     @MainActor var isProcessing = false
     @MainActor var sceneAnchors = [UUID : Plane]()
     @MainActor var specialAnchors = [UUID : ARMeshAnchor]()
+    var focusEntity: FocusEntity? = nil
+    
+    init() {
+    }
+    
+    init(focusEntity: FocusEntity) {
+        self.focusEntity = focusEntity
+    }
     
     func processPlaneAnchors(anchors: [ARAnchor]) async -> ([Plane], [Plane]) {
         var anchorsToBeAdded = [Plane]()
@@ -45,8 +53,6 @@ actor ARManager {
     
     private func getProcessableData(anchors: [ARAnchor]) -> [ARPlaneAnchor] {
         var planeAnchors = [ARPlaneAnchor]()
-        var meshAnchors = [ARMeshAnchor]()
-        
         for anchor in anchors {
             guard let planeAnchor = anchor as? ARPlaneAnchor else { continue }
             if planeAnchor.classification == .ceiling {
