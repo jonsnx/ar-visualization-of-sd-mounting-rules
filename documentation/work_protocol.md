@@ -302,8 +302,7 @@
 - Restrukturierung des Codes um eine saubere Architektur zu gewährleisten
 
 #### Datum: [2025-01-12]
-- [Task]
-- [Task]
+- Bugfixing: Asynchronität führt zu ungewolltem Verhalten
 
 ### Zusammenfassung der Woche
 - [Task]
