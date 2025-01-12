@@ -29,10 +29,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         subscribeToActionStream()
         subscribeToFocusEntity()
         setupARView()
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal, .vertical]
-        configuration.sceneReconstruction = .meshWithClassification
-        arView.session.run(configuration)
+        arView.session.run(WorldTrackingConfiguration.instance.config)
         let focusEntityComponent: FocusEntityComponent = .init(
             onColor: .green,
             offColor: .red,
