@@ -298,8 +298,8 @@
 - Verwendung der Klassifizierung von Türen und Fenster für die Platzierung von SmokeDetectors
 
 #### Datum: [2025-01-11]
-- [Task]
-- [Task]
+- Beginn der Implementierung eines Distance-Indicators für die Abstandsmessung zu Türen und Fenstern
+- Restrukturierung des Codes um eine saubere Architektur zu gewährleisten
 
 #### Datum: [2025-01-12]
 - [Task]
