@@ -20,7 +20,7 @@ class RaycastUtil {
         return nil
     }
     
-    static func performRaycastsAroundYAxis(in session: ARSession, from position: SIMD3<Float>, numberOfRaycasts: Int) -> [RaycastData] {
+    static func performRaycastsAroundYAxis(in session: ARSession, from position: SIMD3<Float>, numberOfRaycasts: Int) async -> [RaycastData] {
         var results: [RaycastData] = []
         let numberOfRays = 30
         let angleIncrement: Float = 2 * Float.pi / Float(numberOfRays)

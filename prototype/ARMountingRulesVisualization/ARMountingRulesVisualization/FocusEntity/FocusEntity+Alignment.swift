@@ -26,73 +26,10 @@ extension FocusEntity {
             SIMD3<Float>.zero, { $0 + $1 }
         ) / Float(recentFocusEntityPositions.count)
         self.position = average
-        if self.isOnCeiling {
-            Task {
-                await checkSurroundings(average)
-            }
-        }
         if self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(1.0, 1.0, 1.0) {
             self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(1.0, 1.0, 1.0), duration: 0.5)
         } else if !self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(0.12, 0.12, 0.12) {
             self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(0.12, 0.12, 0.12), duration: 0.5)
-        }
-    }
-    
-    func checkSurroundings(_ position: SIMD3<Float>) async {
-        if let session = arView?.session {
-            let raycastData: [RaycastData] = RaycastUtil.performRaycastsAroundYAxis(in: session, from: position, numberOfRaycasts: 9)
-            for data in raycastData {
-                let targetPosition = data.result.worldTransform.translation
-                if simd_distance(position, targetPosition) <= 0.6 {
-                    self.isPlaceable = false
-                    return
-                }
-                await checkForWindowsAndDoors(to: targetPosition)
-            }
-        }
-        self.isPlaceable = true
-    }
-    
-    func checkForWindowsAndDoors(to location: SIMD3<Float>) async {
-        guard let currentFrame = arView?.session.currentFrame else {
-            return
-        }
-        
-        var meshAnchors = currentFrame.anchors.compactMap({ $0 as? ARMeshAnchor })
-        
-        // Sort the mesh anchors by distance to the given location and filter out
-        // any anchors that are too far away (4 meters is a safe upper limit).
-        let cutoffDistance: Float = 4.0
-        meshAnchors.removeAll { distance($0.transform.translation, location) > cutoffDistance }
-        meshAnchors.sort { distance($0.transform.translation, location) < distance($1.transform.translation, location) }
-        
-        for anchor in meshAnchors {
-            for index in 0..<anchor.geometry.faces.count {
-                // Get the center of the face so that we can compare it to the given location.
-                let geometricCenterOfFace = anchor.geometry.centerOf(faceWithIndex: index)
-                
-                // Convert the face's center to world coordinates.
-                var centerLocalTransform = matrix_identity_float4x4
-                centerLocalTransform.columns.3 = SIMD4<Float>(geometricCenterOfFace.0, geometricCenterOfFace.1, geometricCenterOfFace.2, 1)
-                let centerWorldPosition = (anchor.transform * centerLocalTransform).translation
-                
-                // We're interested in a classification that is sufficiently close to the given location––within 5 cm.
-                let distanceToFace = distance(centerWorldPosition, location)
-                if distanceToFace <= 1.5 {
-                    // Get the semantic classification of the face and finish the search.
-                    let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
-                    if classification == .window || classification == .door {
-                        if quarterRingEntity != nil {
-                            self.positioningEntity.anchor?.removeChild(quarterRingEntity!)
-                            self.positioningEntity.anchor?.addChild(quarterRingEntity!)
-                        } else {
-                            fatalError("quarterRingEntity is nil")
-                        }
-                        self.isPlaceable = false
-                        return
-                    }
-                }
-            }
         }
     }
     
@@ -175,14 +112,6 @@ extension FocusEntity {
             }
         }
         return normalized
-    }
-    
-    internal func getCamVector() -> (position: SIMD3<Float>, direciton: SIMD3<Float>)? {
-        guard let camTransform = self.arView?.cameraTransform else {
-            return nil
-        }
-        let camDirection = camTransform.matrix.columns.2
-        return (camTransform.translation, -[camDirection.x, camDirection.y, camDirection.z])
     }
     
     /// Uses interpolation between orientations to create a smooth `easeOut` orientation adjustment animation.

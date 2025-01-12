@@ -6,10 +6,12 @@ import Combine
 class ViewController: UIViewController, ARSessionDelegate {
     private var focusEntity: FocusEntity!
     private var arView: ARView!
-    private var cancellables: Set<AnyCancellable> = []
+    private var actionCancellables: Set<AnyCancellable> = []
+    private var updateCancellable: (any Cancellable)?
     private var detector: SmokeDetector?
     private var distanceIndicators: DistanceIndicators?
     private var showCeilingPlane: Bool = false
+    private var currentSurroundings = [RaycastData]()
     
     
     var isOnCeiling: Bool {
@@ -36,7 +38,15 @@ class ViewController: UIViewController, ARSessionDelegate {
             offColor: .red,
             mesh: .generateCylinder(height: 0.05, radius: 0.05)
         )
-        focusEntity = .init(on: arView, focus: focusEntityComponent)
+        let cameraAnchor = AnchorEntity(.camera)
+        arView.scene.addAnchor(cameraAnchor)
+        focusEntity = .init(focus: focusEntityComponent, cameraAnchor: cameraAnchor, getCurrentCameraRotation: {
+            return self.arView.cameraTransform.rotation
+        })
+        arView.scene.addAnchor(focusEntity)
+        self.updateCancellable = arView.scene.subscribe(
+            to: SceneEvents.Update.self, self.processFrame
+        )
     }
     
     fileprivate func setupARView() {
@@ -52,60 +62,98 @@ class ViewController: UIViewController, ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-        if showCeilingPlane {
-            Task {
-                await processAnchors(anchors: anchors)
-            }
+        Task {
+            await processAnchors(anchors)
         }
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        if showCeilingPlane {
-            Task {
-                await processAnchors(anchors: anchors)
-            }
+        Task {
+            await processAnchors(anchors)
         }
     }
     
-    func processAnchors(anchors: [ARAnchor]) async {
-        if arManager.isProcessing { return }
-        arManager.toggleIsProcessing()
-        let (addedAnchors, removedAnchors) = await arManager.processPlaneAnchors(anchors: anchors)
-        addedAnchors.forEach({ arView.scene.addAnchor($0) })
-        removedAnchors.forEach({ arView.scene.anchors.remove($0) })
-        arManager.toggleIsProcessing()
+    public func updateFocusEntity() {
+        guard let camera = self.arView?.session.currentFrame?.camera,
+              case .normal = camera.trackingState,
+              let (camPos, camDir) = self.getCamVector(),
+              let session = self.arView?.session,
+              let result = RaycastUtil.smartRaycast(in: session, from: camPos, to: camDir)
+        else {
+            focusEntity.putInFrontOfCamera()
+            focusEntity.state = .initializing
+            return
+        }
+        focusEntity.state = .tracking(raycastResult: result, camera: camera)
+    }
+    
+    func getCamVector() -> (position: SIMD3<Float>, direciton: SIMD3<Float>)? {
+        let camTransform = self.arView.cameraTransform
+        let camDirection = camTransform.matrix.columns.2
+        return (camTransform.translation, -[camDirection.x, camDirection.y, camDirection.z])
+    }
+    
+    func processAnchors(_ anchors: [ARAnchor]) async {
+        if !arManager.isProcessingAnchors && showCeilingPlane {
+            arManager.toggleIsProcessingAnchors()
+            let (addedAnchors, removedAnchors) = await arManager.processAnchors(anchors: anchors)
+            addedAnchors.forEach({ arView.scene.addAnchor($0) })
+            removedAnchors.forEach({ arView.scene.anchors.remove($0) })
+            arManager.toggleIsProcessingAnchors()
+        }
+    }
+    
+    func processFrame(event: SceneEvents.Update? = nil) {
+        print("In processFrame now...")
+        updateFocusEntity()
+        Task {
+            print("Executing Task now...")
+            self.currentSurroundings = await RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: focusEntity.position, numberOfRaycasts: 30)
+            if !arManager.isProcessingFrame && focusEntity.isOnCeiling {
+                arManager.toggleIsProcessingFrame()
+                focusEntity.isPlaceable = await arManager.isPlaceable(at: focusEntity.position, for: self.currentSurroundings, with: arView.session.currentFrame)
+                print("isPlaceable was called: isPlaceable now \(focusEntity.isPlaceable)")
+                arManager.toggleIsProcessingFrame()
+            }
+        }
     }
     
     func placeDetector() {
         guard let focusEntity = focusEntity else { return }
         if !focusEntity.isPlaceable { return }
         let position = focusEntity.position
-        if detector == nil && distanceIndicators == nil {
-            detector = SmokeDetector(worldPosition: focusEntity.position)
-            arView.scene.addAnchor(detector!)
-            let raycastData = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
-            distanceIndicators = DistanceIndicators(from: focusEntity.position, around: raycastData)
-            arView.scene.addAnchor(distanceIndicators!)
-            return
+        Task {
+            if detector == nil && distanceIndicators == nil {
+                detector = SmokeDetector(worldPosition: focusEntity.position)
+                arView.scene.addAnchor(detector!)
+                if self.currentSurroundings.isEmpty {
+                    self.currentSurroundings = await RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
+                }
+                distanceIndicators = DistanceIndicators(from: focusEntity.position, around: self.currentSurroundings)
+                arView.scene.addAnchor(distanceIndicators!)
+                return
+            }
+            await updateDistanceIndicators(position: position)
+            detector?.moveTo(worldPosition: focusEntity.position)
         }
-        updateDistanceIndicators(position: position)
-        detector?.moveTo(worldPosition: focusEntity.position)
     }
     
     func removeDetector() {
         guard let detector = self.detector,
-        let distanceIndicators = self.distanceIndicators else { return }
+              let distanceIndicators = self.distanceIndicators else { return }
         arView.scene.anchors.remove(detector)
         self.detector = nil
         arView.scene.anchors.remove(distanceIndicators)
         self.distanceIndicators = nil
     }
     
-    func updateDistanceIndicators(position: SIMD3<Float>) {
+    func updateDistanceIndicators(position: SIMD3<Float>) async {
         guard let distanceIndicators = self.distanceIndicators else { return }
         arView.scene.anchors.remove(distanceIndicators)
-        let raycastData = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
-        self.distanceIndicators = DistanceIndicators(from: focusEntity.position, around: raycastData)
+        if self.currentSurroundings.isEmpty {
+            self.currentSurroundings = await RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
+        }
+        self.distanceIndicators = DistanceIndicators(from: focusEntity.position, around: self.currentSurroundings)
         arView.scene.addAnchor(self.distanceIndicators!)
     }
     
@@ -139,7 +187,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                     return
                 }
             }
-            .store(in: &cancellables)
+            .store(in: &actionCancellables)
     }
 }
 
