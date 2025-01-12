@@ -20,6 +20,7 @@ actor ARManager {
     
     @MainActor
     func toggleIsProcessingFrame() {
+        print("toggled isProcessingFrame")
         self.isProcessingFrame = !self.isProcessingFrame
     }
     
@@ -78,7 +79,7 @@ actor ARManager {
                     return false
                 }
                 if frame != nil {
-                    return await !isTooCloseToWindowOrDoor(for: frame!, to: targetPosition)
+                    // return await !isTooCloseToWindowOrDoor(for: frame!, to: targetPosition)
                 }
             }
         return true

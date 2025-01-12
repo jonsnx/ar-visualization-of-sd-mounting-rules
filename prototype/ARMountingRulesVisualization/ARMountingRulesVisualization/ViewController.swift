@@ -13,15 +13,6 @@ class ViewController: UIViewController, ARSessionDelegate {
     private var showCeilingPlane: Bool = false
     private var currentSurroundings = [RaycastData]()
     
-    
-    var isOnCeiling: Bool {
-        return focusEntity?.isOnCeiling ?? false
-    }
-    
-    var isPlaceable: Bool {
-        return focusEntity?.isPlaceable ?? false
-    }
-    
     var arManager = ARManager()
     
     override func viewDidLoad() {
@@ -101,18 +92,22 @@ class ViewController: UIViewController, ARSessionDelegate {
     }
     
     func processFrame(event: SceneEvents.Update? = nil) {
-        print("In processFrame now...")
-        updateFocusEntity()
-        Task {
-            print("Executing Task now...")
-            self.currentSurroundings = await RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: focusEntity.position, numberOfRaycasts: 30)
-            if !arManager.isProcessingFrame && focusEntity.isOnCeiling {
-                arManager.toggleIsProcessingFrame()
-                focusEntity.isPlaceable = await arManager.isPlaceable(at: focusEntity.position, for: self.currentSurroundings, with: arView.session.currentFrame)
-                print("isPlaceable was called: isPlaceable now \(focusEntity.isPlaceable)")
-                arManager.toggleIsProcessingFrame()
+        print("processFrame called")
+        if focusEntity.isOnCeiling {
+            if !arManager.isProcessingFrame {
+                Task {
+                    print("In Task now...")
+                    arManager.toggleIsProcessingFrame()
+                    self.currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: focusEntity.position, numberOfRaycasts: 30)
+                    focusEntity.isPlaceable = await arManager.isPlaceable(at: focusEntity.position, for: self.currentSurroundings)
+                    arManager.toggleIsProcessingFrame()
+                }
             }
+        } else {
+            focusEntity.isPlaceable = false
         }
+        updateFocusEntity()
+        print("processFrame finished")
     }
     
     func placeDetector() {
@@ -124,7 +119,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                 detector = SmokeDetector(worldPosition: focusEntity.position)
                 arView.scene.addAnchor(detector!)
                 if self.currentSurroundings.isEmpty {
-                    self.currentSurroundings = await RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
+                    self.currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
                 }
                 distanceIndicators = DistanceIndicators(from: focusEntity.position, around: self.currentSurroundings)
                 arView.scene.addAnchor(distanceIndicators!)
@@ -148,16 +143,16 @@ class ViewController: UIViewController, ARSessionDelegate {
         guard let distanceIndicators = self.distanceIndicators else { return }
         arView.scene.anchors.remove(distanceIndicators)
         if self.currentSurroundings.isEmpty {
-            self.currentSurroundings = await RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
+            self.currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
         }
         self.distanceIndicators = DistanceIndicators(from: focusEntity.position, around: self.currentSurroundings)
         arView.scene.addAnchor(self.distanceIndicators!)
     }
     
     private func updateInfoCardText() {
-        if !isOnCeiling && !isPlaceable {
+        if !focusEntity.isOnCeiling && !focusEntity.isPlaceable {
             ActionManager.shared.actionStream.send(.showInfoText(text: "Point the camera to the ceiling!"))
-        } else if isOnCeiling && !isPlaceable {
+        } else if focusEntity.isOnCeiling && !focusEntity.isPlaceable {
             ActionManager.shared.actionStream.send(.showInfoText(text: "Mounting of SmokeDetector is not possible here!"))
         } else {
             ActionManager.shared.actionStream.send(.hideInfoText)

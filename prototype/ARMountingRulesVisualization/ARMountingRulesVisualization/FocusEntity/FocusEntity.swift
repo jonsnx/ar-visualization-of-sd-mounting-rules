@@ -169,6 +169,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     public internal(set) var isAnimating = false
     /// Indicates if the square is currently changing its alignment.
     public internal(set) var isChangingAlignment = false
+    
     public var isPlaceable = false
     
     /// A camera anchor used for placing the focus entity in front of the camera.
@@ -242,7 +243,6 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     /// Displays the focus square parallel to the camera plane.
     private func displayAsBillboard() {
         self.isOnCeiling = false
-        self.isPlaceable = false
         self.currentAlignment = .none
         stateChangedSetup()
     }
@@ -250,7 +250,6 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     /// Places the focus entity in front of the camera instead of on a plane.
     func putInFrontOfCamera() {
         self.isOnCeiling = false
-        self.isPlaceable = false
         // Works better than arView.ray()
         guard let newPosition = cameraAnchor?.convert(position: [0, 0, -1], to: nil) else { fatalError("cameraAnchor is nil!") }
         recentFocusEntityPositions.append(newPosition)
@@ -298,7 +297,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     /// - Parameter newPlane: If the entity is directly on a plane, is it a new plane to track
     public func stateChanged(newPlane: Bool = false) {
         var endColor: UIColor
-        if self.isPlaceable {
+        if self.isOnCeiling && self.isPlaceable {
             endColor = focus.onColor
         } else {
             endColor = focus.offColor
