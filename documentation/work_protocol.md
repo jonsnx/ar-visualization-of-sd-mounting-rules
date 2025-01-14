@@ -305,8 +305,15 @@
 - Bugfixing: Asynchronität führt zu ungewolltem Verhalten
 
 ### Zusammenfassung der Woche
-- [Task]
-- [Task]
+- Berechnung der Normalenvektoren der Target-Planes der Raycasts
+- Visualisierung der Abstände zu Wänden mithilfe von Linien bei der Platzierung des Rauchmelders
+- Versuch der Visualisierung von Kollision des RingIndicators mit Wänden, farbliche Darstellung in Arbeit
+- Implementierung der isPlaceable-Logik sowie einer Animation für den Übergang des Zustands von isPlaceable
+- Erstellung und Optimierung eines RingSegment-Models in Blender
+- Implementierung der Löschen-Funktion für platzierte Rauchmelder
+- Verwendung von Tür- und Fensterklassifizierung für die Überprüfung einer validen Platzierung von Rauchmeldern
+- Bereinigung nicht mehr benötigter Codezeilen und Restrukturierung des Codes für eine saubere Architektur
+- Behebung eines Asynchronitätsproblems, das zu ungewolltem Verhalten führte (andauernd)
 
 ---
 
