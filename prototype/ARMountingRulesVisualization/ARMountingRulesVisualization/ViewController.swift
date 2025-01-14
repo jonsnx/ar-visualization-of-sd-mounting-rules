@@ -98,7 +98,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                 Task {
                     print("In Task now...")
                     arManager.toggleIsProcessingFrame()
-                    self.currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: focusEntity.position, numberOfRaycasts: 30)
+                    self.currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: focusEntity.position, numberOfRaycasts: RaycastConstants.numberOfRaycasts)
                     focusEntity.isPlaceable = await arManager.isPlaceable(at: focusEntity.position, for: self.currentSurroundings)
                     arManager.toggleIsProcessingFrame()
                 }
