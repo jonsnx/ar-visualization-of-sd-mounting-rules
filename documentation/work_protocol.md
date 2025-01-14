@@ -317,6 +317,44 @@
 
 ---
 
+## Woche [2025-01-13] bis [2025-01-19]
+
+### Daily Protocol
+
+#### Datum: [2025-01-13]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-14]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-15]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-16]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-17]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-18]
+- [Task]
+- [Task]
+
+#### Datum: [2025-01-19]
+- [Task]
+- [Task]
+
+### Zusammenfassung der Woche
+- [Task]
+- [Task]
+
+---
+
 ## Woche [YYYY-MM-DD] bis [YYYY-MM-DD]
 
 ### Daily Protocol
