@@ -4,7 +4,6 @@ actor ARManager {
     @MainActor var isProcessingAnchors = false
     @MainActor var isProcessingFrame = false
     @MainActor var sceneAnchors = [UUID : Plane]()
-    @MainActor var specialAnchors = [UUID : ARMeshAnchor]()
     
     @MainActor
     private func createPlaneEntity(for planeAnchor: ARPlaneAnchor) -> Plane {
@@ -75,39 +74,32 @@ actor ARManager {
     func isPlaceable(at position: SIMD3<Float>, for raycastData: [RaycastData], with frame: ARFrame? = nil) async -> Bool {
             for data in raycastData {
                 let targetPosition = data.result.worldTransform.translation
-                if simd_distance(position, targetPosition) <= 0.6 {
+                let distance: Float = simd_distance(position, targetPosition)
+                print("Distance for \(targetPosition) from \(position): \(distance)")
+                if distance <= 0.6 {
                     return false
                 }
                 if frame != nil {
-                    // return await !isTooCloseToWindowOrDoor(for: frame!, to: targetPosition)
+                    return await !isTooCloseToWindowOrDoor(for: frame!, from: position)
                 }
             }
         return true
     }
     
-    func isTooCloseToWindowOrDoor(for frame: ARFrame, to location: SIMD3<Float>) async -> Bool {
+    func isTooCloseToWindowOrDoor(for frame: ARFrame, from position: SIMD3<Float>) async -> Bool {
         var meshAnchors = frame.anchors.compactMap({ $0 as? ARMeshAnchor })
-        // Sort the mesh anchors by distance to the given location and filter out
-        // any anchors that are too far away (4 meters is a safe upper limit).
         let cutoffDistance: Float = 1.5
-        meshAnchors.removeAll { distance($0.transform.translation, location) > cutoffDistance }
-        meshAnchors.sort { distance($0.transform.translation, location) < distance($1.transform.translation, location) }
+        meshAnchors.removeAll { distance($0.transform.translation, position) > cutoffDistance }
         for anchor in meshAnchors {
             for index in 0..<anchor.geometry.faces.count {
-                // Get the center of the face so that we can compare it to the given location.
-                let geometricCenterOfFace = anchor.geometry.centerOf(faceWithIndex: index)
-                
-                // Convert the face's center to world coordinates.
-                var centerLocalTransform = matrix_identity_float4x4
-                centerLocalTransform.columns.3 = SIMD4<Float>(geometricCenterOfFace.0, geometricCenterOfFace.1, geometricCenterOfFace.2, 1)
-                let centerWorldPosition = (anchor.transform * centerLocalTransform).translation
-                
-                // We're interested in a classification that is sufficiently close to the given location––within 5 cm.
-                let distanceToFace = distance(centerWorldPosition, location)
-                if distanceToFace <= 1.5 {
-                    // Get the semantic classification of the face and finish the search.
-                    let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
-                    if classification == .window || classification == .door {
+                let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
+                if classification == .window || classification == .door {
+                    let geometricCenterOfFace = anchor.geometry.centerOf(faceWithIndex: index)
+                    var centerLocalTransform = matrix_identity_float4x4
+                    centerLocalTransform.columns.3 = SIMD4<Float>(geometricCenterOfFace.0, geometricCenterOfFace.1, geometricCenterOfFace.2, 1)
+                    let centerWorldPosition = (anchor.transform * centerLocalTransform).translation
+                    let distanceToFace = distance(centerWorldPosition, position)
+                    if distanceToFace <= 1.5 {
                         return true
                     }
                 }

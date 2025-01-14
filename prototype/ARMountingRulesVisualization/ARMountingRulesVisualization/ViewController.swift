@@ -62,7 +62,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     }
     
     public func updateFocusEntity() {
-        guard let camera = self.arView?.session.currentFrame?.camera,
+        guard let camera = self.arView.session.currentFrame?.camera,
               case .normal = camera.trackingState,
               let (camPos, camDir) = self.getCamVector(),
               let session = self.arView?.session,
@@ -92,6 +92,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     }
     
     func processFrame(event: SceneEvents.Update? = nil) {
+        updateFocusEntity()
         if focusEntity.isOnCeiling {
             if !arManager.isProcessingFrame {
                 Task {
@@ -148,9 +149,9 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     private func updateInfoCardText() {
         if !focusEntity.isOnCeiling && !focusEntity.isPlaceable {
-            ActionManager.shared.actionStream.send(.showInfoText(text: "Point the camera to the ceiling!"))
+            ActionManager.shared.actionStream.send(.showInfoText(text: "Richte die Kamera auf die Decke!"))
         } else if focusEntity.isOnCeiling && !focusEntity.isPlaceable {
-            ActionManager.shared.actionStream.send(.showInfoText(text: "Mounting of SmokeDetector is not possible here!"))
+            ActionManager.shared.actionStream.send(.showInfoText(text: "Rauchmelder kann hier nicht montiert werden!"))
         } else {
             ActionManager.shared.actionStream.send(.hideInfoText)
         }
@@ -183,10 +184,10 @@ class ViewController: UIViewController, ARSessionDelegate {
 // TODO:
 // [X] add UI-Elements (Buttons, Text, etc.)
 // [ ] fix rotation of distance indicator text
-// [ ] overhaul ARManager
-// [ ] fix general Architecture
+// [X] overhaul ARManager
+// [X] fix general Architecture
 // [X] remove unnecessary FocusEntity code
-// [ ] think of concept for placed detector screen
+// [X] think of concept for placed detector screen
 // [X] detect distance indicator touching walls
 // [X] implement classification of windows and doors
 // [ ] implement distance indicator for windows and doors
