@@ -92,11 +92,9 @@ class ViewController: UIViewController, ARSessionDelegate {
     }
     
     func processFrame(event: SceneEvents.Update? = nil) {
-        print("processFrame called")
         if focusEntity.isOnCeiling {
             if !arManager.isProcessingFrame {
                 Task {
-                    print("In Task now...")
                     arManager.toggleIsProcessingFrame()
                     self.currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: focusEntity.position, numberOfRaycasts: RaycastConstants.numberOfRaycasts)
                     focusEntity.isPlaceable = await arManager.isPlaceable(at: focusEntity.position, for: self.currentSurroundings)
@@ -107,7 +105,6 @@ class ViewController: UIViewController, ARSessionDelegate {
             focusEntity.isPlaceable = false
         }
         updateFocusEntity()
-        print("processFrame finished")
     }
     
     func placeDetector() {
@@ -116,7 +113,7 @@ class ViewController: UIViewController, ARSessionDelegate {
         let position = focusEntity.position
         Task {
             if detector == nil && distanceIndicators == nil {
-                detector = SmokeDetector(worldPosition: focusEntity.position)
+                detector = SmokeDetector(worldPosition: position)
                 arView.scene.addAnchor(detector!)
                 if self.currentSurroundings.isEmpty {
                     self.currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arView.session, from: position, numberOfRaycasts: 30)
@@ -126,7 +123,7 @@ class ViewController: UIViewController, ARSessionDelegate {
                 return
             }
             await updateDistanceIndicators(position: position)
-            detector?.moveTo(worldPosition: focusEntity.position)
+            detector?.moveTo(worldPosition: position)
         }
     }
     

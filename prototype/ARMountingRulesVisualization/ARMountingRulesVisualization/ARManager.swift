@@ -89,7 +89,7 @@ actor ARManager {
         var meshAnchors = frame.anchors.compactMap({ $0 as? ARMeshAnchor })
         // Sort the mesh anchors by distance to the given location and filter out
         // any anchors that are too far away (4 meters is a safe upper limit).
-        let cutoffDistance: Float = 4.0
+        let cutoffDistance: Float = 1.5
         meshAnchors.removeAll { distance($0.transform.translation, location) > cutoffDistance }
         meshAnchors.sort { distance($0.transform.translation, location) < distance($1.transform.translation, location) }
         for anchor in meshAnchors {
