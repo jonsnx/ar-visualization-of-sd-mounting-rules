@@ -127,18 +127,20 @@ Hierbei ist \(T_{object}\) die Transformationsmatrix des Objekts, und \(P_{objec
 In Augmented-Reality-Anwendungen ist eine präzise Überlagerung digitaler Informationen auf die reale Welt essenziell, um ein realistisches und funktionales Benutzererlebnis zu schaffen. Die Kamerakalibrierung spielt hierbei eine entscheidende Rolle, da sie sicherstellt, dass virtuelle Objekte korrekt positioniert, skaliert und perspektivisch angepasst in die physische Umgebung integriert werden.
 
 Die Kalibrierung umfasst die Bestimmung der \textbf{intrinsischen} und \textbf{extrinsischen} Parameter der Kamera:
+
 \begin{itemize}
     \item \textbf{Intrinsische Parameter} beschreiben die optischen Eigenschaften der Kamera, wie Brennweiten, Verzerrungen und die Position des optischen Zentrums.
     \item \textbf{Extrinsische Parameter} legen die Position und Orientierung der Kamera im Raum fest, was für die korrekte Transformation zwischen Welt- und Bildkoordinaten erforderlich ist.
 \end{itemize}
 
 \begin{figure}
-\centering
-\includegraphics[ width=.5\textwidth ]{calibration-cameramodel-coords}
-\caption{Modell für die Kamerakalibrierung\label{fig:Kalibrierung}}\par
+    \centering
+    \includegraphics[ width=.5\textwidth ]{calibration-cameramodel-coords}
+    \caption{Modell für die Kamerakalibrierung\label{fig:Kalibrierung}}\par
 \end{figure}
 
 Mathematisch wird die Transformation durch die Gleichung \( x = PX \) beschrieben, wobei:
+
 \begin{itemize}
     \item \( x \) die Bildkoordinaten in Pixeln sind,
     \item \( P \) die Projektionsmatrix ist und
@@ -191,4 +193,49 @@ Zur Kalibrierung werden in der Praxis oft visuelle Marker, wie Schachbrettmuster
 Um die Lens-Distortion zu korrigieren, werden oft Polynommodelle, wie das Brown-Conrady-Modell, verwendet. Dieses Modell beschreibt die radiale und tangentialen Verzerrungen der Linse und wird durch die Koeffizienten \( k_1, k_2, k_3 \) und \( p_1, p_2 \) definiert.
 
 Moderne AR-Plattformen wie ARKit oder ARCore integrieren den Kalibrierungsprozess automatisch. ARKit speichert intrinsische Parameter in der Klasse \texttt{AVCameraCalibrationData} und berechnet die extrinsischen Parameter durch die Inertial Measurement Unit (IMU) des Geräts, welche Positions- und Orientierungsdaten liefert.
+
+\section{Tracking-Verfahren}
+
+Unter Tracking versteht man "alle Bearbeitungsschritte, die der gleichzeitigen Verfolgung von (bewegten) Objekten dienen." (Wikipedia) Im Kontext augmentierter Realitäten wird das Tracking verwendet, um die Position und Orientierung von Objekten bzw. Punkten im Bezugs des Koordinatensystems der Kamera zu bestimmen. Mithilfe dieser Daten können virtuelle Objekte korrekt in die reale Welt integriert werden. Es gibt verschiedene Tracking-Verfahren, die auf unterschiedlichen Prinzipien basieren. Im Folgenden werden die wichtigsten Tracking-Methoden für mobile Augmented-Reality-Anwendungen erläutert.
+
+\subsection{Merkmalsbasiertes Tracking}
+
+Beim merkmalsbasierten Tracking wird der Video-Stream der Kamera analysiert, um visuelle Merkmale (Feature-Punkte) in der Umgebung zu erkennen und zu verfolgen. Hierbei hängt die Qualität des Trackings von der Anzahl und Qualität der erkannten Merkmale ab. Umso kontrastreicher und einzigartiger die Merkmale sind, desto robuster und präziser ist das Tracking. 
+
+Zur Erkennung der Feature-Points werden Bildvearbeitungsalgorithmen aus der Computer Vision eingesetzt. Eine weit verbreiteter Algorithmus ist ORB (Oriented FAST and Rotated BRIEF). Dieser baut auf den Algorithmen FAST (Features from Accelerated Segment Test) und BRIEF (Binary Robust Independent Elementary Features) auf und ist besonders effizient und robust. ORB nutzt den FAST-Algorithmus, um Punkte zu finden, die eine starke Helligkeitsänderung aufweisen, und berechnet dann binäre Deskriptoren, um die Merkmale zu beschreiben. Als Erweiterung löscht ORB redundante bzw. unbedeutende Merkmale, die mithilfe einer Harris-Corner-Detektion gefunden wurden. Zuletzt wird eine Rotation des Patches basierend auf der vorher berechneten Orientierung durch, bevor die BRIEF-Berechnung stattfindet. Dadurch bleibt der Deskriptor rotationsinvariant.
+
+Merkmalsbasiertes Tracking ist eine sehr flexible Art des Trackings, da es keine speziellen Marker oder Strukturen in der Umgebung erfordert. Es kann in verschiedenen Szenarien eingesetzt werden, von Innenräumen bis hin zu Außenbereichen. Allerdings ist es anfällig für schlechte Lichtverhältnisse, sich schnell ändernde Umgebungen und sich wiederholenden Strukturen. Als Grundlage der Scene Reconstruction und SLAM (Simultaneous Localization and Mapping) ist es jedoch ein wichtiger Bestandteil vieler AR-Systeme.
+
+\subsection{Markerbasiertes Tracking}
+
+Beim markerbasierten Tracking werden Feature-Punkte in der echten Welt platziert und anschließend von der Kamera erkannt. In der Abbildung \ref{fig:MarkerbasiertesTracking} ist ein Beispiel für ein markerbasiertes Tracking dargestellt. 
+
+Hier wird mithilfe der intrinsichen und extrinsischen Parameter der Kamera (siehe Kapitel 4.2) die Position und Orientierung des Markers im Raum bestimmt. Dabei nimmt man sich die bekannten Dimensionen des Markers zu Nutze, um eine Transformationsmatrix \(T_cm\) zu berechnen, mithilfe derer man die Koordinaten des Markers im lokalen Koordinatensystem ins Kamerakoordinatensystem transformieren kann. Die Bestimmung der Transformation \(T_cm\) erfolgt funktioniert wie folgt:
+
+Es soll gelten:
+
+\[ v_c = T_cm * v_m \]
+
+Nun gilt für einen Bildpixel \(v_s\) unter Anwendung der intrinsischen Kameraparameter (siehe Kapitel 4.2):
+
+\[ v_s = K * v_c \]
+
+Daraus folgt:
+
+\[ v_s = K * T_cm * v_m \]
+
+Da \(v_s\) und \(v_m\) bekannt sind (die Pixelkoordinaten des Markers und die bekannten Dimensionen des Markers), kann die Transformation \(T_cm\) berechnet werden.
+
+Das markerbasierte Tracking ist besonders robust und präzise, da die Position und Orientierung des Markers bekannt sind. Allerdings ist es auch aufwendiger, da die Marker manuell platziert und kalibriert werden müssen. Es wird häufig in Anwendungen eingesetzt, bei denen die Position des darzustellenden Objekts genau bekannt ist. Auch in der Filmproduktion wird markerbasiertes Tracking oft für Motion-Caputre-Verfahren verwendet.
+
+\subsection{Markerloses Tracking}
+
+Beim markerlosen Tracking wird auf in der realen Welt platzierte Features wie beim markerbasierten Tracking verzichtet. Stattdessen werden visuelle Merkmale, wie Ecken, Kanten oder Texturpunkte, in der Umgebung erkannt und verfolgt. Diese Merkmale dienen als Referenzpunkte für die Berechnung der Kameraposition und -ausrichtung. Zur Hilfe werden dabei bei mobilen Smartgeräten oft Sensoren wie Gyroskope und Beschleunigungssensoren verwendet, um die Bewegung des Geräts zu erfassen.
+
+Ein gängiger Ansatz für markerloses Tracking ist die Verwendung von SLAM (Simultaneous Localization and Mapping). SLAM-Algorithmen erstellen eine Karte der Umgebung und bestimmen gleichzeitig die Position des Geräts innerhalb dieser Karte. Dies ermöglicht eine präzise Verfolgung der Bewegung und Position des Geräts in Echtzeit.
+
+Ein weiterer Ansatz ist die Verwendung von Feature-Tracking-Algorithmen wie KLT (Kanade-Lucas-Tomasi) oder ORB (Oriented FAST and Rotated BRIEF). Diese Algorithmen erkennen und verfolgen visuelle Merkmale in aufeinanderfolgenden Kamerabildern, um die Bewegung des Geräts zu berechnen.
+
+Moderne AR-Plattformen wie ARKit und ARCore nutzen eine Kombination aus visuellen und inertialen Tracking-Methoden, um eine robuste und genaue Verfolgung zu gewährleisten. Diese Plattformen integrieren fortschrittliche Algorithmen und nutzen die Hardware-Sensoren der Geräte, um eine nahtlose AR-Erfahrung zu bieten.
+
 
