@@ -257,15 +257,27 @@ Die Abbildung \ref{fig:Triangulation} stellt die Triangulation eines Punktes im 
 p = \left( \sum_j \left( I - \hat{v_j} \hat{v_j}^T \right) \right)^{-1} \left( \sum_j \left( I - \hat{v_j} \hat{v_j}^T \right) c_j \right)
 \]
 
-Das Ergebnis der Triangularisierung der Punkte ist eine sogenannte Punktwolke (Point-Cloud), die die 3D-Struktur der Szene repräsentiert. Diese Punktwolke kann dann weiterverarbeitet werden, um ein detailliertes 3D-Modell der Szene zu erstellen. Dazu gehört zum Beispiel die Oberflächenrekonstruktion (engl. Plane Detection), bei der die Punktwolke in Flächen unterteilt wird, um die Oberflächen von Objekten im Raum zu bestimmen. Die Plane-Detection kann mithilfe des RANSAC-Algorithmus (Random Sample Consensus) durchgeführt werden, der Ausreißer in den Daten identifiziert und die Flächen anhand der verbleibenden Punkte schätzt.
+Das Ergebnis der Triangularisierung der Punkte ist eine sogenannte Punktwolke (Point-Cloud; siehe \ref{fig:PointCloud}), die die 3D-Struktur der Szene repräsentiert. Diese Punktwolke kann dann weiterverarbeitet werden, um ein detailliertes 3D-Modell der Szene zu erstellen. Dazu gehört zum Beispiel die Oberflächenrekonstruktion (engl. Plane Detection), bei der die Punktwolke in Flächen unterteilt wird, um die Oberflächen von Objekten im Raum zu bestimmen. Die Plane-Detection kann mithilfe des RANSAC-Algorithmus (Random Sample Consensus) durchgeführt werden, der Ausreißer in den Daten identifiziert und die Flächen anhand der verbleibenden Punkte schätzt.
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{PointCloud}
+    \caption{Beispiel einer drei-dimensionalen Point-Cloud-Rekonstruktion\label{fig:PointCloud}}\par
+\end{figure}
 
 \subsection{Bundle Adjustment}
 
 Der Bundle Adjustment ist ein Optimierungsverfahren, das verwendet wird, um die Kamerapositionen und die 3D-Struktur der Szene zu verfeinern. Dabei werden die Fehler zwischen den projizierten 3D-Punkten und den tatsächlichen 2D-Punkten minimiert, um die bestmögliche Schätzung der Kamerapositionen und der 3D-Struktur zu erhalten. Der Bundle Adjustment ist ein iterativer Prozess, der normalerweise auf der nicht-linearen Optimierung basiert. Es gibt verschiedene Algorithmen zur Bundle Adjustment, wie z. B. die Levenberg-Marquardt-Methode oder die Gauss-Newton-Methode.
 
-\section{Markerbasiertes Tracking}
+\section{Markenbasiertes Tracking}
 
-Beim markerbasierten Tracking werden Feature-Punkte in der echten Welt platziert und anschließend von der Kamera erkannt. In der Abbildung \ref{fig:MarkerbasiertesTracking} ist ein Beispiel für ein markerbasiertes Tracking dargestellt. 
+Beim markenbasierten Tracking werden Feature-Punkte in der echten Welt platziert und anschließend von der Kamera erkannt. In der Abbildung \ref{fig:Marker} ist ein Beispiel für ein markerbasiertes Tracking dargestellt. 
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{Marker}
+    \caption{Darstellung eines markenbasiertes Tracking\label{fig:Marker}}\par
+\end{figure}
 
 Hier wird mithilfe der intrinsichen und extrinsischen Parameter der Kamera (siehe Kapitel 4.2) die Position und Orientierung des Markers im Raum bestimmt. Dabei nimmt man sich die bekannten Dimensionen des Markers zu Nutze, um eine Transformationsmatrix \(T_cm\) zu berechnen, mithilfe derer man die Koordinaten des Markers im lokalen Koordinatensystem ins Kamerakoordinatensystem transformieren kann. Die Bestimmung der Transformation \(T_cm\) erfolgt funktioniert wie folgt:
 
