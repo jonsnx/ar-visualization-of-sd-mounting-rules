@@ -1,0 +1,4 @@
+- package management
+- viewmodel einführen
+- task worker
+- logik aus models raus

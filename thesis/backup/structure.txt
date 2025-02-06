@@ -1,0 +1,9 @@
+Die vorliegende Arbeit ist in sechs Kapitel unterteilt. Im zweiten Kapitel wird der theoretische Hintergrund von Augmented Reality erläutert. Dabei werden die Grundlagen der Technologie sowie mathematische Konzepte und Algorithmen, die für die Umsetzung von AR-Anwendungen relevant sind, vorgestellt.
+
+Im dritten Kapitel werden verschiedene Technologien und Frameworks zur Entwicklung von AR-Anwendungen analysiert und miteinander verglichen. Dabei werden sowohl Software- als auch Hardwarelösungen betrachtet und ihre Vor- und Nachteile diskutiert.
+
+Im vierten Kapitel wird der Entwurf und die Implementierung eines Prototyps einer mobilen AR-Anwendung beschrieben. Dabei werden die Anforderungen an die Anwendung definiert, das Designkonzept erläutert und die Umsetzung des Prototyps detailliert beschrieben.
+
+Im fünften Kapitel wird die Evaluation des Prototyps vorgestellt. Dabei werden die Ergebnisse der Tests und die Rückmeldungen der Testpersonen analysiert und interpretiert. Zudem werden mögliche Optimierungspotenziale identifiziert und diskutiert.
+
+Im sechsten Kapitel werden die Ergebnisse der Arbeit zusammengefasst und kritisch reflektiert. Dabei werden die Erkenntnisse aus den vorangegangenen Kapiteln zusammengeführt und ein Ausblick auf zukünftige Entwicklungen gegeben.
