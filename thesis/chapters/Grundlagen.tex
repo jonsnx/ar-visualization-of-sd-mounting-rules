@@ -108,30 +108,32 @@ Hierbei ist \(T_{object}\) die Transformationsmatrix des Objekts, und \(P_{objec
 
 \section{Kalibrierung}
 
-In Augmented-Reality-Anwendungen ist eine präzise Überlagerung digitaler Informationen auf die reale Welt essenziell, um ein realistisches und funktionales Benutzererlebnis zu schaffen. Die Kamerakalibrierung spielt hierbei eine entscheidende Rolle, da sie sicherstellt, dass virtuelle Objekte korrekt positioniert, skaliert und perspektivisch angepasst in die physische Umgebung integriert werden.
+Die Kalibrierung ist ein essenzieller Schritt in der Augmented-Reality-Pipeline. Sie dient der Bestimmung der intrinsischen und extrinsischen Kameraparameter, um eine korrekte Transformation von 2D-Bildpunkten in 3D-Weltkoordinaten zu ermöglichen (\cite{mw2024calibration}).
 
-Die Kalibrierung umfasst die Bestimmung der intrinsischen Parameter der Kamera. Diese beschreiben die optischen Eigenschaften der Kamera, wie Brennweiten, Verzerrungen und die Position des optischen Zentrums. Das Ziel ist es, mithilfe dieser Paramater die extrinsischen Parameter der Kamera zu berechnen, die die Position und Orientierung der Kamera im Raum festlegen. Dadurch wird die Transformation von zweidimensionalen Bildpunkten in dreidimensionale Weltkoordinaten ermöglicht.
+Dabei wird häufig das sogenannte „Pinhole“-Modell verwendet, das die grundlegenden Eigenschaften einer idealisierten Kamera beschreibt (siehe Abbildung \ref{fig:Pinhole}). Dieses Modell basiert auf der Annahme einer Kamera ohne Objektiv, die lediglich eine kleine Blendenöffnung besitzt. Das Licht fällt durch diese Blende und projiziert ein umgekehrtes Abbild der Szene auf die Rückwand der Kamera (\cite{mw2024calibration}).
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{pinhole}
+    \caption{Pinhole-Modell (\cite{mw2024calibration})\label{fig:Pinhole}}\par
+\end{figure}
+
+Mithilfe der intrinsischen und extrinsischen Parameter kann eine Projektionsmatrix bestimmt werden, die es ermöglicht, Bildpixel in das Koordinatensystem der realen Welt zu überführen (siehe Abbildung \ref{fig:Kalibrierung}). Die intrinsischen Parameter umfassen die Brennweite, die Objektivverzerrung und die Position des optischen Zentrums der Kamera. Die extrinsischen Parameter hingegen beschreiben die Position und Orientierung der Kamera im Raum (\cite{mw2024calibration}).
 
 \begin{figure}
     \centering
     \includegraphics[ width=.5\textwidth ]{calibration-cameramodel-coords}
-    \caption{Modell für die Kamerakalibrierung\label{fig:Kalibrierung}}\par
+    \caption{Modell für die Kamerakalibrierung (\cite{mw2024calibration})\label{fig:Kalibrierung}}\par
 \end{figure}
 
-Mathematisch wird die Transformation durch die Gleichung \( x = PX \) beschrieben, wobei:
+Mathematisch wird die Projektionsmatrix \(P\) wie folgt definiert (\cite{mw2024calibration, szeliski2022computerVision}):
 
-\begin{itemize}
-    \item \( x \) die Bildkoordinaten in Pixeln sind,
-    \item \( P \) die Projektionsmatrix ist und
-    \item \( X \) die Weltkoordinaten eines Objekts darstellt.
-\end{itemize}
-
-Die Projektionsmatrix \( P \) setzt sich aus der intrinsischen Matrix \( K \) sowie der Rotationsmatrix \( R \) und dem Translationsvektor \( t \) zusammen:
 \[
 P = K[R|t]
 \]
 
-Die intrinsische Matrix \( K \) wird folgendermaßen definiert:
+Hierbei entspricht \(K\) der intrinsischen Matrix. \(R\) die Rotationsmatrix und \(t\) der Translationsvektor der extrinsischen Matrix. Die intrinsische Matrix \(K\) ist definiert als (\cite{mw2024calibration}):
+
 \[
 K = 
 \begin{bmatrix}
@@ -140,34 +142,97 @@ f_x & s & c_x \\
 0 & 0 & 1
 \end{bmatrix}
 \]
+
+Hier gilt:
+
 \begin{itemize}
     \item \( f_x \) und \( f_y \): Brennweiten der Kamera in Pixeln, bezogen auf die horizontalen und vertikalen Achsen.
     \item \( c_x \) und \( c_y \): Koordinaten des optischen Zentrums in Pixeln.
     \item \( s \): Skew-Faktor, der berücksichtigt, ob die Kameraachsen orthogonal sind.
 \end{itemize}
 
-Um die Lens-Distortion zu korrigieren, werden oft Polynommodelle, wie das Brown-Conrady-Modell, verwendet. Dieses Modell beschreibt die radiale und tangentialen Verzerrungen der Linse und wird durch die Koeffizienten \( k_1, k_2, k_3 \) und \( p_1, p_2 \) definiert.
+Die Projektion eines 3D-Punktes \( X = [X, Y, Z, 1]^T \) in das Bildkoordinatensystem \( x = [x, y, 1]^T \) erfolgt dann durch die Gleichung (\cite{mw2024calibration}):
 
-Moderne AR-Plattformen wie ARKit oder ARCore integrieren den Kalibrierungsprozess automatisch. ARKit speichert intrinsische Parameter in der Klasse \texttt{AVCameraCalibrationData} und berechnet die extrinsischen Parameter durch die Inertial Measurement Unit (IMU) des Geräts, welche Positions- und Orientierungsdaten liefert.
+\[
+x = PX
+\]
+
+Ein Bestandteil der intrinsischen Parameter, das gesondert betrachtet werden muss, sind die Verzerrungen der Linse (engl. Lens-Distortions). Diese entstehen zum einen durch die Krümmung der Linse (Radiale Verzerrzng) und zum anderen durch Unterschiede der Ausrichtung der Linse und des Sensors (Tangentiale Verzerrung). Ohne diese Verzerrungen in die Berechnungen einzubeziehen, kann es Unstimmigkeiten zwischen den berechneten Weltkoordinaten und den realen Weltkoordinaten für einen Bildpunkt geben (\cite{mw2024calibration, szeliski2022computerVision}).
+
+Dazu werden oft Polynommodelle, wie das Brown-Conrady-Modell, verwendet. Dieses Modell relative Position zwischen der Linse und des Sensors. die radiale und tangentialen Verzerrungen der Linse und wird durch die Koeffizienten \( k_1, k_2, k_3 \) und \( p_1, p_2 \) definiert (\cite{brown1966distortion}). Die radiale Verzerrung kann somit durch folgende Gleichung beschrieben werden (\cite{mw2024calibration, szeliski2022computerVision}):
+
+\[
+x_{\text{distorted}}   
+=
+x_{\text{undistorted}}
+\left( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6 \right)
+\]
+\[
+y_{\text{distorted}}   
+=
+y_{\text{undistorted}}
+\left( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6 \right)
+\]
+
+In diesem Kapitel wurde die Kamera-Kalibrierung anhand einfacher Modelle erläutert. In der Praxis sind die intrinsischen Parameter jedoch in den meisten Kameras bereits vorkalibriert und können von den Herstellern bereitgestellt werden. So integriert beispielsweise Apples ARKit die intrinsischen Kameraparameter direkt und stellt sie über die Klasse \texttt{AVCameraCalibrationData} zur Verfügung, wodurch sie einfach genutzt werden können (\cite{appledevdoc}).
+
+Die extrinsischen Parameter hingegen müssen häufig manuell bestimmt werden, um die exakte Position und Orientierung der Kamera zu ermitteln. In der Augmented Reality ist die präzise Bestimmung der Kameraposition essenziell für viele Tracking-Verfahren. Dabei unterscheidet man zwischen markerbasiertem Tracking (siehe Kapitel \ref{Markerbasiertes Tracking}), bei dem die Position und Größe eines bekannten Markers – oft ein Schachbrettmuster – in der realen Welt genutzt wird, und markerlosem Tracking (siehe Kapitel \ref{SfM} und \ref{SLAM}), bei dem die Kameraposition durch die Analyse von Bilddaten ermittelt wird (\cite{doerner2022virtual, alam2024calibration}).
 
 \section{Sensorik}
 
-Die Erfassung der Umgebung in Augmented-Reality-Anwendungen erfolgt mithilfe verschiedener Sensoren, die Daten über die physische Welt liefern. Je nach Anwendungsfall und Eingabegerät können unterschiedliche Sensoren verwendet werden, um die Position und Bewegung des Geräts zu bestimmen. Zu den wichtigsten Sensoren für mobile AR-Anwendungen gehören:
+Die Erfassung der Umgebung in Augmented-Reality-Anwendungen erfolgt mithilfe verschiedener Sensoren, die Daten über die physische Welt liefern. Je nach Anwendungsfall und Eingabegerät können unterschiedliche Sensoren verwendet werden, um die Position und Bewegung des Geräts zu bestimmen. Bei vielen Tracking-Verfahren werden eine Kombination von Sensoren verwendet, um die Genauigkeit und Zuverlässigkeit der Positionsschätzung zu verbessern. Beispielsweise kann die Kamera für visuelle Tracking-Anwendungen verwendet werden, während das IMU für die Schätzung der Bewegung des Geräts verwendet wird. Durch die Fusion von Daten aus verschiedenen Sensoren können AR-Anwendungen eine präzise und konsistente Darstellung der virtuellen Objekte in der realen Welt erreichen. Die wichtigsten Sensorenarten werden in diesem Abschnitt erläutert.
 
-\begin{itemize}
-    \item \textbf{Kamera}: Die Kamera liefert visuelle Informationen über die Umgebung und wird zur Erkennung von Markern, Features oder Objekten verwendet.
-    \item \textbf{LiDAR}: LiDAR (Light Detection and Ranging) ist ein Sensor, der die Entfernung zu Objekten mithilfe eines Lasers misst.
-    \item \textbf{Gyroskop}: Das Gyroskop misst die Winkelgeschwindigkeit des Geräts und wird zur Erfassung von Drehbewegungen verwendet.
-    \item \textbf{Beschleunigungsmesser}: Der Beschleunigungsmesser misst die Beschleunigung des Geräts und wird zur Erfassung von linearen Bewegungen verwendet.
-    \item \textbf{Magnetometer}: Das Magnetometer misst das Magnetfeld des Geräts und wird zur Bestimmung der Ausrichtung im Raum verwendet.
-    \item \textbf{GPS}: Das GPS (Global Positioning System) bestimmt die geografische Position des Geräts und wird zur Navigation und Lokalisierung verwendet.
-\end{itemize}
+\subsection{Inertiale Sensoren}
 
-Sensoren wie Gyroskop, Beschleunigungsmesser und Magnetometer werden oft in einem sogenannten IMU (Inertial Measurement Unit) kombiniert, um die Bewegung des Geräts in sechs Freiheitsgraden (3D-Position und -Orientierung) zu erfassen. 
+Inertiale Sensoren erfassen die Beschleunigung und Rotation eines Geräts und bestehen typischerweise aus einem Gyroskop und einem Beschleunigungsmesser. Während das Gyroskop die Winkelgeschwindigkeit misst und Drehbewegungen erkennt, erfasst der Beschleunigungsmesser lineare Beschleunigungen. Durch die Kombination beider Sensoren in einer Inertial Measurement Unit (IMU) lassen sich Bewegungen in sechs Freiheitsgraden (3D-Position und -Orientierung) präzise bestimmen. Diese Technologie ist besonders nützlich zur Erfassung schneller Bewegungen und findet Anwendung in AR-Brillen, Smartphones und anderen mobilen Geräten (\cite{doerner2022virtual}).
 
-Bei vielen Tracking-Verfahren werden eine Kombination von Sensoren verwendet, um die Genauigkeit und Zuverlässigkeit der Positionsschätzung zu verbessern. Beispielsweise kann die Kamera für visuelle Tracking-Anwendungen verwendet werden, während das IMU für die Schätzung der Bewegung des Geräts verwendet wird. Durch die Fusion von Daten aus verschiedenen Sensoren können AR-Anwendungen eine präzise und konsistente Darstellung der virtuellen Objekte in der realen Welt erreichen.
+\begin{tcolorbox}[colback=THAi-Blue!20!white, colframe=THAi-Blue]
+    Als \textbf{Freiheitsgrade} (engl. Degrees of Freedom – DOF) werden voneinander unabhängige Bewegungsmöglichkeiten eines physikalischen Systems bezeichnet. Ein starrer Körper besitzt sechs Freiheitsgrade: je drei für die Translation und Rotation. //TODO: Quelle
+\end{tcolorbox}
+    
 
-\section{Structure from Motion}
+\subsection{Kamera}
+
+Die Kamera ist ein essentieller Sensor für AR-Anwendungen, da die visuellen Informationen von vielen Tracking-Verfahren genutzt werden und die aufgenommenen Bilder die Grundlage für die Darstellung von virtuellen Objekten in der realen Welt bilden. Die Kamera liefert Bilddaten, die zur Erkennung von Markern, Features oder Objekten verwendet werden. Durch die Analyse der Kamerabilder können AR-Anwendungen die Position und Orientierung des Geräts bestimmen und virtuelle Objekte in die reale Welt einfügen. (\cite{doerner2022virtual}).
+
+\subsection{Lasersensoren}
+
+Lasersensoren messen die Entfernung zu Objekten mithilfe von Laserstrahlen. LiDAR (Light Detection and Ranging) ist ein bekannter Lasersensor, der in der Robotik, Automobilindustrie und Augmented Reality weit verbreitet ist. Der Sensor strahlt Laserlicht aus und misst die Zeit, die das Licht benötigt, um zu einem Punkt in der Umgebung zu gelangen und zurückzukehren. Dadurch ist die exakte Bestimmung der Position und Entfernung des Punktes zum Sensor möglich. Dies ermöglicht die präzise Erfassung von Tiefeninformationen in der Umgebung und bietet somit große Vorteile für die Genauigkeit und Zuverlässigkeit des Trackings in AR-Anwendungen (\cite{doerner2022virtual}).
+
+\subsection{Satellitengestütze Systeme}
+
+Satellitengestützte Systeme wie GPS (Global Positioning System) bestimmen die geografische Position des Geräts mithilfe von Satellitensignalen. Diese Systeme sind besonders nützlich für die Lokalisierung des Geräts in großen Außenbereichen. Da GPS-Signale jedoch durch Gebäude und andere Hindernisse blockiert werden können, sind sie in Innenräumen oft ungenau. Zusätzlich dazu sind Abweichungen von bis zu 10m möglich, was für viele AR-Anwendungen nicht ausreichend ist. Smartphones setzen daher häufig A-GPS (Assisted GPS) ein um die GPS-Daten mithilfe von Mobilfunknetz- bzw. WLAN-Daten zu präzisieren (\cite{doerner2022virtual}). 
+
+\subsection{Magnetfeldbasierte Sensoren}
+
+Magnetfeldbasierte Sensoren, wie das Magnetometer in IMUs, messen das Magnetfeld der Erde und liefern so Rückschlüsse bezüglich der Orientierung des Geräts relativ zum Magnetfeld. Diese Sensoren sind besonders nützlich für die Bestimmung der Ausrichtung des Geräts im Raum. Allerdings sind Magnetfelder anfällig für Störungen durch elektrische Geräte und Metallgegenstände, was die Genauigkeit der Messungen beeinträchtigen kann. Dennoch sind magnetfeldbasierte Sensoren eine wichtige Ergänzung zu anderen Sensoren für die präzise Lokalisierung und Orientierung in AR-Anwendungen (\cite{doerner2022virtual}).
+
+\section{Markenbasiertes Tracking}\label{Markerbasiertes Tracking}
+
+Beim markenbasierten Tracking werden Feature-Punkte in der echten Welt platziert und anschließend von der Kamera erkannt. In der Abbildung \ref{fig:Marker} ist ein Beispiel für ein markerbasiertes Tracking dargestellt. 
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{Marker}
+    \caption{Darstellung eines markenbasiertes Tracking\label{fig:Marker}}\par
+\end{figure}
+
+Hier wird mithilfe der intrinsichen und extrinsischen Parameter der Kamera (siehe Kapitel 4.2) die Position und Orientierung des Markers im Raum bestimmt. Dabei nimmt man sich die bekannten Dimensionen des Markers zu Nutze, um eine Transformationsmatrix \(T_cm\) zu berechnen, mithilfe derer man die Koordinaten des Markers im lokalen Koordinatensystem ins Kamerakoordinatensystem transformieren kann. Die Bestimmung der Transformation \(T_cm\) erfolgt funktioniert wie folgt:
+
+Es soll gelten:
+\[ v_c = T_cm * v_m \]
+
+Nun gilt für einen Bildpixel \(v_s\) unter Anwendung der intrinsischen Kameraparameter (siehe Kapitel 4.2):
+\[ v_s = K * v_c \]
+
+Daraus folgt:
+\[ v_s = K * T_cm * v_m \]
+
+Da \(v_s\) und \(v_m\) bekannt sind (die Pixelkoordinaten des Markers und die bekannten Dimensionen des Markers), kann die Transformation \(T_cm\) berechnet werden.
+
+Das markerbasierte Tracking ist besonders robust und präzise, da die Position und Orientierung des Markers bekannt sind. Allerdings ist es auch aufwendiger, da die Marker manuell platziert und kalibriert werden müssen. Es wird häufig in Anwendungen eingesetzt, bei denen die Position des darzustellenden Objekts genau bekannt ist. Auch in der Filmproduktion wird markerbasiertes Tracking oft für Motion-Caputre-Verfahren verwendet.
+
+\section{Structure from Motion}\label{SfM}
 
 Structure from Motion (SfM) ist eine Technik aus der Computer Vision, die verwendet wird, um die 3D-Struktur einer Szene aus einer Reihe von 2D-Bildern zu rekonstruieren. SfM basiert auf der Triangulation von Punkten, die in verschiedenen Bildern sichtbar sind, um die Positionen der Sensoren und der Punkte in der Szene zu bestimmen.
 
@@ -239,32 +304,7 @@ Das Ergebnis der Triangulation ist eine sogenannte Punktwolke (Point Cloud), die
 
 Der Bundle Adjustment ist ein Optimierungsverfahren, das verwendet wird, um die Kamerapositionen und die 3D-Struktur der Szene zu verfeinern. Dabei werden die Fehler zwischen den projizierten 3D-Punkten und den tatsächlichen 2D-Punkten minimiert, um die bestmögliche Schätzung der Kamerapositionen und der 3D-Struktur zu erhalten. Der Bundle Adjustment ist ein iterativer Prozess, der normalerweise auf der nicht-linearen Optimierung basiert. Es gibt verschiedene Algorithmen zur Bundle Adjustment, wie z. B. die Levenberg-Marquardt-Methode oder die Gauss-Newton-Methode.
 
-\section{Markenbasiertes Tracking}
-
-Beim markenbasierten Tracking werden Feature-Punkte in der echten Welt platziert und anschließend von der Kamera erkannt. In der Abbildung \ref{fig:Marker} ist ein Beispiel für ein markerbasiertes Tracking dargestellt. 
-
-\begin{figure}
-    \centering
-    \includegraphics[ width=.5\textwidth ]{Marker}
-    \caption{Darstellung eines markenbasiertes Tracking\label{fig:Marker}}\par
-\end{figure}
-
-Hier wird mithilfe der intrinsichen und extrinsischen Parameter der Kamera (siehe Kapitel 4.2) die Position und Orientierung des Markers im Raum bestimmt. Dabei nimmt man sich die bekannten Dimensionen des Markers zu Nutze, um eine Transformationsmatrix \(T_cm\) zu berechnen, mithilfe derer man die Koordinaten des Markers im lokalen Koordinatensystem ins Kamerakoordinatensystem transformieren kann. Die Bestimmung der Transformation \(T_cm\) erfolgt funktioniert wie folgt:
-
-Es soll gelten:
-\[ v_c = T_cm * v_m \]
-
-Nun gilt für einen Bildpixel \(v_s\) unter Anwendung der intrinsischen Kameraparameter (siehe Kapitel 4.2):
-\[ v_s = K * v_c \]
-
-Daraus folgt:
-\[ v_s = K * T_cm * v_m \]
-
-Da \(v_s\) und \(v_m\) bekannt sind (die Pixelkoordinaten des Markers und die bekannten Dimensionen des Markers), kann die Transformation \(T_cm\) berechnet werden.
-
-Das markerbasierte Tracking ist besonders robust und präzise, da die Position und Orientierung des Markers bekannt sind. Allerdings ist es auch aufwendiger, da die Marker manuell platziert und kalibriert werden müssen. Es wird häufig in Anwendungen eingesetzt, bei denen die Position des darzustellenden Objekts genau bekannt ist. Auch in der Filmproduktion wird markerbasiertes Tracking oft für Motion-Caputre-Verfahren verwendet.
-
-\section{SLAM}
+\section{SLAM}\label{SLAM}
 
 Simultanous Localization and Mapping (SLAM) entstammt urprünglich aus der Robotik und beschreibt die Fähigkeit eines autonomen Systems, sich in einer unbekannten Umgebung zu lokalisieren und gleichzeitig eine Karte dieser Umgebung zu erstellen. SLAM ist sehr stark mit Structure-from-Motion-Algorithmen verwandt, da beide Techniken die gleichen Prinzipien verwenden, um die Kameraposition und die 3D-Struktur der Szene zu bestimmen. Der grundlegende Unterschied besteht darin, dass SLAM die Priorität auf die Echtzeitverarbeitung und die gleichzeitige Schätzung der Position und Orientierung des Sensors und die dreidimensionale Rekonstruktion der Umgebung legt. 
 

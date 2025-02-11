@@ -1,6 +1,10 @@
 % This file was created with Citavi 7.0.1.0
 
-@article{Azuma.1997,
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Geschichtliches
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{azuma1997ar,
  author = {Azuma, Ronald T.},
  year = {1997},
  title = {A survey of augmented reality},
@@ -10,7 +14,7 @@
  journal = {Presence: Teleoperators {\&} Virtual Environments}
 }
 
-@inproceedings{Sutherland.1965,
+@inproceedings{sutherland1965ultimateDisplay,
  author = {Sutherland, Ivan E.},
  title = {The Ultimate Display},
  pages = {506--508},
@@ -19,13 +23,24 @@
  year = {1965}
 }
 
-@inproceedings{Sutherland.1968,
+@inproceedings{sutherland19683dDisplay,
  author = {Sutherland, Ivan E.},
  title = {A head-mounted three dimensional display},
  pages = {757--764},
  publisher = {AFIPS},
  booktitle = {Proceedings of the Fall Joint Computer Conference, Part I},
  year = {1968}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Allgemein
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@book{szeliski2022computerVision,
+ author = {{Richard Szeliski}},
+ year = {2022},
+ title = {Computer Vision: Algorithms and Applications},
+ isbn = {ISBN 978-3-030-34371-2}
 }
 
 @book{doerner2022virtual,
@@ -40,24 +55,6 @@
  title = {Applications of Augmented Reality: Current State of the Art},
  isbn = {978-1-83769-335-1},
  editor = {{Pierre Boulanger}}
-}
-
-@misc{wikipedia2023polygons,
- abstract = {In 3D computer graphics, polygonal modeling is an approach for modeling objects by representing or approximating their surfaces using polygon meshes. Polygonal modeling is well suited to scanline rendering and is therefore the method of choice for real-time computer graphics.  Alternate methods of representing 3D objects include NURBS surfaces, subdivision surfaces, and equation-based (implicit surface) representations used in ray tracers.},
- editor = {Wikipedia},
- year = {2023},
- title = {Polygonal modeling},
- url = {https://en.wikipedia.org/w/index.php?title=Polygonal_modeling&oldid=1185415049},
- urldate = {03.02.2025},
- file = {Wikipedia (Hg.) 2023 - Polygonal modeling:Attachments/Wikipedia (Hg.) 2023 - Polygonal modeling.pdf:application/pdf}
-}
-
-@misc{kore2018space,
- author = {Kore},
- year = {2018},
- title = {A computer's understanding of space for Augmented Reality | by Kore | HackerNoon.com | Medium},
- url = {https://medium.com/hackernoon/a-computers-understanding-of-space-for-augmented-reality-c0fd40a52900},
- urldate = {03.02.2025}
 }
 
 @misc{appledevdoc,
@@ -75,6 +72,24 @@
  isbn = {978-1-4842-7835-2}
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dreidimensional Computergrafik
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@misc{wikipedia2023polygons,
+ abstract = {In 3D computer graphics, polygonal modeling is an approach for modeling objects by representing or approximating their surfaces using polygon meshes. Polygonal modeling is well suited to scanline rendering and is therefore the method of choice for real-time computer graphics.  Alternate methods of representing 3D objects include NURBS surfaces, subdivision surfaces, and equation-based (implicit surface) representations used in ray tracers.},
+ editor = {Wikipedia},
+ year = {2023},
+ title = {Polygonal modeling},
+ url = {https://en.wikipedia.org/w/index.php?title=Polygonal_modeling&oldid=1185415049},
+ urldate = {03.02.2025},
+ file = {Wikipedia (Hg.) 2023 - Polygonal modeling:Attachments/Wikipedia (Hg.) 2023 - Polygonal modeling.pdf:application/pdf}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Coordinate-Systems
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 @misc{usau2023appleARCamera,
  author = {Vitali Usau},
  year = {2023},
@@ -82,6 +97,18 @@
  url = {https://medium.com/@vitali.usau/apple-arcamera-camera-parameters-explanation-for-3d-reconstruction-pipeline-7b3937dab3b9},
  urldate = {03.02.2025}
 }
+
+@misc{kore2018space,
+ author = {Kore},
+ year = {2018},
+ title = {A computer's understanding of space for Augmented Reality | by Kore | HackerNoon.com | Medium},
+ url = {https://medium.com/hackernoon/a-computers-understanding-of-space-for-augmented-reality-c0fd40a52900},
+ urldate = {03.02.2025}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Matrix-Algebra
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 @misc{jazz2020transformMatrix,
  author = {Andy Jazz},
@@ -91,12 +118,10 @@
  urldate = {03.02.2025}
 }
 
-
-
 @misc{pezzi2021matrices,
  abstract = {In this short lecture I want to explain why programmers use 4x4 matrices to apply 3D transformations in computer graphics.We will learn why we need a 4x4 mat...},
  author = {Gustavo Pezzi},
- year = {26.01.2021},
+ year = {2021},
  title = {Math for Game Developers: Why do we use 4x4 Matrices in 3D Graphics?},
  url = {https://www.youtube.com/watch?v=Do_vEjd6gF0},
  urldate = {03.02.2025}
@@ -110,4 +135,45 @@
  urldate = {03.02.2025},
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Calibration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+@misc{li2023calibration,
+  author = {Computer Vision II: Multiple View Geometry (IN2228)},
+  title = {Dr. Haoang Li},
+  year = {2023},
+  note = {Lecture script, TUM},
+  url = {https://cvg.cit.tum.de/_media/teaching/ss2023/mvg2023/material/chapter04_camera_calibration.pdf},
+  urldate = {07.02.2025},
+}
+
+@misc{mw2024calibration,
+  author = {MathWorks},
+  year = {2024},
+  title = {What Is Camera Calibration?},
+  url = {https://de.mathworks.com/help/vision/ug/camera-calibration.html},
+  urldate = {07.02.2025}
+}
+
+@misc{alam2024calibration,
+ year = {2024},
+ title = {Camera Calibration Explained: Enhancing Accuracy in Computer Vision Applications},
+ author = {Md Faruk Alam},
+ url = {https://farukalamai.medium.com/camera-calibration-explained-enhancing-accuracy-in-computer-vision-applications-8ad1494cc5f2},
+ urldate = {07.02.2025}
+}
+
+@article{brown1966distortion,
+	title = {Decentering {Distortion} of {Lenses}},
+	volume = {32},
+	number = {3},
+	journal = {Photometric Engineering},
+	author = {Brown, D. C.},
+	year = {1966},
+	pages = {444--462},
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sensorik
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
