@@ -106,7 +106,7 @@ P_{world} = T_{object} \cdot P_{object}
 
 Hierbei ist \(T_{object}\) die Transformationsmatrix des Objekts, und \(P_{object}\) sind die lokalen Koordinaten. Das Ergebnis \(P_{world}\) beschreibt die Position des Objekts im Weltkoordinatensystem.
 
-\section{Kalibrierung}
+\section{Kalibrierung}\label{Kalibrierung}
 
 Die Kalibrierung ist ein essenzieller Schritt in der Augmented-Reality-Pipeline. Sie dient der Bestimmung der intrinsischen und extrinsischen Kameraparameter, um eine korrekte Transformation von 2D-Bildpunkten in 3D-Weltkoordinaten zu ermöglichen (\cite{mw2024calibration}).
 
@@ -209,7 +209,7 @@ Magnetfeldbasierte Sensoren, wie das Magnetometer in IMUs, messen das Magnetfeld
 
 \section{Markenbasiertes Tracking}\label{Markerbasiertes Tracking}
 
-Beim markenbasierten Tracking werden Feature-Punkte in der echten Welt platziert und anschließend von der Kamera erkannt. In der Abbildung \ref{fig:Marker} ist ein Beispiel für ein markerbasiertes Tracking dargestellt. 
+Das markenbasierte Tracking basiert auf der Erkennung von speziellen Markern, die in der realen Welt platziert sind. Diese Marker dienen als Referenzpunkte für die Positionierung von virtuellen Objekten dienen und ermöglichen es, die extrinsischen Parameter der Kamera zu bestimmen. Die Marker weisen in der Regel ein eindeutiges Muster auf, das von der Kamera erkannt und verfolgt werden kann. Ebenso sind die Dimensionen des Markers bekannt, was die Bestimmung der Position und Orientierung des Markers im Raum erleichtert. Es gibt eine Reihe von Verfahren die unterschiedliche Marker-Typen verwenden und auf unterschiedliche Art und Weise die Position und Orientierung des Markers bestimmen. Vereinfacht dargestellt, funktioniert das markenbasierte Tracking wie folgt:
 
 \begin{figure}
     \centering
@@ -217,18 +217,27 @@ Beim markenbasierten Tracking werden Feature-Punkte in der echten Welt platziert
     \caption{Darstellung eines markenbasiertes Tracking\label{fig:Marker}}\par
 \end{figure}
 
-Hier wird mithilfe der intrinsichen und extrinsischen Parameter der Kamera (siehe Kapitel 4.2) die Position und Orientierung des Markers im Raum bestimmt. Dabei nimmt man sich die bekannten Dimensionen des Markers zu Nutze, um eine Transformationsmatrix \(T_cm\) zu berechnen, mithilfe derer man die Koordinaten des Markers im lokalen Koordinatensystem ins Kamerakoordinatensystem transformieren kann. Die Bestimmung der Transformation \(T_cm\) erfolgt funktioniert wie folgt:
+Wie in Abbildung \ref{fig:Marker} dargestellt, wird die Kamera auf den Marker gerichtet, um ihn zu erfassen. Nun kann mithilfe der intrinsischen Kameraparameter und der bekannten Dimensionen des Markers die Position und Orientierung des Kamerakoordinatensystems relativ zum Marker bestimmt werden. Dies ermöglicht die Bestimmung einer Transformationsmatrix \( T_cm \), mithilfe derer die Koordinaten des Markers im Markerkoordinatensystem ins Kamerakoordinatensystem transformiert werden können. Entsprechend der Abbildung \ref{fig:Marker} kann die Transformation \( T_cm \) wie folgt definiert werden:
 
-Es soll gelten:
-\[ v_c = T_cm * v_m \]
+\begin{equation}\label{eq:v_c}
+v_c = T_cm * v_m
+\end{equation}
 
-Nun gilt für einen Bildpixel \(v_s\) unter Anwendung der intrinsischen Kameraparameter (siehe Kapitel 4.2):
+Wobei \( v_c \) Pixelkoordinaten des Markers im Kamerakoordinatensystem und \( v_m \) Koordinaten im Markerkoordinatensystem entsprechen.
+
+Wobei \( v_c \) Pixelkoordinaten des Markers im Kamerakoordinatensystem und \( v_m \) Koordinaten im Markerkoordinatensystem entrsprechen.
+
+Nun können Koordinaten \( v_s \) im Bildkoordinatensystem \( C \) mithilfe der intrinsischen Kameraparameter (siehe Kapitel \ref{Kalibrierung}) und Koordinaten \( v_c \) im Kamerakoordinatensystem wie folgt beschrieben werden:
+
 \[ v_s = K * v_c \]
 
-Daraus folgt:
+Unter Verwendung der Gleichung \ref{eq:v_c} kann die Transformation \( T_cm \) in die Gleichung eingesetzt werden:
+
 \[ v_s = K * T_cm * v_m \]
 
 Da \(v_s\) und \(v_m\) bekannt sind (die Pixelkoordinaten des Markers und die bekannten Dimensionen des Markers), kann die Transformation \(T_cm\) berechnet werden.
+
+Die Position und Orientierung des Markers im Raum sind somit bekannt und können zur Platzierung von virtuellen Objekten verwendet werden (\cite{doerner2022virtual}).
 
 Das markerbasierte Tracking ist besonders robust und präzise, da die Position und Orientierung des Markers bekannt sind. Allerdings ist es auch aufwendiger, da die Marker manuell platziert und kalibriert werden müssen. Es wird häufig in Anwendungen eingesetzt, bei denen die Position des darzustellenden Objekts genau bekannt ist. Auch in der Filmproduktion wird markerbasiertes Tracking oft für Motion-Caputre-Verfahren verwendet.
 
