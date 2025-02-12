@@ -209,7 +209,9 @@ Magnetfeldbasierte Sensoren, wie das Magnetometer in IMUs, messen das Magnetfeld
 
 \section{Markenbasiertes Tracking}\label{Markerbasiertes Tracking}
 
-Das markenbasierte Tracking basiert auf der Erkennung von speziellen Markern, die in der realen Welt platziert sind. Diese Marker dienen als Referenzpunkte für die Positionierung von virtuellen Objekten dienen und ermöglichen es, die extrinsischen Parameter der Kamera zu bestimmen. Die Marker weisen in der Regel ein eindeutiges Muster auf, das von der Kamera erkannt und verfolgt werden kann. Ebenso sind die Dimensionen des Markers bekannt, was die Bestimmung der Position und Orientierung des Markers im Raum erleichtert. Es gibt eine Reihe von Verfahren die unterschiedliche Marker-Typen verwenden und auf unterschiedliche Art und Weise die Position und Orientierung des Markers bestimmen. Vereinfacht dargestellt, funktioniert das markenbasierte Tracking wie folgt:
+Das markenbasierte Tracking nutzt spezielle Marker, die in der realen Welt platziert werden und als Referenzpunkte für die Positionierung virtueller Objekte dienen. Diese Marker ermöglichen die Bestimmung der extrinsischen Kameraparameter und weisen in der Regel ein eindeutiges Muster auf, das von der Kamera erkannt und verfolgt wird. Da die Dimensionen des Markers bekannt sind, kann seine Position und Orientierung im Raum präzise berechnet werden. Es gibt verschiedene Verfahren, die unterschiedliche Marker-Typen verwenden und jeweils eigene Methoden zur Positions- und Orientierungsbestimmung nutzen. (\cite{doerner2022virtual}) 
+
+Vereinfacht dargestellt, funktioniert das markenbasierte Tracking wie folgt:
 
 \begin{figure}
     \centering
@@ -217,39 +219,51 @@ Das markenbasierte Tracking basiert auf der Erkennung von speziellen Markern, di
     \caption{Darstellung eines markenbasiertes Tracking\label{fig:Marker}}\par
 \end{figure}
 
-Wie in Abbildung \ref{fig:Marker} dargestellt, wird die Kamera auf den Marker gerichtet, um ihn zu erfassen. Nun kann mithilfe der intrinsischen Kameraparameter und der bekannten Dimensionen des Markers die Position und Orientierung des Kamerakoordinatensystems relativ zum Marker bestimmt werden. Dies ermöglicht die Bestimmung einer Transformationsmatrix \( T_cm \), mithilfe derer die Koordinaten des Markers im Markerkoordinatensystem ins Kamerakoordinatensystem transformiert werden können. Entsprechend der Abbildung \ref{fig:Marker} kann die Transformation \( T_cm \) wie folgt definiert werden:
+Wie in Abbildung \ref{fig:Marker} dargestellt, wird die Kamera auf den Marker ausgerichtet, um ihn zu erfassen. Anhand der intrinsischen Kameraparameter und der bekannten Abmessungen des Markers lässt sich die Position und Orientierung des Kamerakoordinatensystems \( S \) relativ zum Marker bestimmen. Dadurch kann die Transformationsmatrix \( T_{cm} \) berechnet werden, mit der die Koordinaten des Markers aus dem Markerkoordinatensystem in das Kamerakoordinatensystem überführt werden. (\cite{doerner2022virtual})
+
+Entsprechend der Abbildung \ref{fig:Marker} lässt sich die Transformation \( T_{cm} \) wie folgt definieren:
 
 \begin{equation}\label{eq:v_c}
-v_c = T_cm * v_m
+    v_c = T_{cm} * v_m
 \end{equation}
 
-Wobei \( v_c \) Pixelkoordinaten des Markers im Kamerakoordinatensystem und \( v_m \) Koordinaten im Markerkoordinatensystem entsprechen.
+Dabei bezeichnet \( v_c \) Koordinaten im Kamerakoordinatensystem, während \( v_m \) Koordinaten im Markerkoordinatensystem darstellen (\cite{doerner2022virtual}).  
 
-Wobei \( v_c \) Pixelkoordinaten des Markers im Kamerakoordinatensystem und \( v_m \) Koordinaten im Markerkoordinatensystem entrsprechen.
+Die Koordinaten \( v_s \) im Bildkoordinatensystem \( C \) lassen sich unter Verwendung der intrinsischen Kameraparameter (siehe Kapitel \ref{Kalibrierung}) sowie der Koordinaten \( v_c \) im Kamerakoordinatensystem wie folgt ausdrücken (\cite{doerner2022virtual}):
 
-Nun können Koordinaten \( v_s \) im Bildkoordinatensystem \( C \) mithilfe der intrinsischen Kameraparameter (siehe Kapitel \ref{Kalibrierung}) und Koordinaten \( v_c \) im Kamerakoordinatensystem wie folgt beschrieben werden:
 
-\[ v_s = K * v_c \]
+\begin{equation}
+    v_s = K * v_c
+\end{equation}
 
-Unter Verwendung der Gleichung \ref{eq:v_c} kann die Transformation \( T_cm \) in die Gleichung eingesetzt werden:
+Unter Verwendung der Gleichung \ref{eq:v_c} kann die Transformation \( T_{cm} \) in die Gleichung eingesetzt werden:
 
-\[ v_s = K * T_cm * v_m \]
+\begin{equation}
+    v_s = K * T_{cm} * v_m
+\end{equation}
 
-Da \(v_s\) und \(v_m\) bekannt sind (die Pixelkoordinaten des Markers und die bekannten Dimensionen des Markers), kann die Transformation \(T_cm\) berechnet werden.
+Da sowohl \( v_s \) als auch \( v_m \) bekannt sind, also die Pixelkoordinaten des Markers und seine realen Abmessungen, lässt sich die Transformationsmatrix \( T_{cm} \) bestimmen. Diese entspricht der extrinsischen Kameramatrix \( [R|t] \), welche die Position und Orientierung der Kamera relativ zum Marker beschreibt. Die berechnete Transformation kann anschließend zur präzisen Platzierung virtueller Objekte genutzt werden. (\cite{doerner2022virtual}) 
 
-Die Position und Orientierung des Markers im Raum sind somit bekannt und können zur Platzierung von virtuellen Objekten verwendet werden (\cite{doerner2022virtual}).
 
-Das markerbasierte Tracking ist besonders robust und präzise, da die Position und Orientierung des Markers bekannt sind. Allerdings ist es auch aufwendiger, da die Marker manuell platziert und kalibriert werden müssen. Es wird häufig in Anwendungen eingesetzt, bei denen die Position des darzustellenden Objekts genau bekannt ist. Auch in der Filmproduktion wird markerbasiertes Tracking oft für Motion-Caputre-Verfahren verwendet.
+//TODO: Berechnung der Transformationsmatrix
 
-\section{Structure from Motion}\label{SfM}
+Das markenbasierte Tracking zeichnet sich durch hohe Präzision und Robustheit aus. Deshalb wird diese Methode häufig in Anwendungen eingesetzt, bei denen die exakte Position des darzustellenden Objekts im Vorfeld bekannt ist. Allerdings ist das markenbasierte Tracking auf die Verwendung von speziellen Markern beschränkt, was die Flexibilität und Anwendbarkeit in verschiedenen Szenarien einschränken kann. Daher werden zunehmend markerlose Tracking-Verfahren bevorzugt, die ohne spezielle Marker auskommen und die Kameraposition anhand von Bildinformationen schätzen. Diese Verfahren werden im folgenden Abschnitt erläutert. (\cite{doerner2022virtual})
 
-Structure from Motion (SfM) ist eine Technik aus der Computer Vision, die verwendet wird, um die 3D-Struktur einer Szene aus einer Reihe von 2D-Bildern zu rekonstruieren. SfM basiert auf der Triangulation von Punkten, die in verschiedenen Bildern sichtbar sind, um die Positionen der Sensoren und der Punkte in der Szene zu bestimmen.
+\section{SLAM}\label{SLAM}
 
-Da SfM die Grundlage vieler AR-Verfahren darstellt und in verbesserter bzw. abgewandelter Form in vielen AR-Frameworks (z.B. SLAM, siehe Kapitel 4.7) eingesetzt wird, ist es wichtig, die grundlegenden Schritte und Algorithmen zu verstehen, die bei der Rekonstruktion von 3D-Szenen verwendet werden. Diese werden im Folgenden erläutert.
+Simultanous Localization and Mapping (SLAM) entstammt urprünglich aus der Robotik und beschreibt die Fähigkeit eines autonomen Systems, sich in einer unbekannten Umgebung zu lokalisieren und gleichzeitig eine Karte dieser Umgebung zu erstellen. SLAM wird in einer Vielzahl von mobile AR-Anwendung und Frameworks eingesetzt. Dort tritt es oft in Form des Visual SLAM auf, bei dem sowohl visuelle Informationen der Kamera als auch Informationen anderer Sensoren, wie IMUs oder LiDAR, genutzt werden. 
 
-\subsection{Feature Detection und Matching}
+\begin{figure}
+    \centering
+    \includegraphics[ width=1\textwidth ]{VSLAM}
+    \caption{Funktionsweise des Visual SLAM\label{fig:VSLAM}}\par
+\end{figure}
 
-Bei der Feature Detection bzw. beim Feature Maching werden Merkmale in verschiedenen Bildern identifiziert und korrespondierende Merkmale gefunden. Dieser Schritt ist entscheidend, um die Bewegung der Kamera (Tracking) und die 3D-Struktur der Szene zu bestimmen. Es gibt verschiedene Algorithmen, die für das Erkennen und Nachverfolgen von Feature-Punkten verwendet werden können, wie z. B. SIFT (Scale-Invariant Feature Transform), SURF (Speeded-Up Robust Features) oder ORB (Oriented FAST and Rotated BRIEF). Diese Algorithmen setzen sich grundsätzlich aus drei Teilen zusammen:
+Die Abbilung \ref{fig:VSLAM} zeigt die einzelnen Schritte des Visual SLAM. SLAM kann in Bezug auf dessen Funktionsweise in ein Frontend und ein Backend unterteilt werden. Das Frontend umfasst die Schätzung der Kameraposition und der 3D-Struktur der Szene (Tracking, siehe Abbildung \ref{fig:VSLAM}), während das Backend die Optimierung der Schätzungen und die Erstellung einer konsistenten Karte übernimmt (Mapping, siehe Abbildung \ref{fig:VSLAM}). Die einzelnen Schritte des vSLAM werden im Folgenden näher erläutert.
+
+\subsection{Merkmalserkennung und -verfolgung}
+
+ei der Feature Detection bzw. beim Feature Maching werden Merkmale in verschiedenen Bildern identifiziert und korrespondierende Merkmale gefunden. Dieser Schritt ist entscheidend, um die Bewegung der Kamera (Tracking) und die 3D-Struktur der Szene zu bestimmen. Es gibt verschiedene Algorithmen, die für das Erkennen und Nachverfolgen von Feature-Punkten verwendet werden können, wie z. B. SIFT (Scale-Invariant Feature Transform), SURF (Speeded-Up Robust Features) oder ORB (Oriented FAST and Rotated BRIEF). Diese Algorithmen setzen sich grundsätzlich aus drei Teilen zusammen:
 
 \begin{enumerate}
     \item Feature Detector oder Keypoint Detector
@@ -263,59 +277,7 @@ Ein besonders effizienter und robuster Algorithmus ist ORB, der auf den Methoden
 
 Neben klassischen Verfahren wie ORB gewinnen Deep-Learning-Modelle zunehmend an Bedeutung für das Feature Matching. Besonders Convolutional Neural Networks (CNNs) und Transformer-Modelle liefern vielversprechende Ergebnisse. Ein Beispiel hierfür ist XFeat (Accelerated Features), ein optimiertes neuronales Netzwerk, das die Merkmalsextraktion beschleunigt. Auch OmniGlue, eine Kombination aus CNNs und Transformer-Modellen, setzt neue Maßstäbe in der robusten und anpassungsfähigen Feature-Matching-Strategie. Diese modernen Ansätze bieten oft eine höhere Genauigkeit und Stabilität, insbesondere in komplexen Szenen oder bei stark variierenden Lichtverhältnissen.
 
-\subsection{Camera Pose Estimation}
-
-Die Schätzung der Kameraposition ist ein essenzieller Schritt in der SfM-Pipeline, da sie die Position und Orientierung der Kamera in jedem Bild bestimmt. Diese Informationen sind entscheidend für die Rekonstruktion der 3D-Struktur der Szene und die Bestimmung der extrinsischen Kameraparameter.
-
-Geht man davon aus, dass die intrinsischen Parameter der Kamera bekannt sind und mehrere Bilder mit korrespondierenden Punkten vorliegen, kann die Kameraposition mithilfe der Essential Matrix \(E\) berechnet werden. Diese Matrix beschreibt die geometrische Beziehung zwischen zwei Bildern und ermöglicht die Bestimmung von Rotation und Translation der Kamera. Die grundlegende Bedingung für die Berechnung der extrinsischen Parameter lautet:
-
-\begin{equation}
-x'^T E x = 0
-\end{equation}
-
-Diese Gleichung beschreibt die Epipolargeometrie, wobei \( x \) und \( x' \) die korrespondierenden Punkte in den beiden Bildern darstellen. Die Essential Matrix kann durch den Five-Point-Algorithmus geschätzt werden, der im kalibrierten Fall mindestens fünf korrespondierende Punkte benötigt, um eine eindeutige Lösung zu liefern.
-
-Sobald die Essential Matrix bestimmt wurde, kann sie mithilfe der Singulärwertzerlegung (SVD) in die Rotationsmatrix \( R \) und die Translationsmatrix \( t \) der Kamera zerlegt werden:
-
-\begin{equation}
-E = R [t]_x
-\end{equation}
-
-Diese Zerlegung erlaubt es, die Bewegung der Kamera zwischen den Bildern präzise zu bestimmen.
-
-\subsection{Dreidimensionale Rekonstruktion}
-
-Die dreidimensionale Rekonstruktion einer Szene überführt die zweidimensionalen Bilddaten einer Kamera in ein 3D-Modell. Dabei werden sowohl die Kameraparameter als auch die Translation und Rotation der Kamera sowie die korrespondierenden Feature-Punkte aus dem Feature Matching verwendet, um die Positionen der Punkte im Raum zu berechnen und so eine präzise 3D-Darstellung der Szene zu erstellen.
-
-Ein zentraler Schritt in der 3D-Rekonstruktion ist die Triangulation, bei der die kartesischen Koordinaten eines Feature-Punktes im Weltkoordinatensystem ermittelt werden. Ein einfaches Verfahren zur Bestimmung dieser Koordinaten besteht darin, den 3D-Strahlen zu folgen, die von den Kamerazentren \( c_j \) in die Richtungen \( \hat{v_j} \) verlaufen. Der gesuchte Punkt \( p_0 \) ist derjenige, der sich im minimalen Abstand zu allen Strahlen befindet. Die Richtungen \( \hat{v_j} \) werden durch die Transformation der 2D-Bildpunkte mittels der Kameramatrizen beschrieben. Der Punkt \( p_0 \) wird dabei durch Minimierung der quadratischen Abstände zwischen den Strahlen und dem Punkt berechnet.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=.5\textwidth]{Triangulation}
-    \caption{Dreidimensionale Triangulation mit zwei Bildern\label{fig:Triangulation}}\par
-\end{figure}
-
-Abbildung \ref{fig:Triangulation} zeigt die grafische Darstellung der Triangulation eines Punktes im dreidimensionalen Raum. Mathematisch wird dieser Prozess durch die folgende Gleichung beschrieben:
-
-\[
-p = \left( \sum_j \left( I - \hat{v_j} \hat{v_j}^T \right) \right)^{-1} \left( \sum_j \left( I - \hat{v_j} \hat{v_j}^T \right) c_j \right)
-\]
-
-Das Ergebnis der Triangulation ist eine sogenannte Punktwolke (Point Cloud), die die 3D-Struktur der Szene abbildet. Diese Punktwolke kann anschließend weiterverarbeitet werden, um ein detailliertes 3D-Modell der Szene zu erstellen. Ein wichtiger Schritt in dieser Weiterverarbeitung ist die Oberflächenrekonstruktion (Plane Detection), bei der die Punktwolke in Flächen unterteilt wird, um die Oberflächen von Objekten im Raum zu bestimmen. Zur Durchführung der Oberflächenrekonstruktion wird häufig der RANSAC-Algorithmus (Random Sample Consensus) eingesetzt. Dieser Algorithmus erkennt Ausreißer in den Daten und schätzt die Flächen anhand der verbleibenden, konsistenten Punkte.
-
-\begin{figure}
-    \centering
-    \includegraphics[ width=.5\textwidth ]{PointCloud}
-    \caption{Beispiel einer drei-dimensionalen Point-Cloud-Rekonstruktion\label{fig:PointCloud}}\par
-\end{figure}
-
-\subsection{Bundle Adjustment}
-
-Der Bundle Adjustment ist ein Optimierungsverfahren, das verwendet wird, um die Kamerapositionen und die 3D-Struktur der Szene zu verfeinern. Dabei werden die Fehler zwischen den projizierten 3D-Punkten und den tatsächlichen 2D-Punkten minimiert, um die bestmögliche Schätzung der Kamerapositionen und der 3D-Struktur zu erhalten. Der Bundle Adjustment ist ein iterativer Prozess, der normalerweise auf der nicht-linearen Optimierung basiert. Es gibt verschiedene Algorithmen zur Bundle Adjustment, wie z. B. die Levenberg-Marquardt-Methode oder die Gauss-Newton-Methode.
-
-\section{SLAM}\label{SLAM}
-
-Simultanous Localization and Mapping (SLAM) entstammt urprünglich aus der Robotik und beschreibt die Fähigkeit eines autonomen Systems, sich in einer unbekannten Umgebung zu lokalisieren und gleichzeitig eine Karte dieser Umgebung zu erstellen. SLAM ist sehr stark mit Structure-from-Motion-Algorithmen verwandt, da beide Techniken die gleichen Prinzipien verwenden, um die Kameraposition und die 3D-Struktur der Szene zu bestimmen. Der grundlegende Unterschied besteht darin, dass SLAM die Priorität auf die Echtzeitverarbeitung und die gleichzeitige Schätzung der Position und Orientierung des Sensors und die dreidimensionale Rekonstruktion der Umgebung legt. 
+SLAM ist sehr stark mit Structure-from-Motion-Algorithmen verwandt, da beide Techniken die viele gemeinsame Prinzipien verwenden, um die Kameraposition und die 3D-Struktur der Szene zu bestimmen. Der grundlegende Unterschied besteht darin, dass SLAM die Priorität auf die Echtzeitverarbeitung und die gleichzeitige Schätzung der Position und Orientierung des Sensors und die dreidimensionale Rekonstruktion der Umgebung legt. 
 
 \section{Scene Understanding}
 
