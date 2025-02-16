@@ -251,6 +251,11 @@ Das markenbasierte Tracking zeichnet sich durch hohe Präzision und Robustheit a
 
 \section{SLAM}\label{SLAM}
 
+Simultanous Localization and Mapping (SLAM) hat sich als eine der wichtigsten Technologien in der Augmented Reality etabliert. Das Verfahren, das ursprünglich aus der Robotik stammt, ermöglicht die gleichzeitige Bestimmung der Position und Orientierung eines Geräts und die Extraktion dreidimensionaler Informationen der Umgebung. SLAM wird in einer Vielzahl von AR-Framworks und -Anwendung eingesetzt.
+
+
+SLAM ermöglicht es, die Position und Orientierung eines Geräts in Echtzeit zu bestimmen und gleichzeitig eine Karte der Umgebung zu erstellen. Diese Technologie ist besonders nützlich für mobile AR-Anwendungen, da sie eine präzise Lokalisierung und Orientierung des Geräts in der realen Welt ermöglicht. SLAM wird in einer Vielzahl von Anwendungen eingesetzt, wie beispielsweise in der Navigation, der Robotik und der Augmented Reality. (\cite{doerner2022virtual})
+
 Simultanous Localization and Mapping (SLAM) entstammt urprünglich aus der Robotik und beschreibt die Fähigkeit eines autonomen Systems, sich in einer unbekannten Umgebung zu lokalisieren und gleichzeitig eine Karte dieser Umgebung zu erstellen. SLAM wird in einer Vielzahl von mobile AR-Anwendung und Frameworks eingesetzt. Dort tritt es oft in Form des Visual SLAM auf, bei dem sowohl visuelle Informationen der Kamera als auch Informationen anderer Sensoren, wie IMUs oder LiDAR, genutzt werden. 
 
 \begin{figure}
@@ -261,27 +266,240 @@ Simultanous Localization and Mapping (SLAM) entstammt urprünglich aus der Robot
 
 Die Abbilung \ref{fig:VSLAM} zeigt die einzelnen Schritte des Visual SLAM. SLAM kann in Bezug auf dessen Funktionsweise in ein Frontend und ein Backend unterteilt werden. Das Frontend umfasst die Schätzung der Kameraposition und der 3D-Struktur der Szene (Tracking, siehe Abbildung \ref{fig:VSLAM}), während das Backend die Optimierung der Schätzungen und die Erstellung einer konsistenten Karte übernimmt (Mapping, siehe Abbildung \ref{fig:VSLAM}). Die einzelnen Schritte des vSLAM werden im Folgenden näher erläutert.
 
-\subsection{Merkmalserkennung und -verfolgung}
+\subsection{Feature Detection}
 
-ei der Feature Detection bzw. beim Feature Maching werden Merkmale in verschiedenen Bildern identifiziert und korrespondierende Merkmale gefunden. Dieser Schritt ist entscheidend, um die Bewegung der Kamera (Tracking) und die 3D-Struktur der Szene zu bestimmen. Es gibt verschiedene Algorithmen, die für das Erkennen und Nachverfolgen von Feature-Punkten verwendet werden können, wie z. B. SIFT (Scale-Invariant Feature Transform), SURF (Speeded-Up Robust Features) oder ORB (Oriented FAST and Rotated BRIEF). Diese Algorithmen setzen sich grundsätzlich aus drei Teilen zusammen:
+Bei der Feature Detection werden Feature-Punkte in Bildern identifiziert. Ein Feature-Punkt (Merkmal) ist ein charakteristischer Punkt in einem Bild, der durch seine einzigartige Struktur oder Helligkeitsverteilung hervorsticht. Ein Feature-Punkt kann beispielsweise ein Eckpunkt, ein Kantenpunkt oder ein Texturpunkt sein. Feature-Punkte bestehen aus einem Key Point, also einem zweidimensionalen Punkt im Bild, und einem Descriptor. 
 
-\begin{enumerate}
-    \item Feature Detector oder Keypoint Detector
-    \item Feature Descriptor
-    \item Feature Matching Algorithm
-\end{enumerate}
+Der Descriptor entspricht einer numerischen Beschreibung des erkannten Merkmals, um sie über mehrere Bilder hinweg vergleichbar zu machen. Diese Deskriptoren bestehen in der Regel aus Vektoren, die die verschiedene Charakteristiken, wie der Helligkeitsverteilung, um den jeweiligen Feature-Punkt erfassen. Korrespondierende Feature Punkte werden anhand der Ähnlichkeiten der Deskriptoren im Vektorraum gefunden.
 
-Der Feature Detector identifiziert charakteristische Punkte im Bild, die sich durch hohe Kontraste oder markante Strukturen auszeichnen. Diese Punkte, auch als Keypoints bezeichnet, dienen als Referenz für spätere Berechnungen. Anschließend erstellt der Feature Descriptor eine numerische Beschreibung für jedes erkannte Merkmal, um sie über mehrere Bilder hinweg vergleichbar zu machen. Diese Deskriptoren bestehen in der Regel aus Vektoren, die die Helligkeitsverteilung um den jeweiligen Feature-Punkt erfassen. Schließlich vergleicht der Feature Matching Algorithmus die Deskriptoren aus verschiedenen Bildern, um korrespondierende Merkmale zu finden, die wiederum zur Schätzung der Kamerabewegung genutzt werden.
+Es gibt verschiedene Algorithmen, die für das Erkennen und Nachverfolgen von Feature-Punkten verwendet werden können, wie z. B. SIFT (Scale-Invariant Feature Transform), SURF (Speeded-Up Robust Features) oder ORB (Oriented FAST and Rotated BRIEF). Die folgende Tabelle vergleicht die Geschwindigkeit der erwähnten Algorithmen bei einer Extraktion von 1000 Feature-Punkten aus dem gleichen Bild:
 
-Ein besonders effizienter und robuster Algorithmus ist ORB, der auf den Methoden FAST (Features from Accelerated Segment Test) und BRIEF (Binary Robust Independent Elementary Features) basiert. Der FAST-Algorithmus erkennt Punkte mit starken Helligkeitsänderungen, indem er benachbarte Pixel in einem Kreis um den zu prüfenden Pixel vergleicht. Übersteigt die Anzahl der signifikant helleren oder dunkleren Pixel einen bestimmten Schwellenwert, wird der Punkt als Feature identifiziert. Anschließend berechnet BRIEF für jedes erkannte Feature binäre Deskriptoren, indem zufällig gewählte Pixelpaare innerhalb der Umgebung des Feature-Punkts verglichen werden. Die resultierenden binären Deskriptoren sind besonders effizient in der Berechnung und Speicherung. Um die erkannten Merkmale schnell und zuverlässig zuzuordnen, kommt die Fast Library for Approximate Nearest Neighbors (FLANN) zum Einsatz, die eine leistungsstarke Methode zur Suche nach korrespondierenden Features bietet.
+\begin{center}
+    \begin{tabular}{ |c|c| } 
+        \hline
+        Algorithmus & Geschwindigkeit (ms) \\
+        \hline
+        SIFT & 5228.7 \\
+        SURF & 217.3 \\
+        ORB & 15.3 \\
+        \hline
+    \end{tabular}
+\end{center}
+
+Aufgrund der Echtzeit-Anforderung in AR-Anwendungen wird neben der Robustheit, vor allem die Geschwindigkeit der Algorithmen betrachtet. ORB stellt hierbei eine gute Balance zwischen Geschwindigkeit und Robustheit dar und wird daher häufig in AR-Anwendungen eingesetzt. Aus diesem Grund wird ORB im folgenden Abschnitt näher erläutert.
+
+Oriented FAST and Rotated BRIEF (ORB) setzt sich aus zwei Komponenten zusammen: FAST (Features from Accelerated Segment Test) und BRIEF (Binary Robust Independent Elementary Features). Der FAST-Algorithmus identifiziert Punkte mit starken Helligkeitsänderungen in den Grauwerten, indem er benachbarte Pixel in einem Kreis um den zu prüfenden Pixel vergleicht. 
+
+Die Abbildung \ref{fig:FAST} zeigt die Funktionsweise des FAST-Algorithmus. Zunächst wird ein Pixel \( p \) mit einem Helligkeitswert \( I_p \) ausgewählt. Ausgehend von diesem Pixel werden die Helligkeitswerte der 16 benachbarte Pixel \( p \) in einem Kreis mit einem Radius von 3 verglichen. Übersteigt die Anzahl der aufeinander folgenden, signifikant helleren oder dunkleren Pixel einen bestimmten Schwellenwert \( N \), wird \( p \) als Feature identifiziert. Diese Schritte werden für alle Pixel im Bild wiederholt, um alle Feature-Punkte zu identifizieren. Der Algorithmus kann optimiert werden, indem zunächst die Nachbarpixel 1, 5, 9, und 13 (siehe Abbildung \ref{fig:FAST}) betrachtet werden. Falls drei der vier Pixel heller oder dunkler sind als \( I_p \), kann es sich um einen potenziellen Feature-Punkt handeln.
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{FAST}
+    \caption{FAST-Feature-Punkte\label{fig:FAST}}\par
+\end{figure}
+
+Zusätzlich zu den erkannten Feature-Punkten berechnet ORB Rotations- bzw. Richtungsinformationen für jedes Feature. Dazu wird ein sogenannter Zentroid berechnet, der den Grauwert des Bildblocks in der Nähe des Feature-Punkts als Schwerpunkt verwendet. Diese Zentroide werden wie folgt berechnet:
+
+Zunächst wird das Moment \( m_{pq} \) im Bildblock \( B \) berechnet, wobei \( p \) und \( q \) entweder 0 oder 1 sind:
+
+\begin{equation}
+    m_{pq} = \sum_{x,y \in B} x^p y^q I(x, y)
+\end{equation}
+
+\begin{tcolorbox}[colback=THAi-Blue!20!white, colframe=THAi-Blue]
+    Momente sind gewichtete Mittelwerte der Pixelintensitäten und dienen in der Bildverarbeitung zur Objektbeschreibung nach der Segmentierung. Sie ermöglichen die Bestimmung von Fläche, Schwerpunkt und Ausrichtung eines Objekts.
+\end{tcolorbox}
+
+Mithilfe der Momente kann nun der inhaltsbasierte Schwerpunkt \( C \) (auch ,,centroid'' genannt) des Bildblocks berechnet werden:
+
+\begin{equation}
+C = 
+\left(
+\frac{m_{10}}{m_{00}}, \\
+\frac{m_{01}}{m_{00}}
+\right)
+\end{equation}
+
+Schließlich wird die Orientierung des Features bestimmt, die durch den Vektor \( \overrightarrow{OC} \) vom geometrischen Zentrum des Bildblocks \( O \) zum Zentroiden \( C \) definiert ist und durch den Winkel \( \theta \) beschrieben wird. Die Berechnung kann verkürzt werden, indem der Tangens des Winkels \( \theta \) durch das Verhältnis der Momente \( m_{01} \) und \( m_{10} \) berechnet wird:
+
+\begin{equation}
+    \theta = \arctan \left( \frac{m_{01}}{m_{10}} \right)
+\end{equation}
+
+Nachdem die Feature-Punkte erkannt wurden, werden die Deskriptoren für jedes Feature berechnet. Der BRIEF-Algorithmus erstellt binäre Deskriptoren, die die Helligkeitsverteilung um den Feature-Punkt beschreiben. Dabei werden zufällige Paare von Pixeln um den Feature-Punkt ausgewählt und verglichen. Die resultierenden binären Werte werden in einem 128-bit Vektor gespeichert und bilden den Deskriptor für das Feature.
+
+Die verbesserte Implementierung des FAST- und BRIEF-Algorithmus in ORB ermöglicht eine schnelle und robuste Merkmalsextraktion, die in Echtzeit auf mobilen Geräten ausgeführt werden kann. Die Features sind invariant gegenüber Rotationen und Skalierungen und eignen sich daher gut für das Feature-Matching in AR-Anwendungen. ORB wird daher häufig in AR-Anwendungen eingesetzt, um Feature-Punkte zu erkennen und zu verfolgen.
 
 Neben klassischen Verfahren wie ORB gewinnen Deep-Learning-Modelle zunehmend an Bedeutung für das Feature Matching. Besonders Convolutional Neural Networks (CNNs) und Transformer-Modelle liefern vielversprechende Ergebnisse. Ein Beispiel hierfür ist XFeat (Accelerated Features), ein optimiertes neuronales Netzwerk, das die Merkmalsextraktion beschleunigt. Auch OmniGlue, eine Kombination aus CNNs und Transformer-Modellen, setzt neue Maßstäbe in der robusten und anpassungsfähigen Feature-Matching-Strategie. Diese modernen Ansätze bieten oft eine höhere Genauigkeit und Stabilität, insbesondere in komplexen Szenen oder bei stark variierenden Lichtverhältnissen.
 
-SLAM ist sehr stark mit Structure-from-Motion-Algorithmen verwandt, da beide Techniken die viele gemeinsame Prinzipien verwenden, um die Kameraposition und die 3D-Struktur der Szene zu bestimmen. Der grundlegende Unterschied besteht darin, dass SLAM die Priorität auf die Echtzeitverarbeitung und die gleichzeitige Schätzung der Position und Orientierung des Sensors und die dreidimensionale Rekonstruktion der Umgebung legt. 
+\subsection{Feature Matching}
+
+Das Feature Matching ist ein wichtiger Schritt im visual SLAM, bei dem die Korrespondenzen zwischen den Feature-Punkten in aufeinanderfolgenden Bildern gefunden werden. Dies ermöglicht die spätere Bestimmung der Kamerabewegung. 
+
+Die Feature-Matching-Algorithmen vergleichen die Deskriptoren der Feature-Punkte und bestimmen die Ähnlichkeiten zwischen den Merkmalen. Korrespondierende Feature-Punkte werden anhand der Ähnlichkeiten der Deskriptoren mithilfe von Distanzmaßen, wie dem euklidischen Abstand oder dem Hamming-Abstand, gefunden. 
+
+Da die Anzahl der Feature-Punkte in den Bildern hoch sein kann, ist es wichtig, effiziente Algorithmen für das Feature Matching zu verwenden. Ein bekannter Algorithmus ist der FLANN-Algorithmus (Fast Library for Approximate Nearest Neighbors), der eine effiziente Suche nach den nächsten Nachbarn in großen Datensätzen ermöglicht. Der FLANN-Algorithmus verwendet k-d-Bäume oder andere Datenstrukturen, um die Suche nach den nächsten Nachbarn zu beschleunigen. 
+
+\subsection{Pose Estimation}
+
+Die Schätzung der Kameraposition (Pose Estimation) ist ein essenzieller Schritt in der SLAM-Pipeline. Sie liefert die Grundlage für die Rekonstruktion der dreidimensionalen Szene und die Bestimmung der extrinsischen Kameraparameter. Die Pose Estimation basiert auf der Triangulation, bei der die dreidimensionale Position eines Punktes im Raum anhand der korrespondierenden Punkte in zwei oder mehr Bildern bestimmt wird.
+
+Dazu wird zunächst identifiziert, wie sich die Kamera zwischen zwei oder mehreren Bildern bewegt hat. Die Epipolargeometrie beschreibt die Beziehung zwischen den Bildern und ermöglicht die Bestimmung der Kameraposition.  Das Ziel ist es, eine sogenannte Essential Matrix zu berechnen, die die Rotation \( R \) und Translation \( t \) der Kamera zwischen den Bildern beschreibt.
+
+Dazu betrachten wir die Situation in Abbildung \ref{fig:Epipolar} mit zwei Bildern \( I_1 \) und \( I_2 \) und den korrespondierenden Punkten \( p_1 \) und \( p_2 \). Die Kamerapositionen \( C_1 \) und \( C_2 \) sind ebenfalls dargestellt. 
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{Epipolar}
+    \caption{Situation der Epipolargeometrie bei zwei Bildern\label{fig:Epipolar}}\par
+\end{figure}
+
+Die epipolare Bedingung beschreibt, dass die Kamerapositionen \( C_1 \) und \( C_2 \) zusammen mit dem Punkt \( P \), der dem Schnittpunkt der Linien \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \) entspricht, auf einer Ebene liegen. Diese Bedingung kann durch die folgende Gleichung ausgedrückt werden:
+
+\begin{equation}
+    x_2^T t \times R x_1 = 0
+\end{equation}
+
+Hierbei entsprechen \( x_1 \) und \( x_2 \) den homogenen Koordinaten der korrespondierenden Punkte \( p_1 \) und \( p_2 \) in den Bildern \( I_1 \) und \( I_2 \). Die Essential Matrix \( E \) wird nun wie folgt definiert:
+
+\begin{equation}
+    E = t \times R
+\end{equation}
+
+Diese Matrix entspricht einer 3x3-Matrix mit neun unbekannten Variablen. Die Essential Matrix kann mithilfe des Eight-Point-Algorithmus geschätzt werden, der die epipolare Bedingung für mindestens acht korrespondierende Punkte in den Bildern verwendet. Dazu wird ein Lineares Gleichungssystem wie folgt aufgestellt: 
+
+\begin{equation}
+    \begin{pmatrix}
+        u_2^1 u_1^1 & u_2^1 v_1^1 & u_2^1 & v_2^1 u_1^1 & v_2^1 v_1^1 & v_2^1 & u_1^1 & v_1^1 & 1 \\
+        u_2^2 u_1^2 & u_2^2 v_1^2 & u_2^2 & v_2^2 u_1^2 & v_2^2 v_1^2 & v_2^2 & u_1^2 & v_1^2 & 1 \\
+        \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+        u_2^8 u_1^8 & u_2^8 v_1^8 & u_2^8 & v_2^8 u_1^8 & v_2^8 v_1^8 & v_2^8 & u_1^8 & v_1^8 & 1 
+    \end{pmatrix}
+    \begin{pmatrix}
+        e_1 \\ e_2 \\ e_3 \\ e_4 \\ e_5 \\ e_6 \\ e_7 \\ e_8 \\ e_9
+    \end{pmatrix}
+    = 0
+\end{equation}
+
+Die Essential Matrix \( E \) kann durch die Singulärwertzerlegung (SVD) in die Rotationsmatrix \( R \) und die Translationsmatrix \( t \) zerlegt werden. Die genaue Beschreibung dieser Zerlegung ist kein Bestandteil dieses Kapitels. Stattdessen wird auf weiterführende Literatur verwiesen.
+
+Wichtig ist, dass die Zerlegung der Essential Matrix vier mögliche Lösungen liefert, die durch die Wahl der korrekten Lösung bestimmt werden müssen. Die Abbildung \ref{fig:SVD} zeigt ein Beispiel für die vier möglichen Lösungen der Zerlegung der Essential Matrix. In diesem Fall kann die korrekte Lösung durch die Überprüfung der positiven Parallaxe bestimmt werden, die angibt, ob die Punkte vor oder hinter der Kamera liegen. Die korrekte Lösung entspricht derjenigen, bei der die meisten Punkte vor der Kamera liegen. Das Ergebnis der Zerlegung ist die Rotation \( R \) und die Translation \( t \), die die Bewegung der Kamera zwischen den Bildern beschreiben.
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=1\textwidth ]{SVD}
+    \caption{Zerlegung der Essential Matrix\label{fig:SVD}}\par
+\end{figure}
+
+Offensichtlich können wir allein von der Bewegung der Kamera zwischen zwei Bildern nicht direkt auf die Position der Kamera im Weltkoordinatensystem schließen. Dazu wird meistens bei der Initialisierung des AR-Systems das Weltkoordinatensystem auf die Position der Kamera im ersten Bild gelegt. Die Position der Kamera im Weltkoordinatensystem wird dann durch die Bewegung der Kamera zwischen den Bildern bestimmt.
+
+\subsection{Triangulation}
+
+Bei der Triangulation werden die kartesischen Koordinaten eines Feature-Punktes in zwei oder mehr Bildern im Raum bestimmt. Dies führt zur Extraktion von Tiefeninformationen aus den vohanden Bildern und ermöglicht die Rekonstruktion der dreidimensionalen Struktur der Szene. 
+
+Die Abbildung \ref{fig:Triangulation} zeigt die Triangulation eines Punktes im dreidimensionalen Raum anhand von zwei Bildern. Die Kamerapositionen \( O_1 \) und \( O_2 \) sowie die korrespondierenden Punkte \( p_1 \) und \( p_2 \) sind dargestellt. Der Punkt \( P \) entspricht dem gesuchten Feature-Punkt im Raum. In einer idealen Welt entspricht \( P \) dem Schnittpunkt der Strahlen \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \). Aufgrund von Rauschen und Ungenauigkeiten in den Bildern ist die exakte Bestimmung des Punktes durch die Berechnung des Schnittpunktes meist nicht möglich. Stattdessen wird der gesuchte Punkt durch die Minimierung der quadratischen Abstände zwischen den Strahlen und dem Punkt berechnet. Der gesuchte Punkt \( P \) ist derjenige, der sich im minimalen Abstand zu allen Strahlen befindet (siehe Abbildung \ref{fig:Triangulation}).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.5\textwidth]{Triangulation}
+    \caption{Dreidimensionale Triangulation mit zwei Bildern\label{fig:Triangulation}}\par
+\end{figure}
+
+Das Ergebnis der Triangulation verschiedener Feature-Punkte über mehrere Bilder ergibt eine sogenannte Punktwolke (Point Cloud), die die 3D-Struktur der Szene abbildet. Diese Punktwolke kann anschließend weiterverarbeitet werden, um ein detailliertes 3D-Modell der Szene zu erstellen. Ein wichtiger Schritt in dieser Weiterverarbeitung ist die Oberflächenrekonstruktion (Plane Detection), bei der die Punktwolke in Flächen unterteilt wird, um die Oberflächen von Objekten im Raum zu bestimmen. Zur Durchführung der Oberflächenrekonstruktion wird häufig der RANSAC-Algorithmus (Random Sample Consensus) eingesetzt. Dieser Algorithmus erkennt Ausreißer in den Daten und schätzt die Flächen anhand der verbleibenden, konsistenten Punkte.
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{PointCloud}
+    \caption{Beispiel einer dreidimensionalen Point-Cloud-Rekonstruktion\label{fig:PointCloud}}\par
+\end{figure}
+
+\subsection{Bundle Adjustment}
+
+Aufgrund der Ungenauigkeiten in den Bildern und der dadurch entstehenden ungenauen Schätzungen der Kamerapositionen und Feature-Punkte im Weltkoordinatensystem ist es notwendig, die gesamte Szene zu optimieren, um eine konsistente und präzise Rekonstruktion zu erhalten. 
+
+In der computergestützten Photogrammetrie sowie in SLAM-Systemen (Simultaneous Localization and Mapping) ist die \emph{Bundle Adjustment} (BA) eine zentrale Methode zur gleichzeitigen Optimierung von Kameraposen und 3D-Punktwolken. Ziel des Verfahrens ist es, den sogenannten Reprojektionsfehler zu minimieren, also die Differenz zwischen den in den Bildern gemessenen 2D-Punkten und den Projektionen der rekonstruierbaren 3D-Punkte zu reduzieren. 
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.8\textwidth ]{BundleAdjustment}
+    \caption{Beispiel einer Situation mit Reprojektionsfehler\label{fig:BA}}\par
+\end{figure}
+
+Dieser, in Abbildung \ref{fig:BA} dargestellte, Reprojektionsfehler tritt aufgrund der Ungenauigkeiten bei der Triangulation und der Schätzung der Kamerapositionen auf. Um diesen Fehler zu minimieren, wird zunächst der triangulierte Punkt im Weltkoordinatensystem zurück in das Kamerabild projiziert. Dazu werden sowohl die extrinsische Parameter als auch die intrinschen Parameter der Kamera (siehe Kapitel \ref{Kalibrierung}) wie folgt verwendet:
+\begin{equation}
+    P' = Rp+t = [X', Y', Z']^T
+\end{equation}
+
+Anschließend wird der Punkt \( P' \) in die normalisierte Bildebene projiziert:
+\begin{equation}
+    P_c = [u_c, v_c, 1]^T = \frac{1}{Z'}[X', Y', Z']^T = [X'/Z', Y'/Z', 1]^T
+\end{equation}
+
+Nun können Verzeichnungen der Linse einbezogen werden:
+\begin{equation}
+    \begin{aligned}
+        u'_c &= u_c(1 + k_1r^2 + k_2r^4 + k_3r^6) \\
+        v'_c &= v_c(1 + k_1r^2 + k_2r^4 + k_3r^6)
+    \end{aligned}
+\end{equation}
+
+Die Anwendung der intrinsischen Parameter liefert die Pixelkoordinaten des reprojizierten Punktes im Bild:
+\begin{equation}
+    \begin{aligned}
+        u &= f_xu'_c + c_x \\
+        v &= f_yv'_c + c_y
+    \end{aligned}
+\end{equation}
+
+Der Reprojektionsfehler kann nun wie folgt berechnet werden:
+\begin{equation}
+    e = z - h(T,p)
+\end{equation}
+
+Wobei \( z \) der beobachtete 2D-Punkte und \( h(T,p) \) der reprojizierte 2D-Punkt ist. Der Reprojektionsfehler wird dann über alle Merkmale summiert:
+\begin{equation}
+    \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{n} \| e_{ij} \|^2 = \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{n} \| z_{ij} - h(T_i, p_j) \|^2
+\end{equation}
+
+Bei dieser Summe handelt es sich um ein nichtlineares Optimierungsproblem, das mithilfe von numerischen Optimierungsmethoden gelöst werden kann. Ein bekanntes Verfahren zur Lösung des Bundle Adjustment ist das Levenberg-Marquardt-Verfahren, das eine Kombination aus dem Gauss-Newton-Verfahren und der Methode der kleinsten Quadrate darstellt.
+
+\subsection{Loop Closure}
+
+Während das Bundle Adjustment die Optimierung der Kamerapositionen und Feature-Punkte über aufeinanderfolgende Bilder ermöglicht, ist es nicht in der Lage, Fehler zu korrigieren, die durch wiederkehrende Strukturen oder Schleifen in der Szene entstehen. Diese Fehler entstehen durch die Akkumulation von Ungenauigkeiten in der Schätzung der Kamerapositionen und Feature-Punkte über mehrere Bilder hinweg. 
+
+Die Loop Closure Detection ist ein Verfahren zur Erkennung und Korrektur von Fehlern in der Kamerapositionsschätzung. Dabei werden Schleifen in der Szene erkannt und die Kamerapositionen entsprechend korrigiert. Anstatt die einzelnen Deskriptoren der Feature-Punkte mehrere Bilder zu vergleichen, werden die Bilder als Ganzes betrachtet und anhand ihrer visuellen Ähnlichkeit miteinander verglichen.
+
+Dazu wird das sogenannte Bag-of-Words-Modell eingesett. Dieses Modell bestimmt die Ähnlichkeit von Bildern anhand von visuellen Wörtern. Dazu wird zunächst ein Wörterbuch mit fixer Größe erstellt, das die häufigsten Wörter in den Bildern repräsentiert. Ein Wort kann dabei als eine Menge benachbarter Merkmalspunkte angesehen werden. Anschließend werden die Bilder mithilfe des Wörterbuches in eine Vektorform kodiert. Ein Bild \( A \) könnte somit wie folgt kodiert werden:
+\begin{equation}
+    A = [1, 1, 0]^T
+\end{equation}
+
+Wobei die Länge des Vektoren die Anzahl der Wörter im Wörterbuch entrspricht und der Vektor das Vorhandensein der visuellen Wörter \( w_1 \) und \( w_2 \) und die Abwesenheit von \( w_3 \) in einem Bild repräsentiert. Eine andere Möglichkeit ist die Kodierung der Häufigkeiten der visuellen Wörter in einem Bild:
+\begin{equation}
+    B = [2, 1, 0]^T
+\end{equation}
+
+Hier repräsentiert der Vektor \( B \) wie oft die visuellen Wörter \( w_1 \), \( w_2 \), \( w_3 \) in einem Bild vorkommen. Die Ähnlichkeit von Bildern kann dann mithilfe von Distanzmaßen, wie dem euklidischen Abstand oder dem Kosinus-Ähnlichkeitsmaß, bestimmt werden. Bilder mit ähnlichen Vektorkodierungen werden als ähnlich betrachtet und können als mögliche Schleifen in der Szene erkannt werden. 
+
+Eine weitaus elegantere Lösung der Loop Closure Detection ist die Bestimmung des Wörtebuches mithilfe eines k-d-Baums. Dieser Baum weist eine Tiefe von \( d \) auf und besitzt \( k \) Verzweigungen am Wurzelknoten. Mithilfe des k-means Clustering wird das Wörterbuch erstellt, indem die Merkmalspunkte der betrachteten Bilder in \( k \) Cluster unterteilt werden. Diese Cluster entsprechen der ersten Ebene des k-d-Baums. Anschließend werden die Cluster in weitere Cluster unterteilt, bis die gewünschte Tiefe \( d \) erreicht ist.
+
+
+\begin{tcolorbox}[colback=THAi-Blue!20!white, colframe=THAi-Blue]
+    Clustering ist ein Verfahren des unüberwachten Lernens, bei dem ähnliche Objekte in Gruppen (Cluster) zusammengefasst werden. Ziel ist es, Muster oder Strukturen in unklassifizierten Daten zu erkennen. 
+\end{tcolorbox}
+
+
+
+
+Die Kamera- und Feature-Punktschätzungen können dann entsprechend angepass werden, um den akkumulierten Fehler zu eliminieren und eine konsistente Rekonstruktion der Szene zu gewährleisten.
+
+
 
 \section{Scene Understanding}
 
-TODO
+Die Scene Understanding bezeichnet die Fähigkeit eines Systems, die Umgebung zu interpretieren und zu verstehen. Ein wichtiger Bestandteil des Scene Understanding ist die semantische Segmentierung, bei der die Pixel eines Bildes in verschiedene Klassen eingeteilt werden. Diese Klassen können beispielsweise Objekte, Personen oder Hintergründe sein. Dadurch lassen sich einzelne Elemente in der Szene, wie Wände, Decken oder Möbel, identifizieren und voneinander unterscheiden. Die semantische Segmentierung ist ein wichtiger Schritt in der AR, da sie die Grundlage für die Interaktion zwischen virtuellen und realen Objekten bildet.
+
+
 
 \section{Technische Limitationen}
 
