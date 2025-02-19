@@ -1,0 +1,118 @@
+####################################################################################
+QUELLEN
+####################################################################################
+
+ALLGEMEIN
+////////////////////////////////////////////////////////////////////////////////////
+
+VR/AR - Foundations and Methods of Extended Realities (XR)
+Computer Vision - Algorithms and Applications
+Applications of Augmented Reality: Current State of the Art
+https://developers.google.com/ar/develop?hl=de
+https://developer.apple.com/augmented-reality/arkit/
+
+
+GESCHICHTLICHES
+////////////////////////////////////////////////////////////////////////////////////
+
+A head-mounted three dimensional display - Sutherland
+The Ultimate Display - Sutherland
+A survey of augmented reality - Azuma
+
+
+PROBLEMSTELLUNG
+////////////////////////////////////////////////////////////////////////////////////
+
+Handbuch zur Montage von Rauchmeldern - internes Dokument der BRUNATA-METRONA
+
+
+3D-COMPUTERGRAFIK
+///////////////////////////////////////////////////////////////////////////////////
+
+https://en.wikipedia.org/w/index.php?title=Polygonal_modeling&oldid=1185415049
+https://medium.com/hackernoon/a-computers-understanding-of-space-for-augmented-reality-c0fd40a52900
+https://medium.com/@vitali.usau/apple-arcamera-camera-parameters-explanation-for-3d-reconstruction-pipeline-7b3937dab3b9
+
+
+MATRIX-ALGEBRA
+///////////////////////////////////////////////////////////////////////////////////
+
+https://medium.com/macoclock/augmented-reality-911-transform-matrix-4x4-af91a9718246
+https://www.youtube.com/watch?v=Do_vEjd6gF0
+https://www.nxp.com/docs/en/application-note/AN4132.pdf
+(https://medium.com/@vitali.usau/apple-arcamera-camera-parameters-explanation-for-3d-reconstruction-pipeline-7b3937dab3b9)
+(https://www.aukom.info/fileadmin/Webdata/el/english/elearning/03/raum.htm#:~:text=By%20virtue%20of%20the%20right,in%20the%20positive%20z%20direction)
+
+
+KALIBRIERUNG
+///////////////////////////////////////////////////////////////////////////////////
+
+https://cvg.cit.tum.de/_media/teaching/ss2023/mvg2023/material/chapter04_camera_calibration.pdf
+https://de.mathworks.com/help/vision/ug/camera-calibration.html
+https://farukalamai.medium.com/camera-calibration-explained-enhancing-accuracy-in-computer-vision-applications-8ad1494cc5f2
+Decentering Distortion of Lenses - Brown
+(https://en.wikipedia.org/wiki/Distortion_%28optics%29)
+(https://developer.apple.com/documentation/avfoundation/avcameracalibrationdata)
+(https://www.youtube.com/watch?v=S-UHiFsn-GI&list=PL7Fxe7FxChBa8DWnKQ0if4s8eBEOOVOdn&index=1)
+
+
+SLAM
+///////////////////////////////////////////////////////////////////////////////////
+
+Introduction to Visual SLAM - Gao
+https://medium.com/@rabimba/arcore-and-arkit-what-is-under-the-hood-slam-part-2-5a5271d30449
+Past, Present, and Future of Simultaneous Localization and Mapping: Toward the Robust-Perception Age
+
+Feature Detection
+-----------------------------------------------------------------------------------
+https://learnopencv.com/how-to-build-chrome-dino-game-bot-using-opencv-feature-matching/#1-what-is-feature-matching
+Introduction to Feature Matching Using Neural Networks
+Visual SLAM: What Are the Current Trends and What to Expect?
+ORB: An efficient alternative to SIFT or SURF
+Machine Learning for High-Speed Corner Detection
+BRIEF: Binary Robust Independent Elementary Features
+(https://medium.com/@deepanshut041/introduction-to-fast-features-from-accelerated-segment-test-4ed33dde6d65)
+(https://medium.com/@deepanshut041/introduction-to-brief-binary-robust-independent-elementary-features-436f4a31a0e6)
+(https://medium.com/@deepanshut041/introduction-to-orb-oriented-fast-and-rotated-brief-4220e8ec40cf)
+
+Pose Estimation
+------------------------------------------------------------------------------------
+https://www.youtube.com/watch?v=auhpPoAqprk
+Uniqueness and Estimation of Three-Dimensional Motion Parameters of Rigid Objects with Curved Surfaces
+(https://www.sciencedirect.com/science/article/pii/S0926580512001690?fr=RR-2&ref=pdf_download&rr=914664673d63fdd0)
+(https://de.wikipedia.org/wiki/Epipolargeometrie)
+
+Triangulation
+------------------------------------------------------------------------------------
+(https://www.r-5.org/files/books/computers/algo-list/image-processing/vision/Richard_Hartley_Andrew_Zisserman-Multiple_View_Geometry_in_Computer_Vision-EN.pdf)
+(https://www.sciencedirect.com/science/article/pii/S0926580512001690?ref=pdf_download&fr=RR-2&rr=91466cceaeb8fdd0)
+(https://staff.fnwi.uva.nl/r.vandenboomgaard/ComputerVision/LectureNotes/CV/StereoVision/index.html)
+(https://www.open3d.org/docs/latest/tutorial/geometry/pointcloud.html)
+
+Bundle Adjustment
+------------------------------------------------------------------------------------
+https://www.baeldung.com/cs/computer-vision-bundle-adjustment
+(https://www.cs.jhu.edu/~misha/ReadingSeminar/Papers/Triggs00.pdf)
+(https://cvg.cit.tum.de/_media/teaching/ss2023/mvg2023/material/chapter12_bundle_adjustment.pdf)
+(https://en.wikipedia.org/wiki/Sparse_matrix)
+
+Loop Closure
+------------------------------------------------------------------------------------
+https://sgvr.kaist.ac.kr/~sungeui/IR_F14/NewSlides/Lec4b-bow.pdf
+https://de.wikipedia.org/w/index.php?title=Clusteranalyse&oldid=252310027
+(https://ori.ox.ac.uk/media/5756/newmanhoicra05.pdf)
+
+Scene Understanding
+------------------------------------------------------------------------------------
+https://arxiv.org/pdf/1605.06211v1
+(https://en.wikipedia.org/wiki/U-Net)
+(https://medium.com/towards-data-science/efficient-method-for-running-fully-convolutional-networks-fcns-3174dc6a692b)
+(https://oulurepo.oulu.fi/bitstream/handle/10024/14140/nbnfioulu-201906262666.pdf?sequence=1&isAllowed=y)
+(https://pmlab.cse.usf.edu/assets/pubs/huanle2020accelerating.pdf)
+(https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9296254)
+
+
+LIV-SLAM
+////////////////////////////////////////////////////////////////////////////////////
+
+https://onlinelibrary.wiley.com/doi/epdf/10.1111/phor.12497?saml_referrer

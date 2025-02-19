@@ -1,7 +1,0 @@
-https://medium.com/macoclock/augmented-reality-911-transform-matrix-4x4-af91a9718246
-https://www.youtube.com/watch?v=Do_vEjd6gF0
-https://www.nxp.com/docs/en/application-note/AN4132.pdf
-https://drive.google.com/drive/folders/1sOAA33p5uFjb6vthvW9Avvk_nRTcyaKr
-https://medium.com/@vitali.usau/apple-arcamera-camera-parameters-explanation-for-3d-reconstruction-pipeline-7b3937dab3b9
-https://developer.apple.com/documentation/arkit/
-https://www.aukom.info/fileadmin/Webdata/el/english/elearning/03/raum.htm#:~:text=By%20virtue%20of%20the%20right,in%20the%20positive%20z%20direction.

@@ -1,7 +1,0 @@
-https://cvg.cit.tum.de/_media/teaching/ss2023/mvg2023/material/chapter04_camera_calibration.pdf
-https://de.mathworks.com/help/vision/ug/camera-calibration.html
-https://farukalamai.medium.com/camera-calibration-explained-enhancing-accuracy-in-computer-vision-applications-8ad1494cc5f2#:~:text=In%20applications%20such%20as%20virtual,another%20in%20three%2Ddimensional%20space.
-https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html
-https://en.wikipedia.org/wiki/Distortion_%28optics%29
-https://www.youtube.com/watch?v=S-UHiFsn-GI&list=PL7Fxe7FxChBa8DWnKQ0if4s8eBEOOVOdn&index=1
-https://developer.apple.com/documentation/avfoundation/avcameracalibrationdata

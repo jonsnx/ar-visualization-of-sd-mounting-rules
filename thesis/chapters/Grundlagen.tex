@@ -108,9 +108,9 @@ Hierbei ist \(T_{object}\) die Transformationsmatrix des Objekts, und \(P_{objec
 
 \section{Kalibrierung}\label{Kalibrierung}
 
-Die Kalibrierung ist ein essenzieller Schritt in der Augmented-Reality-Pipeline. Sie dient der Bestimmung der intrinsischen und extrinsischen Kameraparameter, um eine korrekte Transformation von 2D-Bildpunkten in 3D-Weltkoordinaten zu ermöglichen (\cite{mw2024calibration}).
+Die Kalibrierung ist ein essenzieller Schritt in der Augmented-Reality-Pipeline. Sie dient der Bestimmung der intrinsischen und extrinsischen Kameraparameter, um eine korrekte Transformation von 2D-Bildpunkten in 3D-Weltkoordinaten zu ermöglichen. (\cite{mw2024calibration})
 
-Dabei wird häufig das sogenannte „Pinhole“-Modell verwendet, das die grundlegenden Eigenschaften einer idealisierten Kamera beschreibt (siehe Abbildung \ref{fig:Pinhole}). Dieses Modell basiert auf der Annahme einer Kamera ohne Objektiv, die lediglich eine kleine Blendenöffnung besitzt. Das Licht fällt durch diese Blende und projiziert ein umgekehrtes Abbild der Szene auf die Rückwand der Kamera (\cite{mw2024calibration}).
+Dabei wird häufig das sogenannte „Pinhole“-Modell verwendet, das die grundlegenden Eigenschaften einer idealisierten Kamera beschreibt (siehe Abbildung \ref{fig:Pinhole}). Dieses Modell basiert auf der Annahme einer Kamera ohne Objektiv, die lediglich eine kleine Blendenöffnung besitzt. Das Licht fällt durch diese Blende und projiziert ein umgekehrtes Abbild der Szene auf die Rückwand der Kamera. (\cite{mw2024calibration})
 
 \begin{figure}
     \centering
@@ -118,7 +118,7 @@ Dabei wird häufig das sogenannte „Pinhole“-Modell verwendet, das die grundl
     \caption{Pinhole-Modell (\cite{mw2024calibration})\label{fig:Pinhole}}\par
 \end{figure}
 
-Mithilfe der intrinsischen und extrinsischen Parameter kann eine Projektionsmatrix bestimmt werden, die es ermöglicht, Bildpixel in das Koordinatensystem der realen Welt zu überführen (siehe Abbildung \ref{fig:Kalibrierung}). Die intrinsischen Parameter umfassen die Brennweite, die Objektivverzerrung und die Position des optischen Zentrums der Kamera. Die extrinsischen Parameter hingegen beschreiben die Position und Orientierung der Kamera im Raum (\cite{mw2024calibration}).
+Mithilfe der intrinsischen und extrinsischen Parameter kann eine Projektionsmatrix bestimmt werden, die es ermöglicht, Bildpixel in das Koordinatensystem der realen Welt zu überführen (siehe Abbildung \ref{fig:Kalibrierung}). Die intrinsischen Parameter umfassen die Brennweite, die Objektivverzerrung und die Position des optischen Zentrums der Kamera. Die extrinsischen Parameter hingegen beschreiben die Position und Orientierung der Kamera im Raum. (\cite{mw2024calibration})
 
 \begin{figure}
     \centering
@@ -157,7 +157,7 @@ Die Projektion eines 3D-Punktes \( X = [X, Y, Z, 1]^T \) in das Bildkoordinatens
 x = PX
 \]
 
-Ein Bestandteil der intrinsischen Parameter, das gesondert betrachtet werden muss, sind die Verzerrungen der Linse (engl. Lens-Distortions). Diese entstehen zum einen durch die Krümmung der Linse (Radiale Verzerrzng) und zum anderen durch Unterschiede der Ausrichtung der Linse und des Sensors (Tangentiale Verzerrung). Ohne diese Verzerrungen in die Berechnungen einzubeziehen, kann es Unstimmigkeiten zwischen den berechneten Weltkoordinaten und den realen Weltkoordinaten für einen Bildpunkt geben (\cite{mw2024calibration, szeliski2022computerVision}).
+Ein Bestandteil der intrinsischen Parameter, das gesondert betrachtet werden muss, sind die Verzerrungen der Linse (engl. Lens-Distortions). Diese entstehen zum einen durch die Krümmung der Linse (Radiale Verzerrzng) und zum anderen durch Unterschiede der Ausrichtung der Linse und des Sensors (Tangentiale Verzerrung). Ohne diese Verzerrungen in die Berechnungen einzubeziehen, kann es Unstimmigkeiten zwischen den berechneten Weltkoordinaten und den realen Weltkoordinaten für einen Bildpunkt geben. (\cite{mw2024calibration, szeliski2022computerVision})
 
 Dazu werden oft Polynommodelle, wie das Brown-Conrady-Modell, verwendet. Dieses Modell relative Position zwischen der Linse und des Sensors. die radiale und tangentialen Verzerrungen der Linse und wird durch die Koeffizienten \( k_1, k_2, k_3 \) und \( p_1, p_2 \) definiert (\cite{brown1966distortion}). Die radiale Verzerrung kann somit durch folgende Gleichung beschrieben werden (\cite{mw2024calibration, szeliski2022computerVision}):
 
@@ -174,9 +174,9 @@ y_{\text{undistorted}}
 \left( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6 \right)
 \]
 
-In diesem Kapitel wurde die Kamera-Kalibrierung anhand einfacher Modelle erläutert. In der Praxis sind die intrinsischen Parameter jedoch in den meisten Kameras bereits vorkalibriert und können von den Herstellern bereitgestellt werden. So integriert beispielsweise Apples ARKit die intrinsischen Kameraparameter direkt und stellt sie über die Klasse \texttt{AVCameraCalibrationData} zur Verfügung, wodurch sie einfach genutzt werden können (\cite{appledevdoc}).
+In diesem Kapitel wurde die Kamera-Kalibrierung anhand einfacher Modelle erläutert. In der Praxis sind die intrinsischen Parameter jedoch in den meisten Kameras bereits vorkalibriert und können von den Herstellern bereitgestellt werden. So integriert beispielsweise Apples ARKit die intrinsischen Kameraparameter direkt und stellt sie über die Klasse \texttt{AVCameraCalibrationData} zur Verfügung, wodurch sie einfach genutzt werden können. (\cite{appledevdoc})
 
-Die extrinsischen Parameter hingegen müssen häufig manuell bestimmt werden, um die exakte Position und Orientierung der Kamera zu ermitteln. In der Augmented Reality ist die präzise Bestimmung der Kameraposition essenziell für viele Tracking-Verfahren. Dabei unterscheidet man zwischen markerbasiertem Tracking (siehe Kapitel \ref{Markerbasiertes Tracking}), bei dem die Position und Größe eines bekannten Markers – oft ein Schachbrettmuster – in der realen Welt genutzt wird, und markerlosem Tracking (siehe Kapitel \ref{SfM} und \ref{SLAM}), bei dem die Kameraposition durch die Analyse von Bilddaten ermittelt wird (\cite{doerner2022virtual, alam2024calibration}).
+Die extrinsischen Parameter hingegen müssen häufig manuell bestimmt werden, um die exakte Position und Orientierung der Kamera zu ermitteln. In der Augmented Reality ist die präzise Bestimmung der Kameraposition essenziell für viele Tracking-Verfahren. Dabei unterscheidet man zwischen markerbasiertem Tracking (siehe Kapitel \ref{Markerbasiertes Tracking}), bei dem die Position und Größe eines bekannten Markers – oft ein Schachbrettmuster – in der realen Welt genutzt wird, und markerlosem Tracking (siehe Kapitel \ref{SfM} und \ref{SLAM}), bei dem die Kameraposition durch die Analyse von Bilddaten ermittelt wird. (\cite{doerner2022virtual, alam2024calibration})
 
 \section{Sensorik}
 
@@ -184,7 +184,7 @@ Die Erfassung der Umgebung in Augmented-Reality-Anwendungen erfolgt mithilfe ver
 
 \subsection{Inertiale Sensoren}
 
-Inertiale Sensoren erfassen die Beschleunigung und Rotation eines Geräts und bestehen typischerweise aus einem Gyroskop und einem Beschleunigungsmesser. Während das Gyroskop die Winkelgeschwindigkeit misst und Drehbewegungen erkennt, erfasst der Beschleunigungsmesser lineare Beschleunigungen. Durch die Kombination beider Sensoren in einer Inertial Measurement Unit (IMU) lassen sich Bewegungen in sechs Freiheitsgraden (3D-Position und -Orientierung) präzise bestimmen. Diese Technologie ist besonders nützlich zur Erfassung schneller Bewegungen und findet Anwendung in AR-Brillen, Smartphones und anderen mobilen Geräten (\cite{doerner2022virtual}).
+Inertiale Sensoren erfassen die Beschleunigung und Rotation eines Geräts und bestehen typischerweise aus einem Gyroskop und einem Beschleunigungsmesser. Während das Gyroskop die Winkelgeschwindigkeit misst und Drehbewegungen erkennt, erfasst der Beschleunigungsmesser lineare Beschleunigungen. Durch die Kombination beider Sensoren in einer Inertial Measurement Unit (IMU) lassen sich Bewegungen in sechs Freiheitsgraden (3D-Position und -Orientierung) präzise bestimmen. Diese Technologie ist besonders nützlich zur Erfassung schneller Bewegungen und findet Anwendung in AR-Brillen, Smartphones und anderen mobilen Geräten. (\cite{doerner2022virtual})
 
 \begin{tcolorbox}[colback=THAi-Blue!20!white, colframe=THAi-Blue]
     Als \textbf{Freiheitsgrade} (engl. Degrees of Freedom – DOF) werden voneinander unabhängige Bewegungsmöglichkeiten eines physikalischen Systems bezeichnet. Ein starrer Körper besitzt sechs Freiheitsgrade: je drei für die Translation und Rotation. //TODO: Quelle
@@ -193,56 +193,52 @@ Inertiale Sensoren erfassen die Beschleunigung und Rotation eines Geräts und be
 
 \subsection{Kamera}
 
-Die Kamera ist ein essentieller Sensor für AR-Anwendungen, da die visuellen Informationen von vielen Tracking-Verfahren genutzt werden und die aufgenommenen Bilder die Grundlage für die Darstellung von virtuellen Objekten in der realen Welt bilden. Die Kamera liefert Bilddaten, die zur Erkennung von Markern, Features oder Objekten verwendet werden. Durch die Analyse der Kamerabilder können AR-Anwendungen die Position und Orientierung des Geräts bestimmen und virtuelle Objekte in die reale Welt einfügen. (\cite{doerner2022virtual}).
+Die Kamera ist ein essentieller Sensor für AR-Anwendungen, da die visuellen Informationen von vielen Tracking-Verfahren genutzt werden und die aufgenommenen Bilder die Grundlage für die Darstellung von virtuellen Objekten in der realen Welt bilden. Die Kamera liefert Bilddaten, die zur Erkennung von Markern, Features oder Objekten verwendet werden. Durch die Analyse der Kamerabilder können AR-Anwendungen die Position und Orientierung des Geräts bestimmen und virtuelle Objekte in die reale Welt einfügen. (\cite{doerner2022virtual})
 
-\subsection{Lasersensoren}
+\subsection{Lasersensoren}\label{LiDAR}
 
-Lasersensoren messen die Entfernung zu Objekten mithilfe von Laserstrahlen. LiDAR (Light Detection and Ranging) ist ein bekannter Lasersensor, der in der Robotik, Automobilindustrie und Augmented Reality weit verbreitet ist. Der Sensor strahlt Laserlicht aus und misst die Zeit, die das Licht benötigt, um zu einem Punkt in der Umgebung zu gelangen und zurückzukehren. Dadurch ist die exakte Bestimmung der Position und Entfernung des Punktes zum Sensor möglich. Dies ermöglicht die präzise Erfassung von Tiefeninformationen in der Umgebung und bietet somit große Vorteile für die Genauigkeit und Zuverlässigkeit des Trackings in AR-Anwendungen (\cite{doerner2022virtual}).
+Lasersensoren messen die Entfernung zu Objekten mithilfe von Laserstrahlen. LiDAR (Light Detection and Ranging) ist ein bekannter Lasersensor, der in der Robotik, Automobilindustrie und Augmented Reality weit verbreitet ist. Der Sensor strahlt Laserlicht aus und misst die Zeit, die das Licht benötigt, um zu einem Punkt in der Umgebung zu gelangen und zurückzukehren. Dadurch ist die exakte Bestimmung der Position und Entfernung des Punktes zum Sensor möglich. Dies ermöglicht die präzise Erfassung von Tiefeninformationen in der Umgebung und bietet somit große Vorteile für die Genauigkeit und Zuverlässigkeit des Trackings in AR-Anwendungen. (\cite{doerner2022virtual})
 
 \subsection{Satellitengestütze Systeme}
 
-Satellitengestützte Systeme wie GPS (Global Positioning System) bestimmen die geografische Position des Geräts mithilfe von Satellitensignalen. Diese Systeme sind besonders nützlich für die Lokalisierung des Geräts in großen Außenbereichen. Da GPS-Signale jedoch durch Gebäude und andere Hindernisse blockiert werden können, sind sie in Innenräumen oft ungenau. Zusätzlich dazu sind Abweichungen von bis zu 10m möglich, was für viele AR-Anwendungen nicht ausreichend ist. Smartphones setzen daher häufig A-GPS (Assisted GPS) ein um die GPS-Daten mithilfe von Mobilfunknetz- bzw. WLAN-Daten zu präzisieren (\cite{doerner2022virtual}). 
+Satellitengestützte Systeme wie GPS (Global Positioning System) bestimmen die geografische Position des Geräts mithilfe von Satellitensignalen. Diese Systeme sind besonders nützlich für die Lokalisierung des Geräts in großen Außenbereichen. Da GPS-Signale jedoch durch Gebäude und andere Hindernisse blockiert werden können, sind sie in Innenräumen oft ungenau. Zusätzlich dazu sind Abweichungen von bis zu 10m möglich, was für viele AR-Anwendungen nicht ausreichend ist. Smartphones setzen daher häufig A-GPS (Assisted GPS) ein um die GPS-Daten mithilfe von Mobilfunknetz- bzw. WLAN-Daten zu präzisieren. (\cite{doerner2022virtual}) 
 
 \subsection{Magnetfeldbasierte Sensoren}
 
-Magnetfeldbasierte Sensoren, wie das Magnetometer in IMUs, messen das Magnetfeld der Erde und liefern so Rückschlüsse bezüglich der Orientierung des Geräts relativ zum Magnetfeld. Diese Sensoren sind besonders nützlich für die Bestimmung der Ausrichtung des Geräts im Raum. Allerdings sind Magnetfelder anfällig für Störungen durch elektrische Geräte und Metallgegenstände, was die Genauigkeit der Messungen beeinträchtigen kann. Dennoch sind magnetfeldbasierte Sensoren eine wichtige Ergänzung zu anderen Sensoren für die präzise Lokalisierung und Orientierung in AR-Anwendungen (\cite{doerner2022virtual}).
+Magnetfeldbasierte Sensoren, wie das Magnetometer in IMUs, messen das Magnetfeld der Erde und liefern so Rückschlüsse bezüglich der Orientierung des Geräts relativ zum Magnetfeld. Diese Sensoren sind besonders nützlich für die Bestimmung der Ausrichtung des Geräts im Raum. Allerdings sind Magnetfelder anfällig für Störungen durch elektrische Geräte und Metallgegenstände, was die Genauigkeit der Messungen beeinträchtigen kann. Dennoch sind magnetfeldbasierte Sensoren eine wichtige Ergänzung zu anderen Sensoren für die präzise Lokalisierung und Orientierung in AR-Anwendungen. (\cite{doerner2022virtual})
 
 \section{Markenbasiertes Tracking}\label{Markerbasiertes Tracking}
 
 Das markenbasierte Tracking nutzt spezielle Marker, die in der realen Welt platziert werden und als Referenzpunkte für die Positionierung virtueller Objekte dienen. Diese Marker ermöglichen die Bestimmung der extrinsischen Kameraparameter und weisen in der Regel ein eindeutiges Muster auf, das von der Kamera erkannt und verfolgt wird. Da die Dimensionen des Markers bekannt sind, kann seine Position und Orientierung im Raum präzise berechnet werden. Es gibt verschiedene Verfahren, die unterschiedliche Marker-Typen verwenden und jeweils eigene Methoden zur Positions- und Orientierungsbestimmung nutzen. (\cite{doerner2022virtual}) 
 
-Vereinfacht dargestellt, funktioniert das markenbasierte Tracking wie folgt:
+Vereinfacht dargestellt, funktioniert das markenbasierte Tracking wie folgt (\cite{doerner2022virtual}) :
 
 \begin{figure}
     \centering
     \includegraphics[ width=.5\textwidth ]{Marker}
-    \caption{Darstellung eines markenbasiertes Tracking\label{fig:Marker}}\par
+    \caption{Darstellung eines markenbasiertes Tracking (\cite{doerner2022virtual}) \label{fig:Marker}}\par
 \end{figure}
 
-Wie in Abbildung \ref{fig:Marker} dargestellt, wird die Kamera auf den Marker ausgerichtet, um ihn zu erfassen. Anhand der intrinsischen Kameraparameter und der bekannten Abmessungen des Markers lässt sich die Position und Orientierung des Kamerakoordinatensystems \( S \) relativ zum Marker bestimmen. Dadurch kann die Transformationsmatrix \( T_{cm} \) berechnet werden, mit der die Koordinaten des Markers aus dem Markerkoordinatensystem in das Kamerakoordinatensystem überführt werden. (\cite{doerner2022virtual})
+Wie in Abbildung \ref{fig:Marker} dargestellt, wird die Kamera auf den Marker ausgerichtet, um ihn zu erfassen. Anhand der intrinsischen Kameraparameter und der bekannten Abmessungen des Markers lässt sich die Position und Orientierung des Kamerakoordinatensystems \( S \) relativ zum Marker bestimmen. Dadurch kann die Transformationsmatrix \( T_{cm} \) berechnet werden, mit der die Koordinaten des Markers aus dem Markerkoordinatensystem in das Kamerakoordinatensystem überführt werden. 
 
 Entsprechend der Abbildung \ref{fig:Marker} lässt sich die Transformation \( T_{cm} \) wie folgt definieren:
-
 \begin{equation}\label{eq:v_c}
     v_c = T_{cm} * v_m
 \end{equation}
 
-Dabei bezeichnet \( v_c \) Koordinaten im Kamerakoordinatensystem, während \( v_m \) Koordinaten im Markerkoordinatensystem darstellen (\cite{doerner2022virtual}).  
+Dabei bezeichnet \( v_c \) Koordinaten im Kamerakoordinatensystem, während \( v_m \) Koordinaten im Markerkoordinatensystem darstellen.  
 
-Die Koordinaten \( v_s \) im Bildkoordinatensystem \( C \) lassen sich unter Verwendung der intrinsischen Kameraparameter (siehe Kapitel \ref{Kalibrierung}) sowie der Koordinaten \( v_c \) im Kamerakoordinatensystem wie folgt ausdrücken (\cite{doerner2022virtual}):
-
-
+Die Koordinaten \( v_s \) im Bildkoordinatensystem \( C \) lassen sich unter Verwendung der intrinsischen Kameraparameter (siehe Kapitel \ref{Kalibrierung}) sowie der Koordinaten \( v_c \) im Kamerakoordinatensystem wie folgt ausdrücken:
 \begin{equation}
     v_s = K * v_c
 \end{equation}
 
 Unter Verwendung der Gleichung \ref{eq:v_c} kann die Transformation \( T_{cm} \) in die Gleichung eingesetzt werden:
-
 \begin{equation}
     v_s = K * T_{cm} * v_m
 \end{equation}
 
-Da sowohl \( v_s \) als auch \( v_m \) bekannt sind, also die Pixelkoordinaten des Markers und seine realen Abmessungen, lässt sich die Transformationsmatrix \( T_{cm} \) bestimmen. Diese entspricht der extrinsischen Kameramatrix \( [R|t] \), welche die Position und Orientierung der Kamera relativ zum Marker beschreibt. Die berechnete Transformation kann anschließend zur präzisen Platzierung virtueller Objekte genutzt werden. (\cite{doerner2022virtual}) 
+Da sowohl \( v_s \) als auch \( v_m \) bekannt sind, also die Pixelkoordinaten des Markers und seine realen Abmessungen, lässt sich die Transformationsmatrix \( T_{cm} \) bestimmen. Diese entspricht der extrinsischen Kameramatrix \( [R|t] \), welche die Position und Orientierung der Kamera relativ zum Marker beschreibt. Die berechnete Transformation kann anschließend zur präzisen Platzierung virtueller Objekte genutzt werden.
 
 //TODO: Berechnung der Transformationsmatrix
 
@@ -250,11 +246,11 @@ Das markenbasierte Tracking zeichnet sich durch hohe Präzision und Robustheit a
 
 \section{SLAM}\label{SLAM}
 
-Simultanous Localization and Mapping (SLAM) hat sich als eine der wichtigsten Technologien in der Augmented Reality etabliert. Das Verfahren, das ursprünglich aus der Robotik stammt, stellt eine performante und zuverlässige Möglichkeit dar, die gleichzeitige Bestimmung der Position und Orientierung eines Geräts und die Extraktion dreidimensionaler Informationen der Umgebung zu implementieren. SLAM wird in einer Vielzahl von AR-Framworks und -Anwendung eingesetzt. \cite{doerner2022virtual}
+Simultanous Localization and Mapping (SLAM) hat sich als eine der wichtigsten Technologien in der Augmented Reality etabliert. Das Verfahren, das ursprünglich aus der Robotik stammt, stellt eine performante und zuverlässige Möglichkeit dar, die gleichzeitige Bestimmung der Position und Orientierung eines Geräts und die Extraktion dreidimensionaler Informationen der Umgebung zu implementieren. SLAM wird in einer Vielzahl von AR-Framworks und -Anwendung eingesetzt. (\cite{doerner2022virtual})
 
-SLAM beruht in vieler Hinsicht auf Konzepte des Structure from Motion (SfM), bei dem die 3D-Struktur einer Szene aus einer Sequenz von 2D-Bildern rekonstruiert wird. SfM wird in der Computer Vision und Photogrammetrie eingesetzt, um die räumliche Struktur einer Szene aus Bildern zu rekonstruieren. SLAM erweitert dieses Konzept, indem es die Kameraposition und -orientierung in Echtzeit bestimmt und gleichzeitig eine Karte der Umgebung erstellt.
+SLAM beruht in vieler Hinsicht auf Konzepte des Structure from Motion (SfM), bei dem die 3D-Struktur einer Szene aus einer Sequenz von 2D-Bildern rekonstruiert wird. SfM wird in der Computer Vision und Photogrammetrie eingesetzt, um die räumliche Struktur einer Szene anhand von Merkmalen zu rekonstruieren. SLAM erweitert dieses Konzept, indem es die Kameraposition und -orientierung in Echtzeit bestimmt und gleichzeitig eine Karte der Umgebung erstellt.
 
-SLAM wird in AR-Anwendungen häufig in Form des Visual SLAM (vSLAM) eingesetzt, bei dem sowohl visuelle Informationen der Kamera als auch Informationen anderer Sensoren, wie IMUs oder LiDAR, genutzt werden. Das vSLAM-Verfahren besteht aus zwei Hauptkomponenten: dem Tracking (Frontend) und dem Mapping bzw. Loop Detection/Closure (Backend). Das Tracking umfasst die Schätzung der Kameraposition und der 3D-Struktur der Szene, während das Mapping die Optimierung der Schätzungen und die Erstellung einer konsistenten Karte übernimmt. Die Abbildung \ref{fig:VSLAM} zeigt die wichtigsten Schritte des SLAM-Algorithmus. Diese werden im Folgenden näher erläutert. Dabei wird der Fokus auf die Funktionsweise des vSLAM gelegt, da dieser in mobilen AR-Anwendungen weit verbreitet ist und eine ausführliche Erklärung aller Konzepte ermöglicht. Anschließend wird auf das LiDAR-SLAM eingegangen und Unterschiede zum vSLAM aufgezeigt, da hier eine besondere Relevanz für den Prototypen besteht. (\cite{gao2021vSLAM, tourani2022vSLAMTrends, doerner2022virtual})
+SLAM wird in mobilen AR-Anwendungen häufig in Form des Visual SLAM (vSLAM) eingesetzt, bei dem sowohl visuelle Informationen der Kamera als auch Informationen anderer Sensoren, wie IMUs oder LiDAR, genutzt werden. Das vSLAM-Verfahren besteht aus zwei Hauptkomponenten: dem Tracking (Frontend) und dem Mapping bzw. der Loop Detection/Closure (Backend). Das Tracking umfasst die Schätzung der Kameraposition und der 3D-Struktur der Szene, während das Mapping die Optimierung der Schätzungen und die Erstellung einer konsistenten Karte übernimmt. Die Abbildung \ref{fig:VSLAM} zeigt die wichtigsten Schritte des SLAM-Algorithmus. Diese werden im Folgenden näher erläutert. Dabei wird der Fokus auf die Funktionsweise des vSLAM gelegt, da dieser in mobilen AR-Anwendungen weit verbreitet ist und eine ausführliche Erklärung aller Konzepte ermöglicht. Anschließend wird auf das speziellere LiDAR-SLAM eingegangen und Unterschiede zum vSLAM aufgezeigt, da hier eine besondere Relevanz für den Prototypen besteht. (\cite{gao2021vSLAM, tourani2022vSLAMTrends, doerner2022virtual})
 
 \begin{figure}
     \centering
@@ -419,7 +415,7 @@ In SLAM-Systemen (Simultaneous Localization and Mapping) ist das Bundle Adjustme
     \caption{Beispiel einer Situation mit Reprojektionsfehler\label{fig:BA}}\par
 \end{figure}
 
-Dieser, in Abbildung \ref{fig:BA} dargestellte, Reprojektionsfehler tritt aufgrund der Ungenauigkeiten bei der Triangulation und der Schätzung der Kamerapositionen auf. Um diesen Fehler zu minimieren, wird zunächst der triangulierte Punkt im Weltkoordinatensystem zurück in das Kamerabild projiziert. Dazu werden sowohl die extrinsische Parameter als auch die intrinschen Parameter der Kamera (siehe Kapitel \ref{Kalibrierung}) wie folgt verwendet (\cite{gao2021vSLAM})l: 
+Dieser, in Abbildung \ref{fig:BA} dargestellte, Reprojektionsfehler tritt aufgrund der Ungenauigkeiten bei der Triangulation und der Schätzung der Kamerapositionen auf. Um diesen Fehler zu minimieren, wird zunächst der triangulierte Punkt im Weltkoordinatensystem zurück in das Kamerabild projiziert. Dazu werden sowohl die extrinsische Parameter als auch die intrinschen Parameter der Kamera (siehe Kapitel \ref{Kalibrierung}) wie folgt verwendet (\cite{gao2021vSLAM}): 
 \begin{equation}
     P' = Rp+t = [X', Y', Z']^T
 \end{equation}
@@ -512,9 +508,9 @@ Die Scene Understanding bezeichnet die Fähigkeit eines Systems, die Umgebung zu
 
 In der Vergangenheit wurden für die semantische Segmentierung vor allem klassische Bildverarbeitungstechniken, wie die Histogramm-basierte Segmentierung oder die Regionen-basierte Segmentierung, verwendet. Diese Techniken haben jedoch ihre Grenzen, insbesondere bei der Erkennung komplexer Strukturen oder bei der Unterscheidung ähnlicher Objekte. (\cite{szeliski2022computerVision})
 
-In den letzten Jahren haben sich Deep-Learning-Modelle, insbesondere Convolutional Neural Networks (CNNs), als effektive Methode für die semantische Segmentierung etabliert. CNNs sind in der Lage, komplexe Muster in den Bildern zu erkennen und die Pixel in verschiedene Klassen zu segmentieren. Ein bekanntes CNN-Modell für die semantische Segmentierung ist die Fully Convolutional Nerual Network (FCNN) Architektur, die speziell für die Segmentierung von Bildern entwickelt wurde. \cite{long2014fcnn}
+In den letzten Jahren haben sich Deep-Learning-Modelle, insbesondere Convolutional Neural Networks (CNNs), als effektive Methode für die semantische Segmentierung etabliert. CNNs sind in der Lage, komplexe Muster in den Bildern zu erkennen und die Pixel in verschiedene Klassen zu segmentieren. Ein bekanntes CNN-Modell für die semantische Segmentierung ist die Fully Convolutional Nerual Network (FCNN) Architektur, die speziell für die Segmentierung von Bildern entwickelt wurde. (\cite{long2014fcnn})
 
-Die FCNN-Architektur besteht aus mehreren Convolutional-Schichten (siehe Abbildung \ref{fig:FCNN}), die die Merkmale der Bilder extrahieren und die Pixel in verschiedene Klassen segmentieren. Die Architektur umfasst sowohl die Kodierung (Encoding) als auch die Dekodierung (Decoding) der Bilder. In der Kodierung werden die Merkmale der Bilder extrahiert und in einer kompakten Darstellung kodiert. In der Dekodierung werden die Merkmale wieder in die ursprüngliche Bildgröße dekodiert und die Pixel in verschiedene Klassen segmentiert.\cite{long2014fcnn}
+Die FCNN-Architektur besteht aus mehreren Convolutional-Schichten (siehe Abbildung \ref{fig:FCNN}), die die Merkmale der Bilder extrahieren und die Pixel in verschiedene Klassen segmentieren. Die Architektur umfasst sowohl die Kodierung (Encoding) als auch die Dekodierung (Decoding) der Bilder. In der Kodierung werden die Merkmale der Bilder extrahiert und in einer kompakten Darstellung kodiert. In der Dekodierung werden die Merkmale wieder in die ursprüngliche Bildgröße dekodiert und die Pixel in verschiedene Klassen segmentiert. (\cite{long2014fcnn})
 
 \begin{figure}
     \centering
@@ -524,10 +520,34 @@ Die FCNN-Architektur besteht aus mehreren Convolutional-Schichten (siehe Abbildu
 
 Auf eine detaillierte Beschreibung der Funktionsweise von CNNs und FCNs wird aufgrund des gesetzten Rahmens dieser Arbeit verzichtet. Stattdessen wird auf weiterführende Literatur verwiesen. (\cite{long2014fcnn})
 
-\section{Technische Limitationen}
+\section{LiDAR-inertial-visual (LIV) fusion}
 
-Viele der gängigen Algorithmen zur Feature-Erkennung und -Verfolgung, wie SIFT oder ORB, verlassen sich stark auf die visuelle Qualität der Eingabebilder. In Umgebungen mit schlechten Lichtverhältnissen (z. B. bei schwacher Beleuchtung, direkter Sonneneinstrahlung oder Nachtaufnahmen) wird die Fähigkeit der Algorithmen zur präzisen Merkmalserkennung und -verfolgung beeinträchtigt. Dies kann zu fehlerhaften Schätzungen der Kameraposition oder der 3D-Rekonstruktion führen.
+Einige Augmented Reality Frameworks ermöglichen die Verwendung von LiDAR-Sensoren, sofern die mobilen Geräte mit dieser Art von Sensor ausgestattet sind. Wie in Kapitel \ref{LiDAR} beschrieben funktionieren diese Sensoren mithilfe von Lasern die Punkte im Raum mit den Abständen zum Gerät liefern. (\cite{appledevdoc, arcoredevdoc})
 
-Ein weiteres Problem tritt auf, wenn sich die Umgebung schnell verändert, etwa bei Bewegungen von Objekten, plötzlichen Änderungen der Szene oder in dynamischen Umgebungen. In solchen Fällen können Feature-Punkte in den Bildern verschwinden oder durch neue, nicht korrespondierende Punkte ersetzt werden, was die Stabilität der Berechnungen negativ beeinflusst.
+Da reines LiDAR-SLAM aber nicht in der Lage ist, die visuellen Informationen der Kamera zu nutzen, um die Umgebung zu interpretieren, wird häufig eine Fusion von LiDAR- und Kameradaten durchgeführt. Zusätzlich dazu können auch die IMU-Daten (Inertial Measurement Unit) genutzt werden, um die Bewegung des Gerätes zu schätzen. Die Fusion von LiDAR-, Kamera- und IMU-Daten wird als LiDAR-inertial-visual (LIV) fusion bezeichnet. (\cite{zhang2024lidarslam})
 
-Auch LiDAR-basierte Systeme sind von technischen Einschränkungen betroffen. Zum einen haben LiDAR-Sensoren eine begrenzte Reichweite, die oft auf wenige Meter beschränkt ist, wodurch sie nicht für alle Anwendungen geeignet sind, insbesondere bei großen Distanzen oder in weiten offenen Bereichen. Zudem sind LiDAR-Sensoren in der Regel teuer und daher nur vereinzelt in Smartphones verbaut.
+Faktisch ergänzen sich die verschiedenen Sensoren in ihren Stärken und Schwächen. Während LiDAR-Sensoren präzise Distanzinformationen liefern, sind sie anfällig für Rauschen und können Schwierigkeiten bei der Erfassung von Texturen oder Farben haben. Kamera-Sensoren hingegen liefern detaillierte visuelle Informationen, sind jedoch anfällig für schlechte Lichtverhältnisse oder schnelle Bewegungen. IMU-Sensoren können die Bewegung des Gerätes schätzen, sind jedoch anfällig für Driftfehler. Somit wird eine weitaus präzisere und robustere Rekonstruktion der Szene als beim reinen Visual SLAM ermöglicht. (\cite{zhang2024lidarslam})
+
+Bei der LIV-Fusion gibt es zwei unterschiedliche Ansätze: loosely coupled und tightly coupled. Beim loosely coupled Ansatz werden die Daten der verschiedenen Sensoren unabhängig voneinander verarbeitet und anschließend fusioniert. Beim tightly coupled Ansatz hingegen werden die Daten der verschiedenen Sensoren direkt in einem gemeinsamen Optimierungsprozess verarbeitet. Der tightly coupled Ansatz ermöglicht eine präzisere und robustere Schätzung der Kameraposition und der 3D-Rekonstruktion, da die Daten der verschiedenen Sensoren direkt miteinander verknüpft werden. (\cite{zhang2024lidarslam})
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.8\textwidth ]{LIVSLAM}
+    \caption{Mögliche LIV-SLAM-Architekturen (\cite{zhang2024lidarslam})\label{fig:LIVSLAM}}\par
+\end{figure}
+
+Die Abbildung \ref{fig:LIVSLAM} zeigt drei verschiedene Architekturen für die Fusion von LiDAR-, IMU- und Bilddaten in einem SLAM-System mit unterschiedlichem Kopplungsgrad.
+
+Im ersten Fall (a) ist das System lose gekoppelt, wobei eine visuell-inertiale Odometrie (VIO) und eine LiDAR-Odometrie getrennt voneinander arbeiten. Die VIO kombiniert Bild- und IMU-Daten und liefert eine Bewegungsschätzung, die als Initialisierung für die LiDAR-Odometrie dient. Dadurch wird eine einfache Implementierung mit hoher Effizienz ermöglicht, jedoch ohne eine vollständige gemeinsame Optimierung aller Sensordaten. (\cite{zhang2024lidarslam})
+
+Im zweiten Fall (b) enthält das System zwei eng gekoppelte Module: eines für die VIO (Bild- und IMU-Daten) und eines für die LiDAR-Odometrie (LIO). Beide Module führen eine interne gemeinsame Optimierung ihrer jeweiligen Sensordaten durch, sind jedoch untereinander nur lose gekoppelt. Dies verbessert die Genauigkeit und Robustheit gegenüber reinen losen Kopplungen, ohne eine vollständig integrierte Optimierung aller Sensordaten zu erreichen. (\cite{zhang2024lidarslam})
+
+Der dritte Fall (c) stellt ein vollständig eng gekoppeltes System dar, in dem alle Sensordaten – Bild, IMU und LiDAR – gemeinsam in einer einzigen Optimierung verarbeitet werden. Diese Methode bietet die höchste Genauigkeit und Robustheit, erfordert jedoch einen höheren Rechenaufwand und eine komplexere Implementierung. (\cite{zhang2024lidarslam})
+
+%\section{Technische Limitationen}
+
+%Viele der gängigen Algorithmen zur Feature-Erkennung und -Verfolgung, wie SIFT oder ORB, verlassen sich stark auf die visuelle Qualität der Eingabebilder. In Umgebungen mit schlechten Lichtverhältnissen (z. B. bei schwacher Beleuchtung, direkter Sonneneinstrahlung oder Nachtaufnahmen) wird die Fähigkeit der Algorithmen zur präzisen Merkmalserkennung und -verfolgung beeinträchtigt. Dies kann zu fehlerhaften Schätzungen der Kameraposition oder der 3D-Rekonstruktion führen.
+
+%Ein weiteres Problem tritt auf, wenn sich die Umgebung schnell verändert, etwa bei Bewegungen von Objekten, plötzlichen Änderungen der Szene oder in dynamischen Umgebungen. In solchen Fällen können Feature-Punkte in den Bildern verschwinden oder durch neue, nicht korrespondierende Punkte ersetzt werden, was die Stabilität der Berechnungen negativ beeinflusst.
+
+%Auch LiDAR-basierte Systeme sind von technischen Einschränkungen betroffen. Zum einen haben LiDAR-Sensoren eine begrenzte Reichweite, die oft auf wenige Meter beschränkt ist, wodurch sie nicht für alle Anwendungen geeignet sind, insbesondere bei großen Distanzen oder in weiten offenen Bereichen. Zudem sind LiDAR-Sensoren in der Regel teuer und daher nur vereinzelt in Smartphones verbaut.
