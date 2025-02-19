@@ -1,0 +1,68 @@
+\chapter{Umsetzung des Prototypen}
+
+Die Umsetzung des Prototypen entspricht dem Hauptteil dieser Arbeit. Wie eingehend beschrieben, soll ein Prototyp entwickelt werden, der die Montage von Rauchmeldern in einer augmentierten Umgebung visualisiert. Dabei sollen Smartphones und Tablets sowohl als Ausgabegeräte als auch als Eingabegeräte verwendet werden. Im Folgenden wird die Umsetzung des Prototypen, die sowohl die Konzeption als auch die Implementierung  und die Beschreibung der Anforderungen umfasst, dargestellt.
+
+\section{Anforderungen}
+
+- Framework für die Montageregeln
+
+Damit der Prototyp zielgerichtet entwickelt werden kann, müssen zunächst die Anforderungen definiert werden. Diese Anforderungen bilden die Grundlage für die weitere Konzeption und Implementierung des Anwendung. Dazu wurden verschiedenste Einflussfaktoren berücksichtigt, die die Anforderungen an das System beeinflussen.
+
+\subsection{Benutzerinteraktion}
+
+Die Implementierung von Interaktionen in Augmented-Reality-Anwendungen muss sorgfältig geplant werden, um eine intuitive Bedienung zu gewährleisten. Die Interaktionen sollten einfach und schnell durchführbar sein, um den Benutzer nicht zu überfordern. Der Benutzer sollte sofort erkennen können, wie er mit der Anwendung interagieren kann. 
+
+Es ist eine Reihe von Interaktionen denkbar, die dem Benutzer die Möglichkeit geben, mit der augmentierten Umgebung zu interagieren. Dazu gehören beispielsweise Handgesten vor der Kamera, Sprachbefehle oder Touch-Gesten. 
+
+Aufgrund des Einsatzes von Smartphones und Tablets als Ausgabegeräte für Augmented-Reality-Anwendungen sind die Interaktionsmöglichkeiten jedoch begrenzt. Dies liegt vor allem daran, dass das Ausgabegerät während der Nutzung in der Hand gehalten wird. Bei der Verwendung von Tablets müssen je nach Größe des Gerätes sogar beide Hände verwendet werden, um das Gerät stabil halten zu können. Unter der Annahme, dass das Tablet wie in Abbildung \ref{fig:ipad} gehalten wird, sind die Interaktionsmöglichkeiten auf die Daumen des Benutzers beschränkt. Die Bedienungsmöglichkeiten der AR-Anwendung sollten aus diesem Grund so einfach und minimal wie möglich gehalten werden, sodass der Benutzer die Anwendung bedienen kann, ohne das die Gefahr besteht, das Gerät fallen zu lassen.
+
+\subsection{Genauigkeit}
+
+Die Visualisierung von Montageregeln für Rauchmelder erfordert eine hohe Genauigkeit bei der Tiefenmessung und dem Tracking der Umgebung. Wie einleitend beschrieben, können ungenaue Montagen von Rauchmeldern fatale Folgen haben. Aus diesem Grund ist es wichtig, sicher zu stellen, dass die Dimensionen des Weltkoordinatensystems, in dem die Rauchmelder platziert werden, mit der realen Welt übereinstimmen. Nur so kann sichergestellt werden, dass Abstände korrekt gemessen und Rauchmelder korrekt platziert werden können.
+
+\subsection{Echtzeitdarstellung}
+
+Die Echtzeitdarstellung ist ein wichtiger Bestandteil von Augmented-Reality-Anwendungen, da sie maßgeblich zum Benutzererlebnis beiträgt. Dabei ist es wichtig Latenzen und Drift-Effekte, also die Abweichung der virtuellen Objekte von ihrer tatsächlichen Position, zu minimieren. Es ist demnach sicherzustellen, dass die Verarbeitung der Sensordaten und die Darstellung bzw. Positionierung der virtuellen Objekte möglichst performant implementiert werden und sich nicht gegenseitig blockieren. Auch Benutzerinteraktionen sollten nicht zu Verzögerungen führen, da dies das Benutzererlebnis negativ beeinflussen würde.
+
+\subsection{Feedback}
+
+Feedback ist ein wichtiger Bestandteil von Augmented-Reality-Anwendungen. AR-Systeme können je nach Status des Tracking-Zustands abweichende beziehungsweise unerwartete Ergebnisse liefern. Es ist daher wichtig, dem Benutzer Feedback zu geben, um ihn über den aktuellen Status der Anwendung zu informieren. 
+
+Zusätzlich ist es wichtig, den Benutzer auf Fehlverhalten hinzuweisen, um ihm die Möglichkeit zu geben, dieses zu korrigieren. Dies kann beispielsweise durch visuelle Hinweise oder Textnachrichten geschehen.
+
+\subsection{Verzicht auf manuelle Kalibrierung und Initialisierung}
+
+Falls die Anwendung in einem professionellen Umfeld eingesetzt werden soll, ist es wichtig, dass die Anwendung eine möglichst geringe Einstiegshürde aufweist. Dies bedeutet, dass die Anwendung ohne manuelle Kalibrierung oder Initialisierung starten sollte. Der Benutzer sollte die Anwendung starten und sofort mit der Interaktion beginnen können. Dies ist besonders wichtig, wenn die Anwendung in einem professionellen Umfeld eingesetzt wird, in dem Zeit ein kritischer Faktor ist.
+
+\section{Konzeption}
+- Anzeige von Flächen
+- automatische Platzierung des Rauchmelders
+- Darstellung des Rauchmelders
+- Distanzindikatoren
+- Informationsanzeige
+-> später Focus-Entity
+
+\section{Auswahl der Technologien}
+- LiDAR Sensor
+- ARKit Framework
+- Swift
+- iPad Pro und MacBook Air
+
+\section{Das ARKit Framework}
+- ARView
+- RealityKit
+- ARSessionDelegate
+- Lifecycle
+
+\section{Implementierung}
+- Setup/Initialisierung
+- Struktur
+- Programmablauf
+- MVVM
+- Entities/Models
+- ARManager
+- FocusEntity
+- Raycasting
+- Tasks/async/await/actors
+- Views
+- ActionManager
