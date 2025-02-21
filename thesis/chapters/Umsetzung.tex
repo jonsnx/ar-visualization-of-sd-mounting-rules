@@ -35,14 +35,56 @@ Zusätzlich ist es wichtig, den Benutzer auf Fehlverhalten hinzuweisen, um ihm d
 Falls die Anwendung in einem professionellen Umfeld eingesetzt werden soll, ist es wichtig, dass die Anwendung eine möglichst geringe Einstiegshürde aufweist. Dies bedeutet, dass die Anwendung ohne manuelle Kalibrierung oder Initialisierung starten sollte. Der Benutzer sollte die Anwendung starten und sofort mit der Interaktion beginnen können. Dies ist besonders wichtig, wenn die Anwendung in einem professionellen Umfeld eingesetzt wird, in dem Zeit ein kritischer Faktor ist.
 
 \section{Konzeption}
-- Anzeige von Flächen
-- automatische Platzierung des Rauchmelders
-- Darstellung des Rauchmelders
-- Distanzindikatoren
-- Informationsanzeige
--> später Focus-Entity
+
+Das Konzept des Prototypen wurde iterativ entwickelt und nicht in einem einzigen Schritt abgeschlossen. Dabei wurden die Lösungsansätze zur Umsetzung der Anforderungen schrittweise umgesetzt und verfeinert.
+
+Im ersten Schritt wurde eine grundlegende Skizze des Prototypen erstellt (siehe Abbildung \ref{fig:Concept}), die die wichtigsten Funktionen und Interaktionen darstellte. Diese Skizze diente als Ausgangspunkt für die weitere Entwicklung.
+
+Die Hauptkomponenten des Konzepts umfassen:
+
+\begin{itemize}
+    \item \textbf{Anzeige von Flächen:} Die Anwendung soll in der Lage sein, Flächen in der Umgebung zu erkennen und anzuzeigen.
+    \item \textbf{Darstellung der Montageregeln:} Die Montageregeln sollen direkt an der Decke in Form von Farbflächen dargestellt werden.
+    \item \textbf{Automatische Platzierung eines virtuellen Rauchmelders:} Der Prototyp soll, basierend auf den erkannten Flächen und den Montageregeln, in der Lage sein, einen virtuellen Rauchmelder automatisch an die optimale Position zu platzieren.
+    \item \textbf{Darstellung des Rauchmelders:} Die Rauchmelder sollen in der augmentierten Umgebung dargestellt werden, um dem Benutzer eine genaue Vorstellung von deren Position zu geben.
+    \item \textbf{Distanzindikatoren:} Um sicherzustellen, dass die Rauchmelder korrekt platziert werden, sollen Distanzindikatoren verwendet werden, die dem Benutzer die Abstände anzeigen.
+    \item \textbf{Informationsanzeige:} Die Anwendung soll dem Benutzer zusätzliche Informationen anzeigen, wie z.B. den Status der Platzierung und Hinweise zur optimalen Positionierung.
+\end{itemize}
+
+Auch wenn dieses erste Konzept eine gute Grundlage für die weitere Entwicklung darstellte, mussten im Laufe der Implementierung einige Anpassungen aufgrund neuer Erkenntnisse vorgenommen werden. Eine Erkenntnis war, dass die automatische Platzierung des Rauchmelders die Erfahrung und Intuition des Monteurs vernachlässigte. Aus diesem Grund wurde eine sogenannte Focus-Entity eingeführt, die dem Benutzer die Möglichkeit gibt, den Rauchmelder manuell zu platzieren. Diese Entity projiziert einen Rauchmelder im Raum der stets im Fokus des Benutzers, also in der Mitte des Bildschirms, bleibt. Der Benutzer kann den Rauchmelder durch Bewegungen des Gerätes positionieren. Dadurch wird eine intuitive Benutzerinteraktion gewährleistet und die Arbeit des Monteurs unterstützt anstatt sie zu ersetzen.
+
+Durch die Konzeption der Focus-Entity ist nun aber eine Benutzerinteraktion zur Platzierung des virtuellen Rauchmelders notwendig. Es wurden mehrere Interaktionsmöglichkeiten in Betracht gezogen, darunter Handgesten, Sprachbefehle und Seitentasten des Gerätes. Als intuitivste und einfachste Lösung wurde die Verwendung von Touch-Gesten gewählt. Der Grund dafür ist, dass Touch-Gesten bereits in vielen Anwendungen verwendet werden und dem Benutzer eine vertraute Interaktion bieten. Zusätzlich dazu liefern die Icons der Schaltflächen bereits eine visuelle Rückmeldung, die dem Benutzer zeigt, wie er mit der Anwendung interagieren kann ohne ihn zunächst mit der Bedienung vertraut machen zu müssen. Der Benutzer kann den Rauchmelder somit an der aktuellen Position der Focus-Entity platzieren, sofern es sich um eine gültige Position handelt.
+
+Die Anzahl der verschiedenen Interaktionsmöglichkeiten wurde auf ein Minimum reduziert. Der Monteur soll nur dann mit dem Bildschirm interagieren müssen, wenn es unbedingt notwendig ist. Daher wurde sorgfältig abgewogen, wie viele Schaltflächen für die einwandfreie Nutzung der Anwendung erforderlich sind. Folgende Interaktionen wurden als notwendig erachtet:
+
+\begin{itemize}
+    \item Platzieren des Rauchmelders
+    \item Löschen des Rauchmelders
+    \item Bildschirmfoto der Szene machen
+\end{itemize}
+
+Die Interaktionen wurden als Schaltflächen am unteren, rechten Rand des Bildschirms platziert, um dem Benutzer eine einfache und intuitive Bedienung zu ermöglichen. Die Schaltflächen sind so angeordnet, dass sie mit den Daumen des Benutzers erreicht werden können, ohne dass er das Gerät loslassen muss. Dabei soll sichergestellt, dass die Schaltflächen mithilfe von Icons eindeutig auf ihre Funktion hinweisen.
+
+Ein weiteres UI-Element, das im Konzept berücksichtigt wurde, ist die Informationsanzeige. Diese soll dem Benutzer den Status der Platzierung zur Verfügung stellen. Die Informationsanzeige wird als Textfeld am oberen rechten Rand des Bildschirms platziert, um dem Benutzer die Möglichkeit zu geben, die Informationen schnell zu erfassen, ohne dass sie die Sicht auf die augmentierte Umgebung beeinträchtigen. Änderungen des Statuses werden mithilfe einer Animation hervorgehoben, um dem Benutzer eine visuelle Rückmeldung zu geben. Ein Info-Icon als Ankerpunkt des Textfeldes soll dem Benutzer die Einordnung des gezeigten Textes erleichtern.
+
+Eine gültige Position für den Rauchmelder soll mithilfe der Farbe der Focus-Entity und des Info-Icons dargestellt werden. Diese soll sich ändern, wenn die aktuelle Position der Focus-Entity eine gültige Position für den Rauchmelder darstellt. Dadurch wird dem Benutzer eine visuelle Rückmeldung gegeben, die ihm zeigt, ob die aktuelle Position des Rauchmelders gültig ist oder nicht. 
+
+Als zusätzlicher Indikator für die Platzierung des virtuellen Rauchmelders dient ein Ring, der um die Focus-Entity herum angezeigt wird. Dieser Ring visualisiert einen Abstand von 0,5 Metern gemäß der Regel (TODO: add Regelnr.) um die Focus-Entity. Dadurch erhält der Benutzer direkt visuelles Feedback im Bezug auf die Minimalanforderungen für die Einhaltung der Montageregeln.
 
 \section{Auswahl der Technologien}
+
+Für die Umsetzung des Prototypen wurden verschiedene Technologien und Frameworks in Betracht gezogen. Dabei wurden die Anforderungen an die Anwendung und die verfügbaren Ressourcen berücksichtigt. Dabei wurden stets mobile Geräte, wie Smartphones und Tablets, als Zielplattform im Auge behalten. 
+
+Ein weiteres Kriterium bei der Auswahl der Technologien war der Fakt, dass Decken in der Regeln eine glatte Oberfläche aufweisen. Dies bedeutet, dass die Anzahl der vorhanden Merkmale und Strukturen, die für das Tracking verwendet werden können, begrenzt ist. Im schlimmsten Fall könnte dies dazu führen, dass das Tracking nicht korrekt funktioniert und die virtuellen Objekte nicht stabil in der Umgebung platziert werden können. Erste Tests mithilfe des ARCore-Frameworks von Google haben gezeigt, dass das Tracking auf glatten Oberflächen nicht immer zuverlässig funktioniert. Die Abbildung \ref{fig:ARCore} zeigt eine Demo-Anwendung von Google, welche unter anderem die Anzahl der von ARCore erkannten Feature-Punkte anzeigt. Wie zu sehen ist, erkennt ARCore nur wenige Punkte auf der glatten Oberfläche der Decke. 
+
+Aus diesem Grund stellte Frameworks, die LiDAR-gestütztes Tracking unterstützen, eine attraktive Alternative dar. Wie bereits in Kapitel \ref{TODO:addChapter} beschrieben, ermöglicht LiDAR eine präzise Tiefenmessung und eine genaue Erkennung von Oberflächen unabhängig von deren Struktur. Zusätzlich kann mithilfe der LiDAR-Daten eine längere Initialisierungsphase vermieden werden, da die Tiefeninformationen bereits vorliegen. Auch der Fakt, dass LiDAR-Sensoren kein Umgebungslicht benötigen, um zu funktionieren, ist von großer Bedeutung für den Einsatz in einem professionellen Umfeld, da die Beleuchtungssituation in Gebäuden oft nicht optimal ist.
+
+Leider sind nur eine Handvoll Geräte auf dem Markt mit LiDAR-Sensoren ausgestattet. Tatsächlich gibt es aktuell keine Android-Geräte, die über einen LiDAR-Sensor auf der Rückseite verfügen. Aus diesem Grund wurde entschieden, den Prototypen auf einem iOS-Gerät zu entwickeln, welches über einen LiDAR-Sensor verfügt. Die Wahl fiel auf ein iPad Pro der dritten Generation. Dieses Gerät bietet eine hohe Leistung und einen LiDAR-Sensor, der für die Umsetzung des Prototypen ideal ist. Die Entwicklung einer iOS-Anwendung setzt jedoch voraus, dass die Programmiersprache Swift verwendet wird. Swift ist eine moderne Programmiersprache, die von Apple entwickelt wurde und speziell für die Entwicklung von iOS- und macOS-Anwendungen optimiert ist. Zusätzlich dazu wird ein Mac-Computer benötigt, um die Anwendung auf das iPad Pro zu übertragen und zu testen. Demnach wurde ein MacBook Air als Entwicklungsumgebung verwendet.
+
+Die Verwendung des ARKit-Frameworks von Apple stellte eine naheliegende Wahl dar, da es speziell für die Entwicklung von Augmented-Reality-Anwendungen auf iOS-Geräten entwickelt wurde. Erste Recherchen habe gezeigt, dass ARKit ein mächtiges Framework ist, das eine Vielzahl von Funktionen bietet, die für die Umsetzung des Prototypen notwendig sind. Dazu gehören unter anderem das Tracking der Umgebung, die Erkennung von Flächen, die Platzierung von virtuellen Objekten und die Klassifizierung von Objekten. Zusätzlich dazu bietet ARKit eine hohe Genauigkeit bei der LiDAR-gestützten Tiefenmessung und eine gute Performance bei der Darstellung von virtuellen Objekten. Ein Nachteil von ARKit ist jedoch, dass die Implementierung von ARKit eine Blackbox ist und die genaue Funktionsweise nicht im Detail bekannt ist. Anhand der Dokumentation und Logging-Infos kann jedoch auf die Verwendung von SLAM-Techniken mit der Fusion von Kameradaten, LiDAR-Daten und IMU-Daten geschlossen werden.
+
+Die Verwendung des ARKit-Frameworks wurde mit dem Einsatz des RealityKit-Frameworks kombiniert. RealityKit ist ein neues Framework von Apple, das speziell für die Entwicklung von 3D-Anwendungen auf iOS-Geräten entwickelt wurde. Es bietet eine Vielzahl von Funktionen, die für die Darstellung von 3D-Objekten in einer augmentierten Umgebung notwendig sind. Dazu gehören unter anderem die Erstellung von 3D-Modellen, die Animation von 3D-Objekten und die Interaktion mit 3D-Objekten. RealityKit bietet eine hohe Performance und eine gute Integration mit ARKit, was die Entwicklung von AR-Anwendungen erleichtert.
+
 - LiDAR Sensor
 - ARKit Framework
 - Swift
