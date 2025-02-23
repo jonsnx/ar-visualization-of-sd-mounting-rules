@@ -6,7 +6,7 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            ARViewContainer(infoText: $infoText).edgesIgnoringSafeArea(.all)
+            ARViewWrapper(arViewModel: ARViewModel(), infoText: $infoText).edgesIgnoringSafeArea(.all)
             VStack {
                 ZStack {
                     InfoCard(infoText: infoText)

@@ -20,9 +20,9 @@ class RaycastUtil {
         return nil
     }
     
-    static func performRaycastsAroundYAxis(in session: ARSession, from position: SIMD3<Float>, numberOfRaycasts: Int) -> [RaycastData] {
+    static func performRaycastsAroundYAxis(in session: ARSession, from position: SIMD3<Float>) -> [RaycastData] {
         var results: [RaycastData] = []
-        let numberOfRays = 30
+        let numberOfRays = RaycastConstants.numberOfRaycasts
         let angleIncrement: Float = 2 * Float.pi / Float(numberOfRays)
         var origin = position
         origin.y -= RaycastConstants.raycastOffset
@@ -34,6 +34,13 @@ class RaycastUtil {
             results.append(RaycastData(origin: origin, direction: direction, result: raycastResult))
         }
         return results
+    }
+}
+
+class CameraUtils {
+    static func getCamVector(camTransform: simd_float4x4) -> (position: SIMD3<Float>, direciton: SIMD3<Float>)? {
+        let camDirection = camTransform.columns.2
+        return (camTransform.translation, -[camDirection.x, camDirection.y, camDirection.z])
     }
 }
 

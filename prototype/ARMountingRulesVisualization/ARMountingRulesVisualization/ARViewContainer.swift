@@ -1,35 +1,26 @@
 import SwiftUI
 import Combine
+import ARKit
+import RealityKit
 
-struct ARViewContainer: UIViewControllerRepresentable {
+struct ARViewWrapper: UIViewRepresentable {
+    @ObservedObject var arViewModel: ARViewModel
     @Binding var infoText: String
-
-    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
-        // update here
+    
+    func makeUIView(context: Context) -> ARView {
+        let arView = ARView(frame: .zero)
+        arView.session = arViewModel.arSession
+        arView.environment.sceneUnderstanding.options = []
+        arView.debugOptions.insert(.showSceneUnderstanding)
+        arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur]
+        arView.automaticallyConfigureSession = false
+        for entity in arViewModel.scene {
+            arView.scene.addAnchor(entity)
+        }
+        return arView
     }
     
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ARViewContainer>) -> ViewController {
-        let viewController = ViewController()
-        ActionManager.shared.actionStream
-            .sink { [self] action in
-                switch action {
-                case .showInfoText(text: let newText):
-                    self.infoText = newText
-                case .hideInfoText:
-                    self.infoText = ""
-                case .placeDetector, .removeDetector:
-                    return
-                }
-            }
-            .store(in: &context.coordinator.cancellables)  // Store the subscription
-        return viewController
+    func updateUIView(_ uiView: ARView, context: Context) {
+        // Add your update logic here (if needed)
     }
-    
-    func makeCoordinator() -> Coordinator {
-        return Coordinator()
-    }
-}
-
-class Coordinator: NSObject {
-    var cancellables: Set<AnyCancellable> = []
 }

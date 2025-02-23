@@ -8,8 +8,9 @@ struct MountingRules {
 }
 
 struct RaycastConstants {
-    static let raycastOffset: Float = 0.5
-    static let numberOfRaycasts: Int = 30
+    static let raycastOffset: Float = 0.1
+    static let numberOfRaycasts: Int = 9
+    static let raycastFrequency: Int = 10
 }
 
 class WorldTrackingConfiguration {

@@ -297,7 +297,7 @@ open class FocusEntity: Entity, HasAnchoring, HasFocusEntity {
     /// - Parameter newPlane: If the entity is directly on a plane, is it a new plane to track
     public func stateChanged(newPlane: Bool = false) {
         var endColor: UIColor
-        if self.isOnCeiling && self.isPlaceable {
+        if self.isPlaceable {
             endColor = focus.onColor
         } else {
             endColor = focus.offColor
