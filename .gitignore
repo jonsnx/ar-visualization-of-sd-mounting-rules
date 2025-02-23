@@ -19,11 +19,10 @@ figure/**
 *.synctex
 *.toc
 *.tcp
-Abschlussarbeit-mitR.tex
 .Rhistory
 *.Rproj
 .Rproj.user/**
 /tmp/
 *.xcuserstate
 .DS_Store
-prototype/ARMountingRulesVisualization/ARMountingRulesVisualization.xcodeproj/project.xcworkspace/xcuserdata/julian.xcuserdatad/UserInterfaceState.xcuserstate
+documentation/work_protocol.md
