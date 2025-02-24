@@ -89,7 +89,7 @@ extension ARPlaneAnchor {
 
 import simd
 
-internal extension float4x4 {
+extension float4x4 {
     /**
      Treats matrix as a (right-hand column-major convention) transform matrix
      and factors out the translation component of the transform.

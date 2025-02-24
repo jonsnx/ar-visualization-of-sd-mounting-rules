@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		B9047E452D1D6A0C00B083F1 /* ARMountingRulesVisualization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ARMountingRulesVisualization.app; path = "/Users/julian/Documents/GitHub/ar-visualization-of-sd-mounting-rules/prototype/ARMountingRulesVisualization/build/Debug-iphoneos/ARMountingRulesVisualization.app"; sourceTree = "<absolute>"; };
+		B96FBCB52D6BD87000ACF461 /* ARMountingRulesVisualization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ARMountingRulesVisualization.app; path = "/Users/julian/Documents/GitHub/ar-visualization-of-sd-mounting-rules/prototype/ARMountingRulesVisualization/build/Debug-iphoneos/ARMountingRulesVisualization.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -58,7 +58,7 @@
 			packageProductDependencies = (
 			);
 			productName = ARMountingRulesVisualization;
-			productReference = B9047E452D1D6A0C00B083F1 /* ARMountingRulesVisualization.app */;
+			productReference = B96FBCB52D6BD87000ACF461 /* ARMountingRulesVisualization.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
