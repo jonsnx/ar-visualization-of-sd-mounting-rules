@@ -8,14 +8,14 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     private(set) var arSession: ARSession = ARSession()
     
     @Published private(set) var scene: [Entity & HasAnchoring] = []
-    private var focusEntity: FocusEntity!
-    private var detector: SmokeDetector?
-    private var distanceIndicators: DistanceIndicators?
-    private var updateCancellable: (any Cancellable)?
     @Published private(set) var mountingState: MountingState = .notOnCeiling
     
+    private var focusEntity: FocusEntity!
+    private var smokeDetector: SmokeDetector?
+    private var distanceIndicators: DistanceIndicators?
+    
     private var isProcessing: Bool = false
-    private var currentFocus: SIMD3<Float>?
+    private var currentFocusPosition: SIMD3<Float>?
     
     private var frameCount = 0
     
@@ -44,7 +44,7 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         processFrame()
     }
     
-    func processFrame(event: SceneEvents.Update? = nil) {
+    private func processFrame() {
         updateFocusEntity()
         if !isProcessing && frameCount % RaycastConstants.raycastFrequency == 0 {
             isProcessing = true
@@ -56,8 +56,8 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         frameCount += 1
     }
     
-    func checkIsPlaceable() async {
-        guard let position = currentFocus,
+    private func checkIsPlaceable() async {
+        guard let position = currentFocusPosition,
               await focusEntity.isOnCeiling
         else {
             await setMountingState(.notOnCeiling)
@@ -86,9 +86,9 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         await setIsPlaceable(true)
     }
     
-    func checkIsTooCloseToWindowOrDoor() async -> Bool {
+    private func checkIsTooCloseToWindowOrDoor() async -> Bool {
         guard let anchors = arSession.currentFrame?.anchors,
-              let position = currentFocus else { return false }
+              let position = currentFocusPosition else { return false }
         var meshAnchors = anchors.compactMap({ $0 as? ARMeshAnchor })
         let cutoffDistance: Float = 1.5
         meshAnchors.removeAll { distance($0.transform.translation, position) > cutoffDistance }
@@ -102,7 +102,6 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
                     let centerWorldPosition = (anchor.transform * centerLocalTransform).translation
                     let distanceToFace = distance(centerWorldPosition, position)
                     if distanceToFace <= 1.5 {
-                        print("too close to window or door")
                         return true
                     }
                 }
@@ -111,7 +110,7 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         return false
     }
     
-    public func updateFocusEntity() {
+    private func updateFocusEntity() {
         guard let camera = arSession.currentFrame?.camera,
               case .normal = camera.trackingState,
               let (camPos, camDir) = CameraUtils.getCamVector(camTransform: camera.transform),
@@ -119,21 +118,36 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         else {
             focusEntity.putInFrontOfCamera()
             focusEntity.state = .initializing
-            currentFocus = nil
+            currentFocusPosition = nil
             return
         }
-        currentFocus = result.worldTransform.translation
+        currentFocusPosition = result.worldTransform.translation
         focusEntity.state = .tracking(raycastResult: result, camera: camera)
     }
     
     @MainActor
-    func setIsPlaceable(_ value: Bool) {
+    private func setIsPlaceable(_ value: Bool) {
         self.focusEntity.isPlaceable = value
     }
     
     @MainActor
-    func setMountingState(_ value: MountingState) {
+    private func setMountingState(_ value: MountingState) {
         self.mountingState = value
+    }
+    
+    func placeDetector() {
+        guard let position = currentFocusPosition,
+            focusEntity.isPlaceable
+        else { return }
+        scene.removeAll { $0 is SmokeDetector || $0 is DistanceIndicators }
+        let currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arSession, from: position, 30)
+        smokeDetector = SmokeDetector(worldPosition: position)
+        distanceIndicators = DistanceIndicators(from: position, around: currentSurroundings)
+        scene.append(contentsOf: [smokeDetector!, distanceIndicators!])
+    }
+    
+    func removeDetector() {
+        scene.removeAll { $0 is SmokeDetector || $0 is DistanceIndicators }
     }
 }
 

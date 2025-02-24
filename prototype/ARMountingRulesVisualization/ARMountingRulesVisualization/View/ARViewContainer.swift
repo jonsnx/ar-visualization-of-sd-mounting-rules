@@ -19,5 +19,14 @@ struct ARViewWrapper: UIViewRepresentable {
         return arView
     }
     
-    func updateUIView(_ uiView: ARView, context: Context) { }
+    func updateUIView(_ uiView: ARView, context: Context) {
+        for anchor in uiView.scene.anchors {
+            if anchor is SmokeDetector || anchor is DistanceIndicators {
+                uiView.scene.removeAnchor(anchor)
+            }
+        }
+        for entity in arViewModel.scene {
+            uiView.scene.addAnchor(entity)
+        }
+    }
 }

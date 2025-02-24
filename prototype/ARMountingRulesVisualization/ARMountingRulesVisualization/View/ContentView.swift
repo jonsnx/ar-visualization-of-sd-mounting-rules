@@ -42,7 +42,7 @@ struct ContentView: View {
                             .padding()
                     }
                     Button(action: {
-                        //TODO: add action
+                        arViewModel.placeDetector()
                     }){
                         Image(systemName: "plus")
                             .font(.headline)
@@ -53,7 +53,7 @@ struct ContentView: View {
                             .padding()
                     }
                     Button(action: {
-                        //TODO: add action
+                        arViewModel.removeDetector()
                     }){
                         Image(systemName: "trash")
                             .font(.headline)
