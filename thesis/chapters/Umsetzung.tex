@@ -85,26 +85,88 @@ Die Verwendung des ARKit-Frameworks von Apple stellte eine naheliegende Wahl dar
 
 Die Verwendung des ARKit-Frameworks wurde mit dem Einsatz des RealityKit-Frameworks kombiniert. RealityKit ist ein neues Framework von Apple, das speziell für die Entwicklung von 3D-Anwendungen auf iOS-Geräten entwickelt wurde. Es bietet eine Vielzahl von Funktionen, die für die Darstellung von 3D-Objekten in einer augmentierten Umgebung notwendig sind. Dazu gehören unter anderem die Erstellung von 3D-Modellen, die Animation von 3D-Objekten und die Interaktion mit 3D-Objekten. RealityKit bietet eine hohe Performance und eine gute Integration mit ARKit, was die Entwicklung von AR-Anwendungen erleichtert.
 
-- LiDAR Sensor
-- ARKit Framework
-- Swift
-- iPad Pro und MacBook Air
-
 \section{Das ARKit Framework}
 - ARView
 - RealityKit
 - ARSessionDelegate
 - Lifecycle
 
-\section{Implementierung}
-- Setup/Initialisierung
-- Struktur
-- Programmablauf
-- MVVM
-- Entities/Models
-- ARManager
-- FocusEntity
-- Raycasting
-- Tasks/async/await/actors
-- Views
-- ActionManager
+\section{Implementierung des Prototypen}
+
+\subsection{Softwarearchitektur}
+
+Die Softwarearchitektur des Prototypen wurde so konzipiert, dass sie den Anforderungen an die Anwendung gerecht wird. Dabei wurde darauf geachtet, dass die Architektur flexibel und erweiterbar ist, um zukünftige Anforderungen und Änderungen zu berücksichtigen. Die Architektur basiert auf dem Model-View-ViewModel (MVVM) Pattern, das eine klare Trennung von Daten, Logik und Benutzeroberfläche ermöglicht. Die Abbildung \ref{fig:Architecture} zeigt die Softwarearchitektur des Prototypen.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Architecture}
+    \caption{Softwarearchitektur des Prototypen}
+    \label{fig:Architecture}
+\end{figure}
+
+Die View-Schicht ist für die Darstellung der AR-Szene und der UI-Elemente zuständig. Sie beobachtet das \texttt{ARViewModel} und aktualisiert die Anzeige basierend auf den empfangenen Daten. Das \texttt{ARViewModel} bildet die zentrale Steuerungseinheit der Anwendung. Es verwaltet die Kommunikation mit der \texttt{ARSession}, empfängt Tracking-Daten und verarbeitet Änderungen in der AR-Umgebung. Darüber hinaus aktualisiert es die Szene durch das Verwalten und Steuern der enthaltenen AR-Objekte.
+
+Die AR-Objekte sind in der \texttt{EntityModels}-Komponente zusammengefasst. Diese beinhaltet verschiedene Entitäten, die in der Szene dargestellt werden, wie beispielsweise die \texttt{FocusEntity}, die als visuelle Markierung dient, um dem Nutzer eine Orientierung zu ermöglichen. Zudem enthält das System eine \texttt{SmokeDetector}-Entität, die zur Simulation oder Erkennung von Rauchmeldern verwendet werden kann, sowie \texttt{DistanceIndicators}, welche zur Visualisierung von Entfernungen innerhalb der AR-Szene genutzt werden.
+
+Die Kommunikation zwischen diesen Komponenten erfolgt über ein Observer-Pattern. Dabei beobachtet die View das ViewModel, um Änderungen in der Szene dynamisch darzustellen. Mithilfe des Observation-Frameworks von Swift kann das Pattern einfach implementiert werden, ohne dass zusätzlicher Boilerplate-Code notwendig ist. Dazu muss die Klasse, die beobachtet werden soll, mit \texttt{@Observable} wie folgt annotiert werden:
+
+\begin{lstlisting}[language=Swift]
+@Observable
+class ARViewModel {
+    private(set) var scene: [Entity & HasAnchor] = []
+    @ObservationIgnored private var isProcessing: Bool = false
+    // ...
+}
+\end{lstlisting}
+
+Sämtliche Änderungen an den Variablen werden automatisch an die beobachtenden Klassen weitergeleitet. Variablen, die nicht beobachtet werden sollen, können mit \texttt{@ObservationIgnored} annotiert werden. Dadurch wird eine effiziente und performante Kommunikation zwischen den Komponenten ermöglicht.
+
+Das ViewModel empfängt kontinuierlich Daten von der \texttt{ARSession}. Dazu implementiert es das \texttt{ARSessionDelegate}-Protokoll, das Callback-Methoden bereitstellt, um auf Änderungen in der AR-Umgebung zu reagieren. Die \texttt{ARSession} ist für das Tracking der Umgebung und die Verarbeitung der Sensordaten zuständig. Sie liefert dem ViewModel Informationen über die Position und Orientierung der Kamera, erkannte Flächen und erkannte Objekte. Das ViewModel verarbeitet diese und gibt relevante Informationen an die \texttt{EntityModels} weiter. 
+
+Die verwendete Architektur ermöglicht eine saubere Trennung der Verantwortlichkeiten und sorgt für eine effiziente Verwaltung der AR-Objekte. Gleichzeitig bleibt die Anwendung modular und erweiterbar, sodass neue Funktionen oder Entitäten problemlos integriert werden können.
+
+\subsection{ARSession und ARView}
+
+Die \texttt{ARSession} ist die zentrale Komponente des ARKit-Frameworks und bildet die Grundlage für die Entwicklung von Augmented-Reality-Anwendungen für mobile iOS-Geräte. Die Session wurde für den Prototypen wie folgt konfiguriert:
+
+\begin{lstlisting}[language=Swift]
+let config = ARWorldTrackingConfiguration()
+config.planeDetection = [.horizontal, .vertical]
+config.sceneReconstruction = .meshWithClassification
+config.frameSemantics.insert(.sceneDepth)
+\end{lstlisting}
+
+Hier wird zunächst die Erkennung von sowohl horizontalen als auch vertikalen Flächen aktiviert. Diese Planes (Flächen) werden anhand der Kameradaten und der Tiefeninformationen des LiDAR-Sensors erkannt und setig optimiert beziehungsweise erweitert. Die Session stellt anhand der erkannten Flächen ARPlaneAnchor-Objekte zur Verfügung, die Informationen über die Position, Ausrichtung und Größe der Flächen enthalten. Mithilfe des RealityKit-Frameworks können diese Ankerpunkte genutzt werden, um virtuelle Objekte auf den Flächen zu platzieren.
+
+Die Aktivierung der Szenenrekonstruktion unter der Verwendung von \texttt{.meshWithClassification} aktiviert die Rekonstruktion der Umgebung mithilfe der LiDAR-Daten. Dazu wird ein Mesh erzeugt, das die Oberflächen der Umgebung detailliert beschreibt. Dies ermöglicht eine präzise Platzierung von virtuellen Objekten und die exakte Bestimmung von Abständen und Größen. Zusätzlich stellt das Framework die Klassifizierung des Meshes zur Verfügung. Dabei verwendet ARKit die im Kapitel \ref{TODO:addChapter} beschriebene semantische Segmentierung, um die erkannten Flächen zu klassifizieren und zu unterscheiden. Die Klassifizierung umfasst folgende Kategorien:
+
+\begin{lstlisting}[language=Swift]
+    enum ARMeshClassification: Int {
+        case ceiling
+        case door
+        case floor
+        case none
+        case seat
+        case table  
+        case wall
+        case window
+    }
+\end{lstlisting}
+
+Diese Klassifizierung bezieht sich nicht nur auf die segmentierten Meshes, sondern auch auf die einzelnen Faces, die die Meshes bilden. Dadurch kann die Anwendung die erkannten Flächen genauer analysieren und beispielsweise zwischen Wänden und Decken unterscheiden. Dies ist besonders wichtig für die Platzierung von virtuellen Objekten, da die Montageregeln spezifische Anforderungen an die Positionierung von Rauchmeldern vorgeben.
+
+Das ARModelView kann, als Delegierter der ARSession, auf die verarbeitenden Daten in Form von ARFrame-Objekten zugreifen. Diese Informationen über das generierte Mesh, die erkannten Flächen und zusätzliche Tiefendaten. Das ARModelView verarbeitet diese Daten und ändert gegebenenfalls die Entitäten in der Szene. Die Klassifizierung der Meshes wird genutzt, um die abweichenden Abstände von speziellen Objekten, wie Türen oder Fenstern, zu berücksichtigen. Die Frame-Semantik \texttt{.sceneDepth} liefert zusätzliche Informationen über die Tiefeninformationen der Szene, die für die Platzierung von virtuellen Objekten verwendet werden können.
+
+- Architektur: Struktur, Programmablauf, MVVM
+
+- Session: Setup/Initialisierung/Daten
+
+- ViewModel: Raycasting, isPlaceable
+
+- RealityKid-Entities: FocusEntity, SmokeDetector, DistanceIndicators
+
+- FocusEntity gesondert: Implementierung
+
+- Performance: Multi-Threading, Single Processing, Processing Frequency
+
+- Views: ARView und SwiftUI
