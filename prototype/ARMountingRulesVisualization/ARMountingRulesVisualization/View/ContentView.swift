@@ -42,7 +42,7 @@ struct ContentView: View {
                             .padding()
                     }
                     Button(action: {
-                        ActionManager.shared.actionStream.send(.placeDetector)
+                        //TODO: add action
                     }){
                         Image(systemName: "plus")
                             .font(.headline)
@@ -53,7 +53,7 @@ struct ContentView: View {
                             .padding()
                     }
                     Button(action: {
-                        ActionManager.shared.actionStream.send(.removeDetector)
+                        //TODO: add action
                     }){
                         Image(systemName: "trash")
                             .font(.headline)
