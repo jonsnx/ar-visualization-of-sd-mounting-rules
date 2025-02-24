@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		B9047E452D1D6A0C00B083F1 /* ARMountingRulesVisualization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARMountingRulesVisualization.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B96FBCB52D6BD87000ACF461 /* ARMountingRulesVisualization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ARMountingRulesVisualization.app; path = "/Users/julian/Documents/GitHub/ar-visualization-of-sd-mounting-rules/prototype/ARMountingRulesVisualization/build/Debug-iphoneos/ARMountingRulesVisualization.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,16 +33,7 @@
 			isa = PBXGroup;
 			children = (
 				B9047E472D1D6A0C00B083F1 /* ARMountingRulesVisualization */,
-				B9047E462D1D6A0C00B083F1 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		B9047E462D1D6A0C00B083F1 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B9047E452D1D6A0C00B083F1 /* ARMountingRulesVisualization.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -67,7 +58,7 @@
 			packageProductDependencies = (
 			);
 			productName = ARMountingRulesVisualization;
-			productReference = B9047E452D1D6A0C00B083F1 /* ARMountingRulesVisualization.app */;
+			productReference = B96FBCB52D6BD87000ACF461 /* ARMountingRulesVisualization.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -97,7 +88,7 @@
 			packageReferences = (
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = B9047E462D1D6A0C00B083F1 /* Products */;
+			productRefGroup = B9047E3C2D1D6A0C00B083F1;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

@@ -2,24 +2,24 @@ import SwiftUI
 import Combine
 
 struct ContentView: View {
-    @State private var infoText: String = ""
+    @ObservedObject var arViewModel: ARViewModel = ARViewModel()
     
     var body: some View {
         ZStack {
-            ARViewContainer(infoText: $infoText).edgesIgnoringSafeArea(.all)
+            ARViewWrapper(arViewModel: arViewModel).edgesIgnoringSafeArea(.all)
             VStack {
                 ZStack {
-                    InfoCard(infoText: infoText)
+                    InfoCard(infoText: arViewModel.mountingState.rawValue)
                         .transition(.move(edge: .trailing))
-                        .animation(.easeInOut(duration: 0.5), value: infoText)
-                        .opacity(infoText.isEmpty ? 0 : 1)
-                        .animation(.easeInOut(duration: 0.4), value: infoText)
+                        .animation(.easeInOut(duration: 0.5), value: arViewModel.mountingState.rawValue)
+                        .opacity(arViewModel.mountingState.rawValue.isEmpty ? 0 : 1)
+                        .animation(.easeInOut(duration: 0.4), value: arViewModel.mountingState.rawValue)
                     HStack {
                         Spacer()
                         Button(action: {
                             // TODO: add action
                         }){
-                            let foregroundStyle: Color = !infoText.isEmpty ? .red : .white
+                            let foregroundStyle: Color = arViewModel.mountingState.rawValue.isEmpty ? .white : .red
                             Image(systemName: "info.circle.fill")
                                 .imageScale(.large)
                                 .font(.system(size: 40))
@@ -42,7 +42,7 @@ struct ContentView: View {
                             .padding()
                     }
                     Button(action: {
-                        ActionManager.shared.actionStream.send(.placeDetector)
+                        arViewModel.placeDetector()
                     }){
                         Image(systemName: "plus")
                             .font(.headline)
@@ -53,7 +53,7 @@ struct ContentView: View {
                             .padding()
                     }
                     Button(action: {
-                        ActionManager.shared.actionStream.send(.removeDetector)
+                        arViewModel.removeDetector()
                     }){
                         Image(systemName: "trash")
                             .font(.headline)
