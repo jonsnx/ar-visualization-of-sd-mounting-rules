@@ -12,6 +12,7 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     private var detector: SmokeDetector?
     private var distanceIndicators: DistanceIndicators?
     private var updateCancellable: (any Cancellable)?
+    @Published private(set) var mountingState: MountingState = .notOnCeiling
     
     private var isProcessing: Bool = false
     private var currentFocus: SIMD3<Float>?
@@ -59,10 +60,10 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         guard let position = currentFocus,
               await focusEntity.isOnCeiling
         else {
+            await setMountingState(.notOnCeiling)
             await setIsPlaceable(false)
             return
         }
-        print("checking isPlaceable")
         let currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(
             in: arSession,
             from: position
@@ -70,17 +71,18 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         for data in currentSurroundings {
             let targetPosition = data.result.worldTransform.translation
             let distance: Float = simd_distance(position, targetPosition)
-            print("distance: \(distance) from position: \(position) to: \(targetPosition)")
             if distance <= 0.6 {
-                print("too close to wall")
+                await setMountingState(.constraintsNeglected)
                 await setIsPlaceable(false)
                 return
             }
             if await checkIsTooCloseToWindowOrDoor() {
+                await setMountingState(.constraintsNeglected)
                 await setIsPlaceable(false)
                 return
             }
         }
+        await setMountingState(.constraintsSatisfied)
         await setIsPlaceable(true)
     }
     
@@ -128,4 +130,16 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     func setIsPlaceable(_ value: Bool) {
         self.focusEntity.isPlaceable = value
     }
+    
+    @MainActor
+    func setMountingState(_ value: MountingState) {
+        self.mountingState = value
+    }
+}
+
+
+enum MountingState: String {
+    case constraintsSatisfied = ""
+    case constraintsNeglected = "Rauchmelder kann hier nicht platziert werden!"
+    case notOnCeiling = "Richten Sie die Kamera auf die Decke!"
 }

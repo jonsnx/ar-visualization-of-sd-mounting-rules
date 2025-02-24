@@ -5,7 +5,6 @@ import RealityKit
 
 struct ARViewWrapper: UIViewRepresentable {
     @ObservedObject var arViewModel: ARViewModel
-    @Binding var infoText: String
     
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
@@ -20,7 +19,5 @@ struct ARViewWrapper: UIViewRepresentable {
         return arView
     }
     
-    func updateUIView(_ uiView: ARView, context: Context) {
-        // Add your update logic here (if needed)
-    }
+    func updateUIView(_ uiView: ARView, context: Context) { }
 }
