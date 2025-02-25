@@ -39,10 +39,7 @@ extension FocusEntity {
     /// Update the transform of the focus square to be aligned with the camera.
     internal func updateTransform(raycastResult: ARRaycastResult) {
         self.updatePosition()
-        
-        if state != .initializing {
-            updateAlignment(for: raycastResult)
-        }
+        updateAlignment(for: raycastResult)
     }
     
     internal func updateAlignment(for raycastResult: ARRaycastResult) {

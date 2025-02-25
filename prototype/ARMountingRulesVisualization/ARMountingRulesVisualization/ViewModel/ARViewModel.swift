@@ -9,15 +9,38 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     
     @Published private(set) var scene: [Entity & HasAnchoring] = []
     @Published private(set) var mountingState: MountingState = .notOnCeiling
+    private(set) var trackingState: TrackingState = .initializing {
+        didSet {
+            guard trackingState != oldValue else { return }
+            
+            switch trackingState {
+            case .initializing:
+                if oldValue != .initializing {
+                    focusEntity.displayAsBillboard()
+                }
+                
+            case let .tracking(raycastResult):
+                let planeAnchor = raycastResult.anchor as? ARPlaneAnchor
+                if let planeAnchor = planeAnchor {
+                    focusEntity.entityOnPlane(for: raycastResult, planeAnchor: planeAnchor)
+                } else {
+                    focusEntity.entityOffPlane(raycastResult)
+                }
+            }
+        }
+    }
     
     private var focusEntity: FocusEntity!
     private var smokeDetector: SmokeDetector?
     private var distanceIndicators: DistanceIndicators?
     
     private var isProcessing: Bool = false
-    private var currentFocusPosition: SIMD3<Float>?
+    private var currentFocus: ARRaycastResult?
+    private var recentFocusEntityAlignments: [ARPlaneAnchor.Alignment] = []
+    private var isChangingAlignment: Bool = false
+    private var isFocusOnCeiling: Bool = false
     
-    private var frameCount = 0
+    private var frameCount: Int = 0
     
     override init() {
         super.init()
@@ -57,7 +80,7 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     }
     
     private func checkIsPlaceable() async {
-        guard let position = currentFocusPosition,
+        guard let currentFocus = currentFocus,
               await focusEntity.isOnCeiling
         else {
             await setMountingState(.notOnCeiling)
@@ -66,11 +89,11 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         }
         let currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(
             in: arSession,
-            from: position
+            from: currentFocus.worldTransform.translation
         )
         for data in currentSurroundings {
             let targetPosition = data.result.worldTransform.translation
-            let distance: Float = simd_distance(position, targetPosition)
+            let distance: Float = simd_distance(currentFocus.worldTransform.translation, targetPosition)
             if distance <= 0.6 {
                 await setMountingState(.constraintsNeglected)
                 await setIsPlaceable(false)
@@ -88,7 +111,8 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     
     private func checkIsTooCloseToWindowOrDoor() async -> Bool {
         guard let anchors = arSession.currentFrame?.anchors,
-              let position = currentFocusPosition else { return false }
+              let position = currentFocus?.worldTransform.translation
+        else { return false }
         var meshAnchors = anchors.compactMap({ $0 as? ARMeshAnchor })
         let cutoffDistance: Float = 1.5
         meshAnchors.removeAll { distance($0.transform.translation, position) > cutoffDistance }
@@ -117,12 +141,12 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
               let result = RaycastUtil.smartRaycast(in: arSession, from: camPos, to: camDir)
         else {
             focusEntity.putInFrontOfCamera()
-            focusEntity.state = .initializing
-            currentFocusPosition = nil
+            trackingState = .initializing
+            currentFocus = nil
             return
         }
-        currentFocusPosition = result.worldTransform.translation
-        focusEntity.state = .tracking(raycastResult: result, camera: camera)
+        currentFocus = result
+        trackingState = .tracking(raycastResult: result)
     }
     
     @MainActor
@@ -136,8 +160,8 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     }
     
     func placeDetector() {
-        guard let position = currentFocusPosition,
-            focusEntity.isPlaceable
+        guard let position = currentFocus?.worldTransform.translation,
+              focusEntity.isPlaceable
         else { return }
         scene.removeAll { $0 is SmokeDetector || $0 is DistanceIndicators }
         let currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arSession, from: position, 30)
@@ -151,9 +175,24 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     }
 }
 
+enum MountingState: Equatable {
+    case constraintsSatisfied
+    case constraintsNeglected
+    case notOnCeiling
+    
+    var message: String {
+        switch self {
+        case .constraintsSatisfied:
+            return ""
+        case .constraintsNeglected:
+            return "Rauchmelder kann hier nicht platziert werden!"
+        case .notOnCeiling:
+            return "Richten Sie die Kamera auf die Decke!"
+        }
+    }
+}
 
-enum MountingState: String {
-    case constraintsSatisfied = ""
-    case constraintsNeglected = "Rauchmelder kann hier nicht platziert werden!"
-    case notOnCeiling = "Richten Sie die Kamera auf die Decke!"
+enum TrackingState: Equatable {
+    case initializing
+    case tracking(raycastResult: ARRaycastResult)
 }
