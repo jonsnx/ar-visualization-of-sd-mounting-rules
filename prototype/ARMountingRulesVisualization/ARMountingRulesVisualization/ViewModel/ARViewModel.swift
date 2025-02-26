@@ -191,3 +191,13 @@ enum TrackingState: Equatable {
     case initializing
     case tracking(raycastResult: ARRaycastResult)
 }
+
+
+// TODOS:
+// [ ] implement snapshot logic
+// [ ] implement info modal
+// [ ] implement indicator of door and window constraints
+// [ ] implement "detector placed"-screen
+// [ ] implement partially coloring of ring indicator
+// [ ] implement like a constraints framework or something
+// [ ] implement TA
