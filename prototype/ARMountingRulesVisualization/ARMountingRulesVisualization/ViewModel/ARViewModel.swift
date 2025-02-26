@@ -50,13 +50,8 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         config.frameSemantics = .sceneDepth
         arSession.run(config)
         arSession.delegate = self
-        let focusEntityComponent: FocusEntityComponent = .init(
-            onColor: .green,
-            offColor: .red,
-            mesh: .generateCylinder(height: 0.05, radius: 0.05)
-        )
         let cameraAnchor = AnchorEntity(.camera)
-        focusEntity = FocusEntity(focus: focusEntityComponent, cameraAnchor: cameraAnchor, getCurrentCameraRotation: {
+        focusEntity = FocusEntity(cameraAnchor: cameraAnchor, getCurrentCameraRotation: {
             guard let currentFrame = self.arSession.currentFrame else { return simd_quatf() }
             return currentFrame.camera.transform.orientation
         })
