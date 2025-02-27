@@ -6,9 +6,10 @@ import Combine
 
 class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     private(set) var arSession: ARSession = ARSession()
+    private let ruleManager: MountingRuleManager!
     
     @Published private(set) var scene: [Entity & HasAnchoring] = []
-    @Published private(set) var mountingState: MountingState = .notOnCeiling
+    @Published private(set) var errorType: MountingErrorType = .none
     private(set) var trackingState: TrackingState = .initializing {
         didSet {
             guard trackingState != oldValue else { return }
@@ -31,8 +32,6 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     }
     
     private var focusEntity: FocusEntity!
-    private var smokeDetector: SmokeDetector?
-    private var distanceIndicators: DistanceIndicators?
     
     private var isProcessing: Bool = false
     private var currentFocus: ARRaycastResult?
@@ -43,6 +42,13 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     private var frameCount: Int = 0
     
     override init() {
+        ruleManager = MountingRuleManager(
+            rules: [
+                CeilingRule(),
+                WallRule(),
+                WindowDoorRule()
+            ]
+        )
         super.init()
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal, .vertical]
@@ -67,66 +73,26 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         if !isProcessing && frameCount % RaycastConstants.raycastFrequency == 0 {
             isProcessing = true
             Task {
-                await checkIsPlaceable()
+                await validateMountingRules()
             }
             isProcessing = false
         }
         frameCount += 1
     }
     
-    private func checkIsPlaceable() async {
-        guard let currentFocus = currentFocus,
-              await focusEntity.isOnCeiling
-        else {
-            await setMountingState(.notOnCeiling)
-            await setIsPlaceable(false)
+    private func validateMountingRules() async {
+        guard let currentFocus else {
+            
+            await setErrorType(.ceilingRuleError)
             return
         }
-        let currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(
-            in: arSession,
-            from: currentFocus.worldTransform.translation
-        )
-        for data in currentSurroundings {
-            let targetPosition = data.result.worldTransform.translation
-            let distance: Float = simd_distance(currentFocus.worldTransform.translation, targetPosition)
-            if distance <= 0.6 {
-                await setMountingState(.constraintsNeglected)
-                await setIsPlaceable(false)
-                return
-            }
-            if await checkIsTooCloseToWindowOrDoor() {
-                await setMountingState(.constraintsNeglected)
-                await setIsPlaceable(false)
-                return
-            }
+        let (isValid, errorType) = await ruleManager.validateRules(for: currentFocus, in: arSession)
+        if isValid {
+            await setIsPlaceable(true)
+        } else {
+            await setIsPlaceable(false)
         }
-        await setMountingState(.constraintsSatisfied)
-        await setIsPlaceable(true)
-    }
-    
-    private func checkIsTooCloseToWindowOrDoor() async -> Bool {
-        guard let anchors = arSession.currentFrame?.anchors,
-              let position = currentFocus?.worldTransform.translation
-        else { return false }
-        var meshAnchors = anchors.compactMap({ $0 as? ARMeshAnchor })
-        let cutoffDistance: Float = 1.5
-        meshAnchors.removeAll { distance($0.transform.translation, position) > cutoffDistance }
-        for anchor in meshAnchors {
-            for index in 0..<anchor.geometry.faces.count {
-                let classification: ARMeshClassification = anchor.geometry.classificationOf(faceWithIndex: index)
-                if classification == .window || classification == .door {
-                    let geometricCenterOfFace = anchor.geometry.centerOf(faceWithIndex: index)
-                    var centerLocalTransform = matrix_identity_float4x4
-                    centerLocalTransform.columns.3 = SIMD4<Float>(geometricCenterOfFace.0, geometricCenterOfFace.1, geometricCenterOfFace.2, 1)
-                    let centerWorldPosition = (anchor.transform * centerLocalTransform).translation
-                    let distanceToFace = distance(centerWorldPosition, position)
-                    if distanceToFace <= 1.5 {
-                        return true
-                    }
-                }
-            }
-        }
-        return false
+        await setErrorType(errorType)
     }
     
     private func updateFocusEntity() {
@@ -150,8 +116,8 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     }
     
     @MainActor
-    private func setMountingState(_ value: MountingState) {
-        self.mountingState = value
+    private func setErrorType(_ value: MountingErrorType) {
+        self.errorType = value
     }
     
     func placeDetector() {
@@ -160,30 +126,13 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         else { return }
         scene.removeAll { $0 is SmokeDetector || $0 is DistanceIndicators }
         let currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arSession, from: position, 30)
-        smokeDetector = SmokeDetector(worldPosition: position)
-        distanceIndicators = DistanceIndicators(from: position, around: currentSurroundings)
-        scene.append(contentsOf: [smokeDetector!, distanceIndicators!])
+        let smokeDetector = SmokeDetector(worldPosition: position)
+        let distanceIndicators = DistanceIndicators(from: position, around: currentSurroundings)
+        scene.append(contentsOf: [smokeDetector, distanceIndicators])
     }
     
     func removeDetector() {
         scene.removeAll { $0 is SmokeDetector || $0 is DistanceIndicators }
-    }
-}
-
-enum MountingState: Equatable {
-    case constraintsSatisfied
-    case constraintsNeglected
-    case notOnCeiling
-    
-    var message: String {
-        switch self {
-        case .constraintsSatisfied:
-            return ""
-        case .constraintsNeglected:
-            return "Rauchmelder kann hier nicht platziert werden!"
-        case .notOnCeiling:
-            return "Richten Sie die Kamera auf die Decke!"
-        }
     }
 }
 
@@ -199,5 +148,5 @@ enum TrackingState: Equatable {
 // [ ] implement indicator of door and window constraints
 // [ ] implement "detector placed"-screen
 // [ ] implement partially coloring of ring indicator
-// [ ] implement like a constraints framework or something
+// [X] implement like a constraints framework or something
 // [ ] implement TA
