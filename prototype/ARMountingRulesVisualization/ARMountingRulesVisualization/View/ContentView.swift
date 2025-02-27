@@ -8,7 +8,7 @@ struct ContentView: View {
             ARViewWrapper(arViewModel: arViewModel).edgesIgnoringSafeArea(.all)
             VStack {
                 InfoCard(
-                    infoText: arViewModel.mountingState.message,
+                    infoText: arViewModel.errorType.message,
                     trailingPadding: 10.0
                 )
                 Spacer()
