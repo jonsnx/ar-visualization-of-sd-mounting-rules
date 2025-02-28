@@ -32,6 +32,7 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     }
     
     private var focusEntity: FocusEntity!
+    private var distanceBetweenDetectorAndFocus: Float = -1.0
     
     private var isProcessing: Bool = false
     private var currentFocus: ARRaycastResult?
@@ -101,11 +102,13 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
               let (camPos, camDir) = CameraUtils.getCamVector(camTransform: camera.transform),
               let result = RaycastUtil.smartRaycast(in: arSession, from: camPos, to: camDir)
         else {
+            focusEntity.distanceToDetector = -1.0
             focusEntity.putInFrontOfCamera()
             trackingState = .initializing
             currentFocus = nil
             return
         }
+        focusEntity.distanceToDetector = calcDistanceBetweenDetectorAndFocus()
         currentFocus = result
         trackingState = .tracking(raycastResult: result)
     }
@@ -133,6 +136,13 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     
     func removeDetector() {
         scene.removeAll { $0 is SmokeDetector || $0 is DistanceIndicators }
+    }
+    
+    func calcDistanceBetweenDetectorAndFocus() -> Float {
+        guard let currentFocus,
+              let smokeDetector = scene.first(where: { $0 is SmokeDetector }) as? SmokeDetector
+        else { return -1.0 }
+        return distance(smokeDetector.position, currentFocus.worldTransform.translation)
     }
 }
 

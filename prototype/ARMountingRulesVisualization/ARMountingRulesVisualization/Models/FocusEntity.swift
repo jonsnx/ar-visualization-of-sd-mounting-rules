@@ -34,8 +34,9 @@ import RealityKit
 import ARKit
 
 class FocusEntity: Entity, HasAnchoring {
-    internal var isOnCeiling: Bool = false
     internal var isPlaceable = false
+    internal var distanceToDetector: Float = -1.0
+    private var isOnCeiling: Bool = false
     private var isAnimating = false
     private var isChangingAlignment = false
     private var cameraAnchor: AnchorEntity?
@@ -126,17 +127,29 @@ class FocusEntity: Entity, HasAnchoring {
             endColor = self.offColor
         }
         if self.detectorEntity?.model?.materials.count == 0 {
-            self.detectorEntity?.model?.materials = [SimpleMaterial()]
+            self.detectorEntity?.model?.materials = [PhysicallyBasedMaterial()]
         }
         if self.ringIndicatorEntity?.model?.materials.count == 0 {
-            self.ringIndicatorEntity?.model?.materials = [SimpleMaterial()]
+            self.ringIndicatorEntity?.model?.materials = [PhysicallyBasedMaterial()]
         }
         var modelMaterial = PhysicallyBasedMaterial()
         modelMaterial.baseColor = .init(tint: endColor)
         modelMaterial.emissiveColor = .init(color: endColor)
         modelMaterial.emissiveIntensity = 0.5
+        let pbOpacity: PhysicallyBasedMaterial.Opacity = .init(floatLiteral: getMaterialOpacity())
+        modelMaterial.blending = .transparent(opacity: pbOpacity)
         self.detectorEntity?.model?.materials[0] = modelMaterial
         self.ringIndicatorEntity?.model?.materials[0] = modelMaterial
+    }
+    
+    private func getMaterialOpacity() -> Float {
+        var opacity: Float = 1.0
+        if self.distanceToDetector != -1.0 && self.distanceToDetector < 0.5 {
+            let normalizedDistance = max(0.0, min(self.distanceToDetector, 1.0))
+            let t = normalizedDistance / 0.5
+            opacity = (t * t * (3 - 2 * t))
+        }
+        return opacity
     }
     
     private func stateChangedSetup() {
