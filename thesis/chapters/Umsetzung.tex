@@ -1,34 +1,32 @@
 \chapter{Umsetzung des Prototypen}
 
-Die Umsetzung des Prototypen entspricht dem Hauptteil dieser Arbeit. Wie eingehend beschrieben, soll ein Prototyp entwickelt werden, der die Montage von Rauchmeldern in einer augmentierten Umgebung visualisiert. Dabei sollen Smartphones und Tablets sowohl als Ausgabegeräte als auch als Eingabegeräte verwendet werden. Im Folgenden wird die Umsetzung des Prototypen, die sowohl die Konzeption als auch die Implementierung  und die Beschreibung der Anforderungen umfasst, dargestellt.
+Die Umsetzung des Prototypen entspricht dem Hauptteil dieser Arbeit. Ziel ist es einen Prototyp zu entwickeln, der die Montage von Rauchmeldern unterstützt und die Regeln bei der Positionierung in einer augmentierten Umgebung visualisiert. Dabei sollen Smartphones und Tablets sowohl als Eingabe- als auch als Ausgabegeräte genutzt werden. Im Folgenden werden die einzelnen Schritte der Umsetzung erläutert, einschließlich der Konzeption, Implementierung und Beschreibung der Anforderungen.
 
-\section{Anforderungen}
+\section{Anforderungen}\label{sec:requirements}
 
-- Framework für die Montageregeln
-
-Damit der Prototyp zielgerichtet entwickelt werden kann, müssen zunächst die Anforderungen definiert werden. Diese Anforderungen bilden die Grundlage für die weitere Konzeption und Implementierung des Anwendung. Dazu wurden verschiedenste Einflussfaktoren berücksichtigt, die die Anforderungen an das System beeinflussen.
+Um eine zielgerichtete Entwicklung des Prototyps zu gewährleisten, müssen zunächst die Anforderungen definiert werden. Sie dienen als Grundlage für die weitere Konzeption und Implementierung der Anwendung. Dabei wurden verschiedene Einflussfaktoren berücksichtigt, die die Anforderungen an das System maßgeblich bestimmen.
 
 \subsection{Benutzerinteraktion}
 
-Die Implementierung von Interaktionen in Augmented-Reality-Anwendungen muss sorgfältig geplant werden, um eine intuitive Bedienung zu gewährleisten. Die Interaktionen sollten einfach und schnell durchführbar sein, um den Benutzer nicht zu überfordern. Der Benutzer sollte sofort erkennen können, wie er mit der Anwendung interagieren kann. 
+Die Gestaltung der Benutzerinteraktion in Augmented-Reality-Anwendungen muss sorgfältig geplant werden, um eine intuitive und benutzerfreundliche Bedienung zu gewährleisten. Die Interaktionen sollten einfach und schnell durchführbar sein, um den Benutzer nicht zu überfordern. Der Benutzer sollte sofort erkennen können, wie er mit der Anwendung interagieren kann. 
 
-Es ist eine Reihe von Interaktionen denkbar, die dem Benutzer die Möglichkeit geben, mit der augmentierten Umgebung zu interagieren. Dazu gehören beispielsweise Handgesten vor der Kamera, Sprachbefehle oder Touch-Gesten. 
+Denkbare Interaktionsmöglichkeiten umfassen unter anderem Handgesten vor der Kamera, Sprachbefehle oder Touch-Gesten. Allerdings sind die verfügbaren Interaktionsformen durch die Nutzung von Smartphones und Tablets eingeschränkt. Dies liegt vor allem daran, dass das Gerät während der Anwendung in der Hand gehalten werden muss. Besonders bei größeren Tablets kann es notwendig sein, beide Hände zur Stabilisierung des Geräts einzusetzen.
 
-Aufgrund des Einsatzes von Smartphones und Tablets sind die Interaktionsmöglichkeiten jedoch begrenzt. Dies liegt vor allem daran, dass das Ausgabegerät während der Nutzung in der Hand gehalten werden muss. Bei der Verwendung von Tablets müssen je nach Größe des Gerätes sogar beide Hände verwendet werden, um das Gerät stabil halten zu können. Unter der Annahme, dass das Tablet wie in Abbildung \ref{fig:ipad} gehalten wird, sind die Interaktionsmöglichkeiten auf die Daumen des Benutzers und die Ausrichtung bzw. Position des Gerätes beschränkt. Die Bedienungsmöglichkeiten der AR-Anwendung sollten aus diesem Grund so einfach und minimal wie möglich gehalten werden, sodass der Benutzer die Anwendung bedienen kann ohne, dass die Gefahr besteht, das Gerät fallen zu lassen.
+Unter der Annahme, dass das Tablet, wie in Abbildung \ref{fig:ipad} dargestellt, mit beiden Händen gehalten wird, beschränken sich die möglichen Interaktionen auf die Daumen des Benutzers sowie auf die Positionierung und Ausrichtung des Geräts. Daher sollten die Interaktionsmechanismen der AR-Anwendung möglichst einfach und minimalistisch gestaltet sein, um eine komfortable Bedienung zu ermöglichen, ohne dass das Risiko besteht, das Gerät versehentlich fallen zu lassen.
 
 \subsection{Genauigkeit}
 
-Die Visualisierung von Montageregeln für Rauchmelder erfordert eine hohe Genauigkeit bei der Tiefenmessung und dem Tracking der Umgebung. Wie einleitend beschrieben, können ungenaue Montagen von Rauchmeldern fatale Folgen haben. Aus diesem Grund ist es wichtig, sicher zu stellen, dass die Dimensionen des Weltkoordinatensystems, in dem die Rauchmelder platziert werden, mit der realen Welt übereinstimmen. Nur so kann sichergestellt werden, dass Abstände korrekt gemessen und Rauchmelder korrekt platziert werden können.
+Die Visualisierung von Montageregeln für Rauchmelder erfordert eine hohe Genauigkeit bei der Tiefenmessung und dem Tracking der Umgebung. Wie einleitend beschrieben, können fehlerhafte Montagen schwerwiegende Folgen haben. Daher ist es essenziell sicherzustellen, dass die Dimensionen des virtuellen Koordinatensystems, in dem die Rauchmelder platziert werden, exakt mit der realen Welt übereinstimmen. Nur so können Abstände korrekt gemessen und die Montageregeln präzise visualisiert werden.
 
-\subsection{Echtzeitdarstellung}
+\subsection{Echtzeit-Darstellung}
 
-Die Echtzeitdarstellung ist ein wichtiger Bestandteil von Augmented-Reality-Anwendungen, da sie maßgeblich zum Benutzererlebnis beiträgt. Dabei ist es wichtig Latenzen und Drift-Effekte, also die Abweichung der virtuellen Objekte von ihrer tatsächlichen Position, zu minimieren. Es ist demnach sicherzustellen, dass die Verarbeitung der Sensordaten und die Darstellung bzw. Positionierung der virtuellen Objekte möglichst performant implementiert werden und sich nicht gegenseitig blockieren. Auch Benutzerinteraktionen sollten nicht zu Verzögerungen führen, da dies das Benutzererlebnis negativ beeinflussen würde.
+Die Echtzeitleistung der Darstellung der Augmented-Reality-Szene spielt eine entscheidende Rolle in AR-Anwendungen. Es ist wichtig, Latenzen und Drift-Effekte zu minimieren, um sicherzustellen, dass virtuelle Objekte exakt und synchron mit der realen Welt dargestellt werden. Eine effiziente Verarbeitung der Sensordaten sowie eine präzise Positionierung und Darstellung der virtuellen Objekte sind daher essenziell. Gleichzeitig dürfen diese Prozesse nicht miteinander in Konflikt geraten oder sich gegenseitig blockieren. Auch Benutzerinteraktionen sollten ohne Verzögerungen erfolgen, um das Erlebnis nicht negativ zu beeinflussen.
 
-\subsection{Feedback}
+\subsection{User-Feedback}
 
-Feedback ist ein wichtiger Bestandteil von Augmented-Reality-Anwendungen. AR-Systeme können je nach Status des Tracking-Zustands abweichende beziehungsweise unerwartete Ergebnisse liefern. Es ist daher wichtig, dem Benutzer Feedback zu geben, um ihn über den aktuellen Status der Anwendung zu informieren. 
+Das User-Feedback ist ein wichtiger Bestandteil von Augmented-Reality-Anwendungen, da es dem Benutzer hilft, den aktuellen Zustand des Systems zu verstehen. AR-Systeme können je nach Tracking-Status unerwartete oder fehlerhafte Darstellungen liefern. Daher ist es essenziell, den Nutzer kontinuierlich über den Status der Anwendung zu informieren.
 
-Zusätzlich ist es wichtig, den Benutzer auf Fehlverhalten hinzuweisen, um ihm die Möglichkeit zu geben, dieses zu korrigieren. Dies kann beispielsweise durch visuelle Hinweise oder Textnachrichten geschehen.
+Zudem sollte das System auf mögliche Fehlbedienungen hinweisen und dem Benutzer gezielte Hilfestellungen bieten, um Korrekturen vorzunehmen. Dies kann durch visuelle Indikatoren, Textnachrichten oder andere Formen der Rückmeldung, wie akustische oder haptische Signale, erfolgen. Ein gut durchdachtes Feedback-System verbessert nicht nur die Benutzererfahrung, sondern trägt auch zur intuitiven Bedienbarkeit der Anwendung bei.
 
 \subsection{Verzicht auf manuelle Kalibrierung und Initialisierung}
 
@@ -36,26 +34,24 @@ Falls die Anwendung in einem professionellen Umfeld eingesetzt werden soll, ist 
 
 \section{Konzeption}
 
-Das Konzept des Prototypen wurde iterativ entwickelt und nicht in einem einzigen Schritt abgeschlossen. Dabei wurden die Lösungsansätze zur Umsetzung der Anforderungen schrittweise umgesetzt und verfeinert.
+Das Konzept des Prototypen wurde iterativ entwickelt und nicht in einem einzigen Schritt abgeDschlossen. Dabei wurden die Lösungsansätze schrittweise umgesetzt und kontinuierlich optimiert, um die Anforderungen bestmöglich zu erfüllen. Zu Beginn wurde eine grundlegende Skizze des Prototyps erstellt (siehe Abbildung \ref{fig:Concept}), die die zentralen Funktionen und Interaktionen veranschaulichte. Diese diente als Ausgangspunkt für die weitere Entwicklung und half dabei, die wesentlichen Komponenten des Systems frühzeitig zu definieren.
 
-Im ersten Schritt wurde eine grundlegende Skizze des Prototypen erstellt (siehe Abbildung \ref{fig:Concept}), die die wichtigsten Funktionen und Interaktionen darstellte. Diese Skizze diente als Ausgangspunkt für die weitere Entwicklung.
-
-Die Hauptkomponenten des Konzepts umfassen:
+Die Hauptkomponenten des ersten Konzepts umfassten die folgenden Funktionen:
 
 \begin{itemize}
-    \item \textbf{Anzeige von Flächen:} Die Anwendung soll in der Lage sein, Flächen in der Umgebung zu erkennen und anzuzeigen.
-    \item \textbf{Darstellung der Montageregeln:} Die Montageregeln sollen direkt an der Decke in Form von Farbflächen dargestellt werden.
-    \item \textbf{Automatische Platzierung eines virtuellen Rauchmelders:} Der Prototyp soll, basierend auf den erkannten Flächen und den Montageregeln, in der Lage sein, einen virtuellen Rauchmelder automatisch an die optimale Position zu platzieren.
-    \item \textbf{Darstellung des Rauchmelders:} Die Rauchmelder sollen in der augmentierten Umgebung dargestellt werden, um dem Benutzer eine genaue Vorstellung von deren Position zu geben.
-    \item \textbf{Distanzindikatoren:} Um sicherzustellen, dass die Rauchmelder korrekt platziert werden, sollen Distanzindikatoren verwendet werden, die dem Benutzer die Abstände anzeigen.
-    \item \textbf{Informationsanzeige:} Die Anwendung soll dem Benutzer zusätzliche Informationen anzeigen, wie z.B. den Status der Platzierung und Hinweise zur optimalen Positionierung.
+    \item \textbf{Anzeige von Flächen:} Die Anwendung soll in der Lage sein, Flächen in der Umgebung zu erkennen und anzuzeigen
+    \item \textbf{Darstellung der Montageregeln:} Die Montageregeln sollen direkt an der Decke in Form von Farbflächen dargestellt werden
+    \item \textbf{Automatische Platzierung eines virtuellen Rauchmelders:} Der Prototyp soll, basierend auf den erkannten Flächen und den Montageregeln, in der Lage sein, einen virtuellen Rauchmelder automatisch an die optimale Position zu platzieren
+    \item \textbf{Darstellung des Rauchmelders:} Virtuelle Rauchmelder sollen in der augmentierten Umgebung dargestellt werden, um dem Benutzer eine genaue Vorstellung von deren Position zu geben
+    \item \textbf{Distanzindikatoren:} Um sicherzustellen, dass die Rauchmelder korrekt montiert werden, sollen Distanzindikatoren verwendet werden, die dem Benutzer die Abstände zu den umgebenden Wänden anzeigen
+    \item \textbf{Informationsanzeige:} Die Anwendung soll dem Benutzer zusätzliche Informationen anzeigen, wie z.B. den Status der Platzierung und Hinweise zur optimalen Positionierung
 \end{itemize}
 
-Auch wenn dieses erste Konzept eine gute Grundlage für die weitere Entwicklung darstellte, mussten im Laufe der Implementierung einige Anpassungen aufgrund neuer Erkenntnisse vorgenommen werden. Eine Erkenntnis war, dass die automatische Platzierung des Rauchmelders die Erfahrung und Intuition des Monteurs vernachlässigte. Aus diesem Grund wurde eine sogenannte Focus-Entity eingeführt, die dem Benutzer die Möglichkeit gibt, den Rauchmelder manuell zu platzieren. Diese Entity projiziert einen Rauchmelder im Raum der stets im Fokus des Benutzers, also in der Mitte des Bildschirms, bleibt. Der Benutzer kann den Rauchmelder durch Bewegungen des Gerätes positionieren. Dadurch wird eine intuitive Benutzerinteraktion gewährleistet und die Arbeit des Monteurs unterstützt anstatt sie zu ersetzen.
+Auch wenn dieses erste Konzept eine gute Grundlage für die weitere Entwicklung darstellte, mussten im Laufe der Implementierung einige Anpassungen aufgrund neuer Erkenntnisse vorgenommen werden. Eine Erkenntnis war, dass die automatische Platzierung des Rauchmelders die Erfahrung und Intuition des Monteurs vernachlässigte. Aus diesem Grund wurde eine sogenannte \textit{Focus-Entity} eingeführt, die dem Benutzer die Möglichkeit gibt, den Rauchmelder manuell zu platzieren. Diese Entity projiziert einen virtuellen Rauchmelder in den Raum, der stets im Fokus des Benutzers, also in der Mitte des Bildschirms, bleibt. Der Benutzer kann den Rauchmelder durch die Bewegung des Gerätes positionieren. Dadurch wird eine intuitive Benutzerinteraktion gewährleistet und die Arbeit des Monteurs unterstützt anstatt sie zu ersetzen.
 
-Durch die Konzeption der Focus-Entity ist nun aber eine Benutzerinteraktion zur Platzierung des virtuellen Rauchmelders notwendig. Es wurden mehrere Interaktionsmöglichkeiten in Betracht gezogen, darunter Handgesten, Sprachbefehle und Seitentasten des Gerätes. Als intuitivste und einfachste Lösung wurde die Verwendung von Touch-Gesten gewählt. Der Grund dafür ist, dass Touch-Gesten bereits in vielen Anwendungen verwendet werden und dem Benutzer eine vertraute Interaktion bieten. Zusätzlich dazu liefern die Icons der Schaltflächen bereits eine visuelle Rückmeldung, die dem Benutzer zeigt, wie er mit der Anwendung interagieren kann ohne ihn zunächst mit der Bedienung vertraut machen zu müssen. Der Benutzer kann den Rauchmelder somit an der aktuellen Position der Focus-Entity platzieren, sofern es sich um eine gültige Position handelt.
+Mit der Einführung der Focus-Entity wurde eine geeignete Interaktionsmethode erforderlich. Dabei wurden verschiedene Interaktionsmöglichkeiten wie Handgesten, Sprachbefehle und physische Tasten in Betracht gezogen. Letztlich fiel die Wahl auf Touch-Gesten, da diese bereits in vielen Anwendungen etabliert sind und dem Benutzer eine vertraute Bedienweise bieten. Zusätzlich dazu liefern die Icons der Schaltflächen des User-Interfaces bereits visuelle Rückmeldungen, die dem Benutzer zeigen, wie er mit der Anwendung interagieren kann ohne ihn zunächst mit der Bedienung vertraut machen zu müssen. Somit kann der Benutzer den Rauchmelder an der aktuellen Position der Focus-Entity platzieren, sofern es sich um eine gültige Position handelt.
 
-Die Anzahl der verschiedenen Interaktionsmöglichkeiten wurde auf ein Minimum reduziert. Der Monteur soll nur dann mit dem Bildschirm interagieren müssen, wenn es unbedingt notwendig ist. Daher wurde sorgfältig abgewogen, wie viele Schaltflächen für die einwandfreie Nutzung der Anwendung erforderlich sind. Folgende Interaktionen wurden als notwendig erachtet:
+Die Anzahl der notwendigen Interaktionen wurde bewusst auf ein Minimum reduziert, um eine möglichst effiziente Bedienung zu gewährleisten. Der Monteur soll nur dann aktiv mit dem Bildschirm interagieren müssen, wenn es unbedingt erforderlich ist. Daher wurde sorgfältig abgewogen, wie viele Schaltflächen und UI-Elemente für die einwandfreie Nutzung der Anwendung erforderlich sind. In diesem Zusammenhang wurden drei wesentliche Interaktionen als notwendig erachtet:
 
 \begin{itemize}
     \item Platzieren des Rauchmelders
@@ -63,33 +59,35 @@ Die Anzahl der verschiedenen Interaktionsmöglichkeiten wurde auf ein Minimum re
     \item Bildschirmfoto der Szene machen
 \end{itemize}
 
-Die Interaktionen wurden als Schaltflächen am unteren, rechten Rand des Bildschirms platziert, um dem Benutzer eine einfache und intuitive Bedienung zu ermöglichen. Die Schaltflächen sind so angeordnet, dass sie mit den Daumen des Benutzers erreicht werden können, ohne dass er das Gerät loslassen muss. Dabei soll sichergestellt, dass die Schaltflächen mithilfe von Icons eindeutig auf ihre Funktion hinweisen.
+Die Interaktionen wurden als Schaltflächen am unteren Rand des Bildschirms platziert. Die Schaltflächen sind so angeordnet, dass sie mit den Daumen erreicht werden können, ohne in irgendeiner Art und Weise umgreifen zu müssen. 
 
-Ein weiteres UI-Element, das im Konzept berücksichtigt wurde, ist die Informationsanzeige. Diese soll dem Benutzer den Status der Platzierung zur Verfügung stellen. Die Informationsanzeige wird als Textfeld am oberen rechten Rand des Bildschirms platziert, um dem Benutzer die Möglichkeit zu geben, die Informationen schnell zu erfassen, ohne dass sie die Sicht auf die augmentierte Umgebung beeinträchtigen. Änderungen des Statuses werden mithilfe einer Animation hervorgehoben, um dem Benutzer eine visuelle Rückmeldung zu geben. Ein Info-Icon als Ankerpunkt des Textfeldes soll dem Benutzer die Einordnung des gezeigten Textes erleichtern.
+Ein weiteres zentrales Element der Benutzeroberfläche ist die Informationsanzeige, die dem Benutzer jederzeit den aktuellen Status der Platzierung vermittelt. Um die Sicht auf die augmentierte Umgebung nicht zu beeinträchtigen, wurde sie am oberen rechten Rand des Bildschirms platziert. Statusänderungen werden durch Animationen hervorgehoben, um die Aufmerksamkeit des Benutzers gezielt darauf zu lenken. Ein zusätzliches Info-Icon dient als Ankerpunkt für das Textfeld und erleichtert die Einordnung der gezeigten Informationen.
 
-Eine gültige Position für den Rauchmelder soll mithilfe der Farbe der Focus-Entity und des Info-Icons dargestellt werden. Diese soll sich ändern, wenn die aktuelle Position der Focus-Entity eine gültige Position für den Rauchmelder darstellt. Dadurch wird dem Benutzer eine visuelle Rückmeldung gegeben, die ihm zeigt, ob die aktuelle Position des Rauchmelders gültig ist oder nicht. 
-
-Als zusätzlicher Indikator für die Platzierung des virtuellen Rauchmelders dient ein Ring, der um die Focus-Entity herum angezeigt wird. Dieser Ring visualisiert einen Abstand von 0,5 Metern gemäß der Regel (TODO: add Regelnr.) um die Focus-Entity. Dadurch erhält der Benutzer direkt visuelles Feedback im Bezug auf die Minimalanforderungen für die Einhaltung der Montageregeln.
+Um eine gültige Position für den Rauchmelder visuell zu verdeutlichen, wurden zwei Indikatoren implementiert. Zum einen ändert sich die Farbe der Focus-Entity sowie des Info-Icons, sobald sich der Rauchmelder an einer gültigen Position befindet. Zum anderen wird ein zusätzlicher Ring um die Focus-Entity angezeigt, der einen Abstand von 0,5 Metern gemäß den Montageregeln (TODO: add Regelnr.) visualisiert. Dadurch erhält der Benutzer direktes Feedback zur Einhaltung der Mindestanforderungen und kann die Platzierung entsprechend anpassen.
 
 \section{Auswahl der Technologien}
 
-Für die Umsetzung des Prototypen wurden verschiedene Technologien und Frameworks in Betracht gezogen. Dabei wurden die Anforderungen an die Anwendung und die verfügbaren Ressourcen berücksichtigt. Dabei wurden stets mobile Geräte, wie Smartphones und Tablets, als Zielplattform im Auge behalten. 
+Für die Umsetzung des Prototypen wurden verschiedene Technologien und Frameworks in Betracht gezogen. Dabei wurden die Anforderungen an die Anwendung und die verfügbaren Ressourcen berücksichtigt. Da die Anwendung primär für mobile Endgeräte wie Smartphones und Tablets konzipiert wurde, lag der Fokus auf plattformgerechten Technologien mit leistungsfähiger AR-Unterstützung.
 
-Ein weiteres Kriterium bei der Auswahl der Technologien war der Fakt, dass Decken in der Regeln eine glatte Oberfläche aufweisen. Dies bedeutet, dass die Anzahl der vorhanden Merkmale und Strukturen, die für das Tracking verwendet werden können, begrenzt ist. Im schlimmsten Fall könnte dies dazu führen, dass das Tracking nicht korrekt funktioniert und die virtuellen Objekte nicht stabil in der Umgebung platziert werden können. Erste Tests mithilfe des ARCore-Frameworks von Google haben gezeigt, dass das Tracking auf glatten Oberflächen nicht immer zuverlässig funktioniert. Die Abbildung \ref{fig:ARCore} zeigt eine Demo-Anwendung von Google, welche unter anderem die Anzahl der von ARCore erkannten Feature-Punkte anzeigt. Wie zu sehen ist, erkennt ARCore nur wenige Punkte auf der glatten Oberfläche der Decke. 
+Ein zentrales Kriterium bei der Wahl der Technologien war die Beschaffenheit der Deckenoberflächen, da diese in der Regel glatt sind und somit nur wenige markante Merkmale für das visuelle Tracking bieten. Diese begrenzte Anzahl an Feature-Punkten kann dazu führen, dass das Tracking instabil wird und virtuelle Objekte nicht präzise in der Umgebung verankert werden können. Erste Tests mit dem ARCore-Framework von Google zeigten, dass dessen Tracking-Mechanismus auf glatten Oberflächen an seine Grenzen stößt. Abbildung \ref{fig:ARCore} illustriert eine Demo-Anwendung von Google, die die Anzahl der erkannten Feature-Punkte anzeigt. Dabei wurde deutlich, dass ARCore auf einer glatten Decke nur wenige Referenzpunkte identifizieren konnte, was zu einer eingeschränkten Tracking-Stabilität führt, wenn man davon ausgeht dass die Kamera primär auf die Decke gerichtet ist.
 
-Aus diesem Grund stellte Frameworks, die LiDAR-gestütztes Tracking unterstützen, eine attraktive Alternative dar. Wie bereits in Kapitel \ref{TODO:addChapter} beschrieben, ermöglicht LiDAR eine präzise Tiefenmessung und eine genaue Erkennung von Oberflächen unabhängig von deren Struktur. Zusätzlich kann mithilfe der LiDAR-Daten eine längere Initialisierungsphase vermieden werden, da die Tiefeninformationen bereits vorliegen. Auch der Fakt, dass LiDAR-Sensoren kein Umgebungslicht benötigen, um zu funktionieren, ist von großer Bedeutung für den Einsatz in einem professionellen Umfeld, da die Beleuchtungssituation in Gebäuden oft nicht optimal ist.
+Aufgrund dieser Limitation erwiesen sich Frameworks, die LiDAR-gestütztes Tracking unterstützen, als eine vielversprechende Alternative. Wie bereits in Kapitel \ref{LiDAR} beschrieben, ermöglicht LiDAR eine präzise Tiefenerfassung und eine zuverlässige Flächenerkennung – unabhängig von der Oberflächenstruktur. Darüber hinaus reduziert LiDAR die Initialisierungszeit, da die Tiefeninformationen sofort verfügbar sind. Ein weiterer Vorteil ist, dass LiDAR-Sensoren unabhängig vom Umgebungslicht funktionieren, was besonders für professionelle Anwendungen von Bedeutung ist, da die Lichtverhältnisse in Gebäuden nicht immer optimal sind.
 
-Leider sind nur eine Handvoll Geräte auf dem Markt mit LiDAR-Sensoren ausgestattet. Tatsächlich gibt es aktuell keine Android-Geräte, die über einen LiDAR-Sensor auf der Rückseite verfügen. Aus diesem Grund wurde entschieden, den Prototypen auf einem iOS-Gerät zu entwickeln, welches über einen LiDAR-Sensor verfügt. Die Wahl fiel auf ein iPad Pro der dritten Generation. Dieses Gerät bietet eine hohe Leistung und einen LiDAR-Sensor, der für die Umsetzung des Prototypen ideal ist. Die Entwicklung einer iOS-Anwendung setzt jedoch voraus, dass die Programmiersprache Swift verwendet wird. Swift ist eine moderne Programmiersprache, die von Apple entwickelt wurde und speziell für die Entwicklung von iOS- und macOS-Anwendungen optimiert ist. Zusätzlich dazu wird ein Mac-Computer benötigt, um die Anwendung auf das iPad Pro zu übertragen und zu testen. Demnach wurde ein MacBook Air als Entwicklungsumgebung verwendet.
+Allerdings sind aktuell nur wenige mobile Geräte mit einem LiDAR-Sensor ausgestattet. Besonders im Android-Segment gibt es derzeit keine Geräte mit einem rückseitig integrierten LiDAR-Sensor. Daher fiel die Entscheidung auf die Entwicklung eines iOS-basierten Prototyps unter Verwendung eines iPad Pro der dritten Generation. Dieses Gerät bietet sowohl die benötigte Rechenleistung als auch einen leistungsfähigen LiDAR-Sensor, der sich ideal für die Umsetzung eignet. Die Wahl von iOS als Plattform machte den Einsatz der Programmiersprache Swift erforderlich, da diese speziell für die Entwicklung von Anwendungen auf Apple-Geräten optimiert ist. Zudem wurde ein MacBook Air als Entwicklungsumgebung verwendet, da ein macOS-basiertes System notwendig ist, um die Anwendung auf das iPad zu übertragen und zu testen.
 
-Die Verwendung des ARKit-Frameworks von Apple stellte eine naheliegende Wahl dar, da es speziell für die Entwicklung von Augmented-Reality-Anwendungen auf iOS-Geräten entwickelt wurde. Erste Recherchen habe gezeigt, dass ARKit ein mächtiges Framework ist, das eine Vielzahl von Funktionen bietet, die für die Umsetzung des Prototypen notwendig sind. Dazu gehören unter anderem das Tracking der Umgebung, die Erkennung von Flächen, die Platzierung von virtuellen Objekten und die Klassifizierung von Objekten. Zusätzlich dazu bietet ARKit eine hohe Genauigkeit bei der LiDAR-gestützten Tiefenmessung und eine gute Performance bei der Darstellung von virtuellen Objekten. Ein Nachteil von ARKit ist jedoch, dass die Implementierung von ARKit eine Blackbox ist und die genaue Funktionsweise nicht im Detail bekannt ist. Anhand der Dokumentation und Logging-Infos kann jedoch auf die Verwendung von SLAM-Techniken mit der Fusion von Kameradaten, LiDAR-Daten und IMU-Daten geschlossen werden.
+Für die Augmented-Reality-Funktionalitäten wurde das ARKit-Framework von Apple eingesetzt, da es speziell für iOS-Geräte entwickelt wurde und eine Vielzahl von Funktionen für AR-Anwendungen bietet. Dazu gehören unter anderem das Tracking der Umgebung, die Erkennung von Flächen, die präzise Platzierung virtueller Objekte sowie die Objekterkennung und -klassifizierung. Besonders vorteilhaft ist die enge Integration von ARKit mit der LiDAR-Technologie, die eine hohe Genauigkeit und Stabilität bei der Platzierung von virtuellen Objekten ermöglicht. Ein Nachteil von ARKit besteht jedoch darin, dass es sich um eine weitgehend geschlossene Lösung handelt, deren interne Funktionsweise nicht vollständig dokumentiert ist. Durch Analyse der Dokumentation und von Logging-Informationen lässt sich jedoch darauf schließen, dass ARKit ein SLAM-Verfahren (Simultaneous Localization and Mapping) unter Verwendung der Fusion von Kameradaten, LiDAR-Daten und Sensordaten der IMU (Inertial Measurement Unit) verwendet.
 
-Die Verwendung des ARKit-Frameworks wurde mit dem Einsatz des RealityKit-Frameworks kombiniert. RealityKit ist ein neues Framework von Apple, das speziell für die Entwicklung von 3D-Anwendungen auf iOS-Geräten entwickelt wurde. Es bietet eine Vielzahl von Funktionen, die für die Darstellung von 3D-Objekten in einer augmentierten Umgebung notwendig sind. Dazu gehören unter anderem die Erstellung von 3D-Modellen, die Animation von 3D-Objekten und die Interaktion mit 3D-Objekten. RealityKit bietet eine hohe Performance und eine gute Integration mit ARKit, was die Entwicklung von AR-Anwendungen erleichtert.
+Zusätzlich wurde ARKit mit dem RealityKit-Framework kombiniert, das speziell für die Darstellung und Interaktion mit 3D-Objekten in einer augmentierten Umgebung entwickelt wurde. RealityKit bietet eine leistungsfähige Rendering-Engine, die unter anderem physikalisch basierte Beleuchtung, Animationen und Echtzeitinteraktionen mit 3D-Objekten unterstützt. Durch die enge Verzahnung mit ARKit wird eine hohe Performance bei der Visualisierung von augmentierten Inhalten erreicht, was die Entwicklung des Prototyps erheblich erleichterte.
+
+Durch diese Technologieauswahl konnte eine stabile, performante und präzise AR-Anwendung realisiert werden, die insbesondere auf die Herausforderungen glatter Oberflächen und anspruchsvoller Tracking-Bedingungen optimiert ist.
 
 \section{Implementierung des Prototypen}
 
+Die Implementierung des Prototypen erfolgte in mehreren Schritten, die sich an den Anforderungen und dem Konzept orientierten. Dabei wurden die zentralen Funktionen und Komponenten schrittweise entwickelt und getestet, um eine reibungslose Funktionalität und eine intuitive Benutzererfahrung zu gewährleisten. Im Folgenden werden die wichtigsten Aspekte der Implementierung beschrieben, darunter die Softwarearchitektur, die ARSession und ARView, die Entitäten der AR-Szene, die Validierung der Montageregeln und die Benutzeroberfläche.
+
 \subsection{Softwarearchitektur}
 
-Die Softwarearchitektur des Prototypen wurde so konzipiert, dass sie den Anforderungen an die Anwendung gerecht wird. Dabei wurde darauf geachtet, dass die Architektur flexibel und erweiterbar ist, um zukünftige Anforderungen und Änderungen zu berücksichtigen. Die Architektur basiert auf dem Model-View-ViewModel (MVVM) Pattern, das eine klare Trennung von Daten, Logik und Benutzeroberfläche ermöglicht. Die Abbildung \ref{fig:Architecture} zeigt die Softwarearchitektur des Prototypen.
+Die Softwarearchitektur des Prototyps wurde so konzipiert, dass sie flexibel, modular und erweiterbar ist, um zukünftige Anforderungen und Anpassungen problemlos zu ermöglichen. Dabei kommt das \textit{Model-View-ViewModel} (MVVM)-Pattern zum Einsatz, das eine klare Trennung zwischen Datenhaltung, Geschäftslogik und Benutzeroberfläche gewährleistet. Abbildung \ref{fig:Architecture} gibt eine Übersicht über die Architektur des Prototyps.
 
 \begin{figure}[ht]
     \centering
@@ -98,11 +96,17 @@ Die Softwarearchitektur des Prototypen wurde so konzipiert, dass sie den Anforde
     \label{fig:Architecture}
 \end{figure}
 
-Die View-Schicht ist für die Darstellung der Augmented-Reality-Szene und der UI-Elemente zuständig. Sie beobachtet das \texttt{ARViewModel} und aktualisiert die Anzeige basierend auf den empfangenen Daten. Das \texttt{ARViewModel} bildet die zentrale Steuerungseinheit der Anwendung. Es verwaltet die Kommunikation mit der \texttt{ARSession}, empfängt Tracking-Daten und verarbeitet Änderungen in der AR-Umgebung. Darüber hinaus aktualisiert es die Szene durch das Verwalten und Steuern der enthaltenen Augmented-Reality-Objekte.
+Die \textit{View}-Schicht ist für die Darstellung der Augmented-Reality-Szene und der UI-Elemente zuständig. Sie beobachtet das \texttt{ARViewModel} und aktualisiert die Anzeige basierend auf den empfangenen Daten. Das \texttt{ARViewModel} bildet die zentrale Steuerungseinheit der Anwendung. Es verwaltet die Kommunikation mit der \texttt{ARSession}, empfängt Tracking-Daten und verarbeitet Änderungen in der AR-Umgebung. Darüber hinaus aktualisiert es die Szene durch das Verwalten und Steuern der enthaltenen Augmented-Reality-Objekte.
 
-Die AR-Objekte sind in der \texttt{EntityModels}-Komponente zusammengefasst. Diese beinhaltet verschiedene Entitäten, die in der Szene dargestellt werden, wie beispielsweise die \texttt{FocusEntity}, die als visuelle Markierung dient, um dem Nutzer eine Orientierung zu ermöglichen. Zudem enthält das System eine \texttt{SmokeDetector}-Entität, die zur Simulation oder Erkennung von Rauchmeldern verwendet werden kann, sowie \texttt{DistanceIndicators}, welche zur Visualisierung von Entfernungen innerhalb der Augmented-Reality-Szene genutzt werden.
+Die AR-Objekte sind in der \texttt{EntityModels}-Komponente zusammengefasst. Diese enthält verschiedene Entitäten, die innerhalb der Szene visualisiert werden, darunter:
 
-Die Kommunikation zwischen diesen Komponenten erfolgt über ein \texttt{Observer}-Pattern. Dabei beobachtet die View das \texttt{ViewModel}, um Änderungen in der Szene dynamisch darzustellen. Mithilfe des Observation-Frameworks von Swift kann das Pattern einfach implementiert werden, ohne dass zusätzlicher Boilerplate-Code notwendig ist. Dazu muss die Klasse, die beobachtet werden soll, mit \texttt{@Observable} wie folgt annotiert werden:
+\begin{itemize}
+    \item \texttt{FocusEntity}: dient als visuelle Orientierungshilfe für den Nutzer und markiert potenzielle Platzierungsorte
+    \item \texttt{SmokeDetector}: repräsentiert den virtuellen Rauchmelder innerhalb der AR-Umgebung
+    \item \texttt{DistanceIndicators}: zeigen Abstände zu anderen Objekten an, um die korrekte Montage sicherzustellen
+\end{itemize}
+
+Die Kommunikation zwischen diesen Komponenten erfolgt mithilfe des \texttt{Observer}-Patterns. Die View beobachtet dabei das \texttt{ViewModel} und reagiert auf Änderungen in der Szene. Dank des in Swift integrierten Observation-Frameworks lässt sich dieses Muster einfach umsetzen, ohne zusätzlichen Boilerplate-Code zu erzeugen. Die Annotation \texttt{@Observable} ermöglicht es, dass Änderungen an einer Klasse automatisch an ihre Beobachter weitergeleitet werden:
 
 \begin{lstlisting}[language=Swift]
 @Observable
@@ -113,15 +117,63 @@ class ARViewModel {
 }
 \end{lstlisting}
 
-Sämtliche Änderungen an den Variablen werden automatisch an die beobachtenden Klassen weitergeleitet. Variablen, die nicht beobachtet werden sollen, können mit \texttt{@ObservationIgnored} annotiert werden. Dadurch wird eine effiziente und performante Kommunikation zwischen den Komponenten ermöglicht.
+Variablen, die nicht beobachtet werden sollen, können mit \texttt{@ObservationIgnored} markiert werden, wodurch unnötige Updates vermieden und die Performance optimiert wird.
 
-Das \texttt{ViewModel} empfängt kontinuierlich Daten von der \texttt{ARSession}. Dazu implementiert es das \texttt{ARSessionDelegate}-Protokoll, das Callback-Methoden bereitstellt, um auf Änderungen in der AR-Umgebung zu reagieren. Die \texttt{ARSession} ist für das Tracking der Umgebung und die Verarbeitung der Sensordaten zuständig. Sie liefert dem \texttt{ViewModel} Informationen über die Position und Orientierung der Kamera, erkannte Flächen und erkannte Objekte. Das \texttt{ViewModel} verarbeitet diese und gibt relevante Informationen an die \texttt{EntityModels} weiter. 
+Das \texttt{ViewModel} erhält kontinuierlich Tracking-Daten von der \texttt{ARSession}, indem es das \texttt{ARSessionDelegate}-Protokoll implementiert. Dieses stellt verschiedene Callback-Methoden bereit, mit denen auf Änderungen in der Umgebung reagiert werden kann. Die \texttt{ARSession} erfasst Sensordaten und liefert Informationen zu Kamerapositionen, erkannten Flächen sowie identifizierter Objekte. Das \texttt{ViewModel} verarbeitet diese Daten und aktualisiert daraufhin die \texttt{EntityModels}, um die Darstellung in der AR-Szene entsprechend anzupassen.
 
-Die verwendete Architektur ermöglicht eine saubere Trennung der Verantwortlichkeiten und sorgt für eine effiziente Verwaltung der AR-Objekte. Gleichzeitig bleibt die Anwendung modular und erweiterbar, sodass neue Funktionen oder Entitäten problemlos integriert werden können.
+Durch diese Architektur wird eine klare Trennung der Verantwortlichkeiten erreicht, wodurch die Anwendung strukturiert, effizient und leicht erweiterbar bleibt. Neue Funktionen oder zusätzliche Entitäten können nahtlos integriert werden, ohne die bestehende Codebasis grundlegend verändern zu müssen.
 
-\subsection{ARSession und ARView}
+\subsection{View}
 
-Die \texttt{ARSession} ist die zentrale Komponente des ARKit-Frameworks und bildet die Grundlage für die Entwicklung von Augmented-Reality-Anwendungen für mobile iOS-Geräte. Die Session wurde für den Prototypen wie folgt konfiguriert:
+Die Benutzeroberfläche des Prototyps wurde mit dem SwiftUI-Framework von Apple entwickelt. SwiftUI verwendet eine deklarative Syntax, um Benutzeroberflächen zu erstellen und zu verwalten. Dabei werden einzelne \texttt{View}-Komponenten als grundlegende Bausteine der Benutzeroberfläche verwendet, die durch Modifikatoren und Container zu komplexen Layouts zusammengesetzt werden können. Der komponentenbasierte Aufbau der Benutzeroberfläche lässt sich ideal als Baumstruktur visualisieren:
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{UI}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{AppUI}
+    \end{minipage}
+    \caption{SwiftUI-Benutzeroberfläche: Baumstruktur (links) und App-Ansicht (rechts)}
+    \label{fig:AppUI}
+\end{figure}
+
+Dieser modulare Aufbau ermöglicht eine strukturierte und flexible Implementierung der Benutzeroberfläche, wobei jede Komponente eigenständig und wiederverwendbar ist. Ein Beispiel hierfür ist der \texttt{ControlButton}, der mehrfach mit verschiedenen Symbolen und zugehörigen Callback-Funktionen eingesetzt wird.
+
+\begin{lstlisting}[language=Swift]
+struct ControlButton: View {
+    var iconName: String
+    var action: () -> Void
+        
+    var body: some View {
+        // Implementatierung der Button-Komponente
+    }
+}
+\end{lstlisting}
+
+SwiftUI stellt eine Vielzahl vordefinierter Komponenten bereit, die speziell für die Entwicklung von iOS-Anwendungen optimiert sind. So kommt beispielsweise die \texttt{ZStack}-Komponente zum Einsatz, um die Buttons und die InfoCard über der ARView zu platzieren.
+
+Zur Steuerung der Darstellung und des Verhaltens der Komponenten wurden Modifikatoren verwendet. Ein Beispiel hierfür ist die Verwendung von Übergängen und Animationen, um die Zustandsänderungen der \texttt{InfoCard} visuell darzustellen:
+
+\begin{lstlisting}[language=Swift]
+InfoText(infoText: infoText)
+    .transition(.move(edge: .trailing))
+    .animation(.easeInOut(duration: 0.5), value: infoText)
+    .opacity(infoText.isEmpty ? 0 : 1)
+    .animation(.easeInOut(duration: 0.4), value: infoText)
+\end{lstlisting}
+
+Der \texttt{transition}-Modifikator stellt eine Bewegung der Komponent von der rechten Bildschirmkante dar. Diese Bewegung wird durch den \texttt{animation}-Modifikator animiert. Um den Übergangseffekt zu verstärken, wird zusätzlich der \texttt{opacity}-Modifikator verwendet, um die Transparenz der Komponente während des Übergangs zu steuern.
+
+Die ARView bildet das Herzstück der Augmented-Reality-Darstellung und ist Teil des RealityKit-Frameworks. Sie ermöglicht das Rendering von 3D-Objekten in einer erweiterten Umgebung. Um die ARView in die SwiftUI-View zu integrieren, muss sie als \texttt{UIViewRepresentable}-Komponente eingebunden werden. Dies erlaubt es, die ARView als Subview der SwiftUI-View zu verwenden, wo sie mithilfe von Modifikatoren positioniert und skaliert wird.
+
+\subsection{Konfiguration und Nutzung der ARSession}
+
+Die \texttt{ARSession} ist die zentrale Komponente des ARKit-Frameworks und bildet die Grundlage für die Entwicklung von Augmented-Reality-Anwendungen auf iOS-Geräten. Sie verwaltet das Tracking der Umgebung, die Verarbeitung von Sensordaten und die Bereitstellung von Ankerpunkten zur Platzierung virtueller Objekte. Für den Prototypen wurde die Session mit der folgenden Konfiguration initialisiert:
 
 \begin{lstlisting}[language=Swift]
 let config = ARWorldTrackingConfiguration()
@@ -130,9 +182,9 @@ config.sceneReconstruction = .meshWithClassification
 config.frameSemantics.insert(.sceneDepth)
 \end{lstlisting}
 
-Hier wird zunächst die Erkennung von sowohl horizontalen als auch vertikalen Flächen aktiviert. Diese Planes (Flächen) werden anhand der Kameradaten und der Tiefeninformationen des LiDAR-Sensors erkannt und setig optimiert beziehungsweise erweitert. Die Session stellt anhand der erkannten Flächen \texttt{ARPlaneAnchor}-Objekte zur Verfügung, die Informationen über die Position, Ausrichtung und Größe der Flächen enthalten. Mithilfe des RealityKit-Frameworks können diese Ankerpunkte genutzt werden, um virtuelle Objekte auf den Flächen zu platzieren.
+Diese Konfiguration aktiviert zunächst die Erkennung horizontaler und vertikaler Flächen. Die \texttt{ARSession} erkennt diese \textit{Planes} mithilfe der Kameradaten und der Tiefeninformationen des LiDAR-Sensors. Die erkannten Flächen werden kontinuierlich optimiert und erweitert. Sie werden als \texttt{ARPlaneAnchor}-Objekte bereitgestellt, die Informationen zu Position, Ausrichtung und Größe der Fläche enthalten. Über das RealityKit-Framework können diese Ankerpunkte genutzt werden, um virtuelle Objekte stabil auf den erkannten Flächen zu platzieren.
 
-Die Aktivierung der Szenenrekonstruktion unter der Verwendung von \texttt{.meshWithClassification} aktiviert die Rekonstruktion der Umgebung mithilfe der LiDAR-Daten. Dazu wird ein Mesh erzeugt, das die Oberflächen der Umgebung detailliert beschreibt. Dies ermöglicht eine präzise Platzierung von virtuellen Objekten und die exakte Bestimmung von Abständen und Größen. Zusätzlich stellt das Framework die Klassifizierung des Meshes zur Verfügung. Dabei verwendet ARKit die im Kapitel \ref{sec:SceneUnderstanding} beschriebene semantische Segmentierung, um die erkannten Flächen zu klassifizieren und zu unterscheiden. Die Klassifizierung umfasst folgende Kategorien:
+Ein weiterer wesentlicher Bestandteil der Konfiguration ist die Aktivierung der Szenenrekonstruktion durch \texttt{.meshWithClassification}. Dabei wird die Umgebung auf Basis der LiDAR-Daten als detailliertes Mesh rekonstruiert. Diese Methode ermöglicht nicht nur eine präzisere Platzierung virtueller Objekte, sondern auch eine exakte Erfassung von Abständen und Größenverhältnissen. Zudem bietet ARKit eine semantische Klassifikation des Meshes, die es erlaubt, verschiedene Oberflächentypen zu unterscheiden. Dazu verwendet ARKit, die im Kapitel \ref{sec:SceneUnderstanding} beschriebene, semantische Segmentierung. Die Klassifizierung erfolgt nach den folgenden Kategorien:
 
 \begin{lstlisting}[language=Swift]
     enum ARMeshClassification: Int {
@@ -147,39 +199,23 @@ Die Aktivierung der Szenenrekonstruktion unter der Verwendung von \texttt{.meshW
     }
 \end{lstlisting}
 
-Diese Klassifizierung bezieht sich nicht nur auf die segmentierten Meshes, sondern auch auf die einzelnen Faces, die die Meshes bilden. Dadurch kann die Anwendung die erkannten Flächen genauer analysieren und beispielsweise zwischen Wänden und Decken unterscheiden. Dies ist besonders wichtig für die Platzierung von virtuellen Objekten, da die Montageregeln spezifische Anforderungen an die Positionierung von Rauchmeldern vorgeben.
+Die Klassifizierung erstreckt sich nicht nur auf ganze Meshes, sondern auch auf deren einzelne Faces. Dadurch kann die Anwendung gezielt zwischen verschiedenen Oberflächentypen unterscheiden, was insbesondere für die Darstellung der Montageregeln essenziell ist. Da diese Vorgaben spezifische Abstände zu Elementen wie Wänden, Fenstern oder Türen erfordern, ermöglicht diese Segmentierung eine exakte Bestimmung der Platzierung des Rauchmelders.
 
-Das \texttt{ARModelView} kann, als Delegierter der ARSession, auf die verarbeitenden Daten in Form von \texttt{ARFrame}-Objekten zugreifen. Diese Informationen über das generierte Mesh, die erkannten Flächen und zusätzliche Tiefendaten. Das \texttt{ARModelView} verarbeitet diese Daten und ändert gegebenenfalls die Entitäten in der Szene. Die Klassifizierung der Meshes wird genutzt, um die abweichenden Abstände von speziellen Objekten, wie Türen oder Fenstern, zu berücksichtigen. Die Frame-Semantik \texttt{.sceneDepth} liefert zusätzliche Informationen über die Tiefeninformationen der Szene, die für die Platzierung von virtuellen Objekten verwendet werden können.
-
-\subsection{Entitäten der AR-Szene}
-
-Die Entitäten (Entities) der Augmented-Reality-Szene stellen die Model-Objekte des Prototypen dar. Dabei handelt es sich um virtuelle Objekte, die in der augmentierten Umgebung platziert werden und dem Benutzer eine visuelle Rückmeldung geben. Es wurde darauf geachtet, dass die Szene ein Minimum an visuellen Elementen enthält, um den Benutzer nicht zu überfordern. Wie in Abbildung \ref{fig:Architecture} dargestellt, beschränken sich die visualisierten Entitäten auf die folgenden Objekte:
+Das \texttt{ARModelView} fungiert als Delegierter der \texttt{ARSession} und kann daher in Echtzeit auf die verarbeiteten Daten zugreifen, die in Form von \texttt{ARFrame}-Objekten bereitgestellt werden. Diese enthalten:
 
 \begin{itemize}
-    \item \texttt{FocusEntity}
-    \item \texttt{SmokeDetector}
-    \item \texttt{DistanceIndicators}
+    \item Informationen über das generierte Mesh und dessen Klassifikation,
+    \item erkannte Flächen und ihre Positionen,
+    \item zusätzliche Tiefendaten durch die aktivierte Frame-Semantik \texttt{.sceneDepth}.
 \end{itemize}
 
-Die Entitäten wurden so konzipiert, dass sie direkt in die Augmented-Reality-Szene platziert werden können und sich dynamisch an die Umgebung anpassen. Dazu wurden Protokolle und Klassen des \texttt{RealityKit}-Frameworks verwendet, die eine einfache Erstellung und Verwaltung von Augmented-Reality-Objekten ermöglichen. Im Beispiel der \texttt{SmokeDetector}-Entität wurde die Klasse wie folgt implementiert:
+Diese Informationen nutzt das \texttt{ARModelView}, um die Entitäten in der Szene dynamisch anzupassen. Insbesondere die Klassifikationsdaten ermöglichen es, objektspezifische Platzierungsbedingungen zu berücksichtigen – etwa notwendige Mindestabstände zu Türen oder Fenstern. Die zusätzlichen Tiefeninformationen aus der \texttt{sceneDepth}-Semantik tragen ebenfalls zur verbesserten Positionierung virtueller Objekte bei, indem sie genauere Abstandsmessungen innerhalb der Szene ermöglichen.
 
-\begin{lstlisting}[language=Swift]
-class SmokeDetector: Entity, HasModel, HasAnchoring {
-    init() {
-        super.init()
-        // Initialization of MeshComponent and ModelComponent
-    }
-    // ...
-}
-\end{lstlisting}
+Durch diese Konfiguration und Nutzung der \texttt{ARSession} wird sicher gestellt, dass die Möglichkeiten der vorhandenen Hardware-Ressourcen optimal ausgeschöpft werden.
 
-Dabei wird die \texttt{SmokeDetector}-Entität als Subklasse der \texttt{Entity}-Klasse definiert. Die \texttt{Entity}-Klasse ist die Basisklasse für alle virutellen Objekte in der Augmented-Reality-Szene und stellt grundlegenden Funktionen zur Verfügung, um die Entitäten in der Szene zu verwalten. Die \texttt{SmokeDetector}-Entität implementiert das \texttt{HasModel}-Protokoll, das die Verwendung von 3D-Modellen in der Entität ermöglicht. Zusätzlich implementiert sie das \texttt{HasAnchoring}-Protokoll, das die Verankerung der Entität an einem AR-Anchor ermöglicht. Änderungen, die an der Entität vorgenommen werden, werden automatisch an die Augmented-Reality-Szene weitergeleitet und dort dargestellt.
+\subsection{Implementierung der Montageregeln}\label{sec:ImplMontageregeln}
 
-Zugegeben, stellt die Verwendung von \texttt{RealityKit}-Komponenten in Model-Klassen eine Abhängigkeit zur View-Schicht dar. Eine strikte Trennung der Entity- und der Model-Klassen wäre wünschenswert, um die Wiederverwendbarkeit und Erweiterbarkeit der Model-Klassen zu gewährleisten. Dies würde aber eine zusätzliche Komplexität mit sich bringen und die Architektur unnötig verkomplizieren. Daher wurde im Rahmen des Prototypen entschieden, die \texttt{RealityKit}-Komponenten direkt in den Model-Klassen zu verwenden, um die Implementierung zu vereinfachen und die Entwicklung zu beschleunigen.
-
-\subsection{Validierung der Montageregeln}
-
-Die Implementierng der Montageregeln bilden, neben der Visualisierung, den Kern des Prototypen und sind Vorraussetzung für die korrekte Platzierung der Rauchmelder. Aus diesem Grund ist es wichtig, dass die Regeln korrekt und zuverlässig umgesetzt werden und einfach erweiterbar sind. Für den Prototypen wurden Mindestanforderungen bezüglich der im Kapitel \ref{cha:Problemstellung} beschriebenen Regeln definiert. Diese Mindestanforderungen umfassen die folgenden Regeln:
+Die Implementierung der Montageregeln bildet zusammen mit der Visualisierung den zentralen Bestandteil des Prototyps und stellt eine Voraussetzung für die korrekte Platzierung der Rauchmelder dar. Daher ist es entscheidend, dass die Regeln präzise und zuverlässig umgesetzt werden, während gleichzeitig eine einfache Erweiterbarkeit gewährleistet bleibt. Für den Prototypen wurden Mindestanforderungen definiert, die sich auf die im Kapitel \ref{cha:Problemstellung} beschriebenen Regeln stützen. Diese Mindestanforderungen umfassen:
 
 \begin{itemize}
     \item Der Rauchmelder darf nur an Decken montiert werden
@@ -187,9 +223,9 @@ Die Implementierng der Montageregeln bilden, neben der Visualisierung, den Kern 
     \item Der Rauchmelder muss mindestens 1,50 m von Türen und Fenstern entfernt sein
 \end{itemize}
 
-Dazu wurde ein Framework entwickelt, das die Validierung der Montageregeln übernimmt. Zentrale Komponente des Frameworks ist der \texttt{MountingRuleManager}. Diese Klasse verwaltet eine Liste von Montageregeln. 
+Zur Validierung dieser Regeln wurde ein Framework entwickelt, das die Überprüfung der Montageregeln übernimmt. Eine zentrale Komponente dieses Frameworks ist der \texttt{MountingRuleManager}. Diese Klasse verwaltet eine Liste von Montageregeln und stellt sicher, dass die festgelegten Anforderungen eingehalten werden.
 
-Diese Regeln sind als Klassen implementiert und implementieren das \texttt{MountingRule}-Protokoll. Das Protokoll definiert eine Funktion, die die Validierung der Regel durchführt und einen booleschen Wert zurückgibt:
+Die Regeln selbst sind als Klassen implementiert, die das \texttt{MountingRule}-Protokoll übernehmen. Dieses Protokoll definiert eine Methode zur Validierung der jeweiligen Regel und gibt einen booleschen Wert zurück:
 
 \begin{lstlisting}[language=Swift]
 protocol MountingRule {
@@ -198,8 +234,7 @@ protocol MountingRule {
 }
 \end{lstlisting}
 
-
-Zusätzlich dazu wird ein \texttt{MountingErrorType} angegeben, der den Typ des Fehlers angibt, falls die Regel nicht erfüllt ist. Entsprechend der zuvor beschriebenen Mindestanforderungen wurden folgende \texttt{MountingErrorType}-Werte definiert:
+Zusätzlich wird ein \texttt{MountingErrorType} angegeben, der den Typ des Fehlers beschreibt, wenn eine Regel nicht erfüllt wird. Entsprechend der zuvor genannten Mindestanforderungen wurden folgende \texttt{MountingErrorType}-Werte definiert:
 
 \begin{lstlisting}[language=Swift]
 enum MountingErrorType {
@@ -210,9 +245,9 @@ enum MountingErrorType {
 }
 \end{lstlisting}
 
-Abhängig von diesem Typ wird der Status der virtuelle Montage angepasst und dem Benutzer eine entsprechende Rückmeldung gegeben. 
+Je nach Fehlerart wird der Status der virtuellen Montage angepasst, und der Benutzer erhält eine entsprechende Rückmeldung.
 
-Der \texttt{MountingRuleManager} stellt eine Funktion zur Verfügung, welche die Validierung der gegebenen Regeln ausführt und den Status der Montage zurückgibt:
+Der \texttt{MountingRuleManager} stellt eine Funktion zur Verfügung, die alle Regeln validiert und den Fehlerstatus der Montage zurückgibt:
 
 
 \begin{lstlisting}[language=Swift]
@@ -232,39 +267,15 @@ class MountingRuleManager {
 }
 \end{lstlisting}
 
-Die Funktion iteriert über die Liste der Regeln und führt die Validierung für jede Regel aus. Falls eine Regel nicht erfüllt ist, wird der entsprechende \texttt{MountingErrorType} zurückgegeben. Andernfalls wird \texttt{.none} zurückgegeben, um anzuzeigen, dass alle Regeln erfüllt sind.
+Die Funktion durchläuft die Liste der definierten Regeln und führt die Validierung für jede Regel durch. Sollte eine Regel nicht erfüllt werden, gibt die Methode den entsprechenden \texttt{MountingErrorType} zurück. Andernfalls wird \texttt{.none} zurückgegeben, was anzeigt, dass alle Regeln erfüllt sind.
 
-Der \texttt{MountingRuleManager} wird im \texttt{ARViewModel} initialisiert und verwendet. Dabei ist die Reihenfolge der Regeln entscheidend, da die Regeln nacheinander überprüft werden. Für den Prototypen wurde die Reihenfolge der Regeln so gewählt, dass die wichtigsten Regeln zuerst überprüft werden. Dies ermöglicht eine effiziente Überprüfung der Regeln und eine schnelle Rückmeldung an den Benutzer.
+Der \texttt{MountingRuleManager} wird innerhalb des \texttt{ARViewModel} initialisiert und verwendet. Die Reihenfolge der Regeln ist dabei von Bedeutung, da sie nacheinander überprüft werden. Für den Prototypen wurde die Reihenfolge so gewählt, dass die wichtigsten Regeln zuerst überprüft werden. Dies ermöglicht eine effiziente Überprüfung und eine schnelle Rückmeldung an den Benutzer.
 
-Die beschriebene Implementierung stellt eine einfache und leicht erweiterbare Lösung dar, um die Montageregeln zu validieren und dem Benutzer eine Rückmeldung zu geben. Die Regeln können einfach hinzugefügt oder geändert werden, um neue Anforderungen zu berücksichtigen oder bestehende Regeln zu optimieren.
+Die beschriebene Implementierung stellt eine einfach erweiterbare Lösung zur Validierung der Montageregeln dar. Es ist problemlos möglich, neue Regeln hinzuzufügen oder bestehende Regeln anzupassen, um sowohl neuen Anforderungen gerecht zu werden als auch bestehende Regeln zu optimieren.
 
-\subsection{FocusEntity}
+\subsection{Raycasting}\label{Raycasting}
 
-\subsection{Performance-Optimierung}
-Wie in den Anforderungen beschrieben, spielt die Performance eine entscheidende Rolle bei der Entwicklung von Augmented-Reality-Anwendungen. Sie wird von verschiedenen Faktoren beeinflusst, darunter die Verarbeitungsgeschwindigkeit der Sensordaten, die Darstellung virtueller Objekte und die Interaktion mit dem Benutzer. Um eine hohe Performance sicherzustellen, wurden gezielte Optimierungsmaßnahmen implementiert, die die Datenverarbeitung effizienter gestalten und die Darstellung der AR-Szene beschleunigen.
-
-Bevor Multithreading als Optimierungsstrategie in Betracht gezogen wurde, lag der Fokus darauf, die synchrone Implementierung zu verbessern. Dabei wurden drei zentrale Aspekte identifiziert:
-
-\begin{itemize}
-\item Reduktion der Verarbeitungsfrequenz der ARFrame-Daten
-\item Optimierung der Raycast-Abstandsprüfung
-\item Filterung der ARMeshAnchors zur effizienteren Abstandsanalyse
-\end{itemize}
-
-Die Verarbeitung der ARFrame-Daten wurde optimiert, indem die Regelprüfung nur noch alle 10 Frames durchgeführt wird. Dies reduziert die Anzahl der Berechnungen erheblich und steigert die Verarbeitungsgeschwindigkeit.
-
-Die Anzahl der Raycasts zur Abstandskontrolle wurde von 30 auf 9 gesenkt. Dadurch wird der Rechenaufwand weiter verringert, was zu einer spürbaren Effizienzsteigerung bei der Überprüfung von Abständen führt.
-
-Zusätzlich erfolgt bei der Analyse der ARMeshAnchors nun eine Vorabfilterung: Anker, die sich außerhalb des Mindestabstands zu Türen und Fenstern befinden, werden direkt ausgeschlossen. Dies reduziert die Anzahl der zu überprüfenden Anker signifikant und beschleunigt die Abstandskontrolle.
-
-Dank dieser Maßnahmen konnte die Performance der Anwendung deutlich verbessert werden, ohne dass zunächst auf parallele Verarbeitung zurückgegriffen werden musste.
-
-Im nächsten Schritt wurde die Implementierung von Multithreading in Betracht gezogen, um die Verarbeitung der ARFrame-Daten weiter zu beschleunigen. Dabei wurde auf das async/await-Feature von Swift zurückgegriffen, das eine einfache und effiziente Implementierung von asynchronen Operationen ermöglicht. Die Funktionen zur Überprüfung der Montageregeln wurden in einen separaten Thread ausgelagert, um die Hauptverarbeitungsschleife und somit die ARView nicht zu blockieren. Dadurch wird die Reaktionszeit der Anwendung verbessert und die Performance insgesamt gesteigert.
-
-\subsection{Raycasting} \label{Raycasting}
- 
-
-\textit{Raycasting} ist eine Technik, die in der Computergrafik und in Augmented-Reality-Systemen weit verbreitet ist. Sie wird zum Beispiel verwendet, um die Sichtlinie eines Benutzers zu simulieren und zu überprüfen, ob sie ein bestimmtes Objekt trifft. Die Abbildung \ref{fig:Raycasting} zeigt die Funktionsweise des \textit{Raycastings}. Bei dieser Technik wird ein Strahl (\textit{Ray}) von einem Startpunkt in eine bestimmte Richtung geschossen und geprüft, ob er ein Objekt trifft.
+\textit{Raycasting} ist eine weit verbreitete Technik in der Computergrafik und in Augmented-Reality-Systemen. Sie wird verwendet, um die Sichtlinie eines Benutzers zu simulieren und zu prüfen, ob diese auf ein bestimmtes Objekt trifft. Abbildung \ref{fig:Raycasting} zeigt das Prinzip des Raycastings. Dabei wird ein Strahl (\textit{Ray}) von einem Ausgangspunkt in eine bestimmte Richtung abgefeuert, und es wird überprüft, ob dieser ein Objekt trifft.
 
 \begin{figure}[ht]
     \centering
@@ -273,98 +284,120 @@ Im nächsten Schritt wurde die Implementierung von Multithreading in Betracht ge
     \label{fig:Raycasting}
 \end{figure}
 
-Das ARKit-Framework stellt eine Funktion zur Verfügung, um \textit{Raycasts} in der AR-Szene durchzuführen. Hierbei lässt sich der Startpunkt und die Richtung des Strahls mithilfe eines \texttt{RaycastQuery}-Objekts definieren. Die Funktion liefert ein Array von \texttt{ARRaycastResult}-Objekten zurück, die Informationen über die Position der Schnittpunkte mit den getroffen Zielen, die Art der getroffenen Ziele und die Orientierung dessen. Falls es sich bei dem getroffenen Ziel einen \texttt{ARAnchor} besitzt, wird dieser ebenfalls zurückgegeben.
+Das ARKit-Framework bietet eine Funktion, mit der Raycasts innerhalb der AR-Szene durchgeführt werden können. Der Startpunkt und die Richtung des Strahls lassen sich über ein \texttt{RaycastQuery}-Objekt definieren. Die Funktion gibt ein Array von \texttt{ARRaycastResult}-Objekten zurück, die Informationen zu den Schnittpunkten des Strahls mit den getroffenen Objekten, deren Art und Orientierung enthalten. Falls das getroffene Objekt einen \texttt{ARAnchor} besitzt, wird auch dieser zurückgegeben.
 
-Mithilfe von \textit{Raycasts} wurde die Validierung des Mindestabstandes zu umgebenen Wänden implementiert. Um die Umgebung auf zu nahen Wänden zu überprüfen, werden mehrere \textit{Raycasts} in einem 360-Grad-Winkel parallel zur x-z-Ebene um die Fokus-Entität durchgeführt. Trifft der Strahl auf ein Objekt, wird davon ausgegangen, dass es sich bei diesem um eine Wand bieziehungsweise ein Objekt, welches eine Wand darstellt, handelt. Anschließend wird der Abstand von diesem Objekt zur Fokus-Entität berechnet und mit dem vordefinierten Mindestabstand verglichen. Unterschreitet die Distanz den Mindestabstand, wird die Position der Fokus-Entität als ungültig angesehen und die Montage des virtuellen Rauchmelders verhindert.
+Im Rahmen der Anwendung wurde Raycasting genutzt, um den Mindestabstand zu umliegenden Wänden zu validieren. Hierfür werden mehrere Raycasts parallel zur x-z-Ebene in einem 360-Grad-Winkel um die Focus-Entity geschossen, um die Umgebung auf zu nahe Wände zu überprüfen. Wenn ein Strahl auf ein Objekt trifft, wird davon ausgegangen, dass es sich um eine Wand oder ein Wand-ähnliches Objekt handelt. Anschließend wird der Abstand zwischen diesem Objekt und der Focus-Entity berechnet und mit dem festgelegten Mindestabstand verglichen. Liegt der Abstand unter dem definierten Wert, wird die Position der Focus-Entity als ungültig betrachtet und die Platzierung des virtuellen Rauchmelders verhindert.
 
-Zusätzlich dazu stellt das \textit{Raycasting} die Grundlage der Positionierung der Fokus-Entität dar. Dabei wird bei jedem Frame ein Raycast von der Kamera in das Zentrum der Augmented-Reality-Szene geschossen und die Position des ersten getroffenen Objekts als Position der Fokus-Entität verwendet. Dies ermöglicht eine präzise Platzierung der Fokus-Entität und eine genaue Ausrichtung des virtuellen Rauchmelders.
+Darüber hinaus bildet Raycasting die Grundlage für die Positionierung der Focus-Entity. Bei jedem Frame wird ein Raycast von der Kamera in das Zentrum der AR-Szene abgefeuert, und die Position des ersten getroffenen Objekts wird als Position der Focus-Entity verwendet. Dies ermöglicht eine präzise Platzierung der Focus-Entity und eine genaue Ausrichtung des virtuellen Rauchmelders.
 
-\subsection{View}
+\subsection{Virtuelle Objekte der AR-Szene}
 
-Die View des Prototypen wurde mithilfe des SwiftUI-Frameworks von Apple implementiert. Diese Framework verwendet eine deklarative Syntax, um Benutzeroberflächen zu erstellen und zu verwalten. Dabei stellen einzelne \texttt{View}-Komponenten die Bausteine der Benutzeroberfläche dar, die mithilfe von Modifikatoren und Containern zu komplexen Layouts zusammengesetzt werden können. Der komponentenbasierte Aufbau der Benutzeroberfläche kann gut als Baumstruktur dargestellt werden:
+Die Entitäten (\textit{Entities}) der Augmented-Reality-Szene stellen die Model-Objekte des Prototypen dar. Dabei handelt es sich um virtuelle Objekte, die in der augmentierten Umgebung platziert werden und dem Benutzer eine visuelle Rückmeldung geben. Es wurde darauf geachtet, dass die Szene ein Minimum an visuellen Elementen enthält, um den Benutzer nicht zu überfordern. Wie in Abbildung \ref{fig:Architecture} dargestellt, beschränken sich die visualisierten Entitäten auf die folgenden Objekte:
 
-\begin{figure}[h]
-    \centering
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{UI}
-        \label{fig:UITree}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{AppUI}
-        \label{fig:UIApp}
-    \end{minipage}
-    \caption{SwiftUI-Benutzeroberfläche: Baumstruktur (links) und App-Ansicht (rechts)}
-\end{figure}
+\begin{itemize}
+    \item \texttt{FocusEntity}
+    \item \texttt{SmokeDetector}
+    \item \texttt{DistanceIndicators}
+\end{itemize}
 
-Dieser Aufbau ermöglicht eine übersichtliche Implementierung der Benutzeroberfläche und eine einfache Anpassung der einzelnen Komponenten. Die Komponenten können so implementiert werden, dass sie unabhängig voneinander sind und wiederverwendet werden können. So wird der \texttt{ControlButton} beispielsweise mehrfach mit unterschiedlichen Icons und Callback-Funktionen verwendet.
+Diese Entitäten wurden so konzipiert, dass sie sich dynamisch an die Umgebung anpassen und direkt in der Augmented-Reality-Szene platziert werden können. Zur Umsetzung wurden Protokolle und Klassen des \texttt{RealityKit}-Frameworks genutzt. Im Beispiel der \texttt{SmokeDetector}-Entität wurde die Klasse wie folgt implementiert:
 
 \begin{lstlisting}[language=Swift]
-struct ControlButton: View {
-    var iconName: String
-    var action: () -> Void
-        
-    var body: some View {
-        // Implementatierung der Button-Komponente
+class SmokeDetector: Entity, HasModel, HasAnchoring {
+    init() {
+        super.init()
+        // Initialization of MeshComponent and ModelComponent
     }
+    // ...
 }
 \end{lstlisting}
 
-SWiftUI stellt eine Vielzahl von vordefinierten Komponenten zur Verfügung, die für die Entwicklung von iOS-Anwendungen optimiert sind. So wird beispielsweise die \texttt{ZStack}-Komponente verwendet, um die Buttons und die InfoCard über der ARView zu legen. 
+Die Klasse \texttt{SmokeDetector} erbt von \texttt{Entity}, der grundlegenden Klasse für alle virtuellen Objekte in einer Augmented-Reality-Szene. Sie implementiert zudem das \texttt{HasModel}-Protokoll, das die Nutzung von 3D-Modellen innerhalb der Entität ermöglicht. Das \texttt{HasAnchoring}-Protokoll sorgt dafür, dass die Entität an einem AR-Anchor verankert werden kann. Änderungen an der Entität werden automatisch in der AR-Szene übernommen und visuell dargestellt.
 
-Zusätzlich dazu wurden Modifikatoren verwendet um die Darstellung der Komponenten zu steuern. So wurden beispielsweise Übergänge und Animationen definiert, um die Zustandsänderungen der \texttt{InfoCard} zu visualisieren:
+Ein potenzieller Nachteil dieser Implementierung besteht darin, dass die \texttt{RealityKit}-Komponenten direkt in den Model-Klassen verwendet werden. Dies führt zu einer gewissen Abhängigkeit zwischen der Model- und der View-Schicht, wodurch die strikte Trennung der Architekturprinzipien – insbesondere des MVVM-Patterns – nicht vollständig eingehalten wird. Eine alternative Lösung wäre die vollständige Entkopplung der Model-Klassen von den AR-spezifischen Komponenten. Dies würde jedoch eine zusätzliche Abstraktionsebene und damit eine erhöhte Komplexität mit sich bringen.
+
+Im Rahmen dieses Prototypen wurde daher ein pragmatischer Ansatz gewählt: Die direkte Integration der \texttt{RealityKit}-Komponenten innerhalb der Model-Klassen ermöglicht eine effizientere Entwicklung und eine schnellere Iteration, ohne die Wartbarkeit wesentlich zu beeinträchtigen.
+
+\subsection{FocusEntity}
+
+Die \texttt{FocusEntity} stellt die Grundlage der Interaktion des Benutzers mit der Augmented-Reality-Szene dar. Sie dient als visuelle Markierung, um den Benutzer bei der regelkonformen Platzierung des virtuellen Rauchmelders zu unterstützen. Die \texttt{FocusEntity} besteht aus zwei Komponenten: einer vereinfachten und einfarbigen Darstellung eines Rauchmelders und einem zweidimensionalen Ring. Der Ring visualisiert den Mindestabstand von 0,5 Metern zu umgebenden Wänden und wird nur angezeigt wenn die Decke als Zieloberfläche erkannt wurde. Zusätzlich dazu wird die Farbe der \texttt{FocusEntity} dynamisch angepasst, um dem Benutzer eine visuelle Rückmeldung über die Gültigkeit der aktuellen Position zu geben. Die Abbildung \ref{fig:AppUI} zeigt die \texttt{FocusEntity} in der Augmented-Reality-Szene.
+
+Die Implementierung der \texttt{FocusEntity} orientiert sich an einer bereits existierenden Lösung \cite{cobb2019focusEntity}, wobei darauf geachtet wurde, die Entität in die Architektur des Prototypen zu integrieren und Abängigkeiten zu anderen Systemen zu minimieren. Im Folgenden werden die wichtigsten Aspekte der Implementierung erläutert.
+
+Die Aktualisierung des Zustands der \texttt{FocusEntity} erfolgt über das \texttt{TrackingState}-Enum. Dieses Enum definiert zwei mögliche Zustände:
 
 \begin{lstlisting}[language=Swift]
-InfoText(infoText: infoText)
-    .transition(.move(edge: .trailing))
-    .animation(.easeInOut(duration: 0.5), value: infoText)
-    .opacity(infoText.isEmpty ? 0 : 1)
-    .animation(.easeInOut(duration: 0.4), value: infoText)
+enum TrackingState: Equatable {
+    case initializing
+    case tracking(raycastResult: ARRaycastResult)
+}
 \end{lstlisting}
 
-Der \texttt{transition}-Modifikator stellt eine Bewegung der Komponent von der rechten Bildschirmkante dar. Diese Bewegung wird mithilfe des \texttt{animation}-Modifikators animiert. Um den Übergangseffekt zu verstärken wurde außerdem ein \texttt{opacity}-Modifikator animiert, der den Übergang der Transparenz der Komponente darstellt. 
-
-Die ARView stellt die Rendering-Engine für die Augmented-Reality-Szene dar. Sie ist Teil des RealityKit-Frameworks und ermöglicht die Darstellung von 3D-Objekten in einer augmentierten Umgebung. Damit die ARView in die SwiftUI-View integriert werden kann, muss sie als \texttt{UIViewRepresentable}-Komponente eingebunden werden. Dabei wird die ARView als Subview der SwiftUI-View hinzugefügt und mithilfe von Modifikatoren positioniert und skaliert. 
-
-
-[X] Architektur: Struktur, Programmablauf, MVVM
-
-[ ] Session: Setup/Initialisierung/Daten
-
-[X] ViewModel: Raycasting, isPlaceable
-
-[ ] RealityKid-Entities: FocusEntity, SmokeDetector, DistanceIndicators
-
-[ ] FocusEntity gesondert: Implementierung
-
-[X] Performance: Multi-Threading, Single Processing, Processing Frequency
-
-[X] Views: ARView und SwiftUI
-
-Der Zustand gibt an, ob die implementierten Mindestanforderungen erfüllt sind oder nicht. Dabei erfolgt die Überprüfung der Regeln schrittweise. Zunächst wird geprüft, ob die Focus-Entity aktuell auf eine Decke zeigt. Dazu wird im ersten Schritt überprüft ob die Entität mit einem \texttt{ARPlaneAnchor} verankert ist. Anschließend wird die Klassifizierung des Ankers überprüft, um festzustellen, ob es sich um eine Decke handelt. Ist dies nicht der Fall, wird der Zustand auf \texttt{notOnCeiling} gesetzt.
-
-Im nächsten Schritt werden die Abstände zu den Wänden geprüft. Es wurden zwei unterschiedliche Ansätze für die Überprüfung der Abstände zu umliegenden Wänden in Erwägung gezogen. Der erste Ansatz basiert auf dem Collision-Detection-System von RealityKit, das die Kollisionen zwischen den AR-Objekten erkennt. Dazu würde eine unsichtbare oder transparente Kugel mit einem Radius, der dem Mindestabstand zu den Wänden entpsricht, um die Fokus-Entität platziert werden, die die Kollisionen mit den Wänden überprüft. Falls eine Kollision mit einem \texttt{ARPlaneAnchor} erkannt wird, wird der Zustand auf \texttt{constraintsNeglected} gesetzt. 
-
-Der zweite Ansatz basiert auf dem in \ref{Raycasting} beschriebenen Raycast-Verfahren. Um die Umgebung auf zu nahen Wänden zu überprüfen, werden mehrere Raycasts in einem 360-Grad-Winkel parallel zu x-z-Ebene um die Fokus-Entität durchgeführt. Trifft der Raycast auf einen \texttt{ARPlaneAnchor} mit der Alignment-Eigenschaft \texttt{.vertical}, wird der Abstand zur Fokus-Entität berechnet. Dabei wird die Distanz mithilfe der Positionen der Fokus-Entität berechnet und mit dem Mindestabstand verglichen. Unterschreitet die Distanz den Mindestabstand, wird der Zustand auf \texttt{constraintsNeglected} gesetzt.
-
-Recherchen bezüglich beider Ansätze lässt darauf schließen, dass die Berechnung der Distanz mithilfe von Raycasts performter ist als die Kollisionserkennung. Daher wurde der zweite Ansatz für die Überprüfung der Abstände verwendet.
-
-Im letzten Schritt werden die Abstände zu Türen und Fenstern überprüft. Dazu werden \texttt{ARMeshAnchor} im \texttt{ARFrame} analysiert. Diese ARMeshAnchor entsprechen physikalischen Objekten in der Umgebung, die mithilfe der LiDAR-Daten erkannt wurden und mit einem polygonalen Mesh beschrieben werden. Diese Daten werden wie folgt analysiert:
+Abhängig von dem Ergebnis eines Raycasts, der in das Zentrum des Bildschirms geschossen wird, wird der Tracking-Zustand in einer \texttt{trackingState}-Variable gespeichert. Liefert der Raycast kein gültiges Ergebnis, wird der Zustand auf \texttt{initializing} gesetzt und die \texttt{FocusEntity} wird direkt vor der Kamera platziert. Andernfalls wird die \texttt{trackingState}-Variable mit dem Ergebnis des Raycasts aktualisiert und die Position der \texttt{FocusEntity} wird aktualisiert. Auf die Änderungen der \texttt{trackingState}-Variable wird mithilfe eines \textit{Property Observers} reagiert: 
 
 \begin{lstlisting}[language=Swift]
-for anchor in frame.anchors.compactMap({ $0 as? ARMeshAnchor }) {
-    for index in 0..<anchor.geometry.faces.count {
-        if [.window, .door].contains(anchor.geometry.classificationOf(faceWithIndex: index)),
-           distance(anchor.geometry.centerOf(faceWithIndex: index), focusEntity.position) < MountingRules.minDistanceToWindowsAndDoors {
-            state = .constraintsNeglected
-            return
+var trackingState: TrackingState = .initializing {
+    didSet {
+        // ...
+        switch trackingState {
+        case .initializing:
+            // Place FocusEntity in front of the camera
+        case .tracking(let raycastResult):
+            // Update FocusEntity position with raycastResult
         }
     }
 }
 \end{lstlisting}
 
-Zunächst werden mithilfe der \texttt{compactMap()}-Funktion alle Anker aus dem \texttt{ARFrame} entfernt, die nicht vom Typ \texttt{ARMeshAnchor} sind. Anschließend werden die verbleibenden Anker in einer \texttt{for}-Schleife analysiert, um die Klassifizierung des Meshes zu überprüfen. Dabei wird für jedes Face des Meshes die Klassifizierung abgefragt und geprüft, ob es sich um eine Tür oder ein Fenster handelt. Trifft dies zu, wird der Abstand zur Fokus-Entität berechnet und mit dem Mindestabstand verglichen. Unterschreitet die Distanz den Mindestabstand, wird der Zustand auf \texttt{constraintsNeglected} gesetzt.
+Die \texttt{didSet}-Methode wird aufgerufen, sobald sich der Wert der \texttt{trackingState}-Variable ändert. Abhängig vom neuen Zustand wird die Position der \texttt{FocusEntity} angepasst. Zur Stabilisierung der Position wird die neue Entitätsposition über die letzten zehn Frames hinweg gemittelt:
 
-Erst wenn die Überprüfung der Regeln vollständig abgeschlossen ist und alle Anforderungen erfüllt sind, wird der Zustand auf \texttt{constraintsSatisfied} gesetzt und die Montage des virtuellen Rauchmelders kann erfolgen.
+\begin{lstlisting}[language=Swift]
+private func updatePosition() {
+    recentFocusEntityPositions = Array(recentFocusEntityPositions.suffix(10))
+    let average = recentFocusEntityPositions.reduce(
+        SIMD3<Float>.zero, { $0 + $1 }
+    ) / Float(recentFocusEntityPositions.count)
+    self.position = average
+    // ...
+}
+\end{lstlisting}
+
+Zusätzlich wird überprüft, ob die Orientierung der \texttt{FocusEntity} aktualisiert werden soll. Dies erfolgt durch die Auswertung der letzten 20 \texttt{ARPlaneAnchor.Alignment}-Werte, die im \texttt{ARRaycastResult}-Objekt enthalten sind:
+
+\begin{lstlisting}[language=Swift]
+self.recentFocusEntityAlignments = Array(self.recentFocusEntityAlignments.suffix(20))
+let alignCount = self.recentFocusEntityAlignments.count
+let horizontalHistory = recentFocusEntityAlignments.filter({ $0 == .horizontal }).count
+let verticalHistory = recentFocusEntityAlignments.filter({ $0 == .vertical }).count
+if alignment == .horizontal && horizontalHistory > alignCount * 3/4 ||
+    alignment == .vertical && verticalHistory > alignCount / 2 ||
+    raycastResult.anchor is ARPlaneAnchor {
+    // Update FocusEntity orientation
+}
+\end{lstlisting}
+
+Hierbei wird die Anzahl der horizontalen und vertikalen Ausrichtungen überprüft. Überschreitet eine dieser Ausrichtungen einen festgelegten Schwellenwert, wird die Orientierung der \texttt{FocusEntity} aktualisiert, sofern diese Ausrichtung nicht bereits die aktuelle ist.
+
+Falls das \texttt{ARRaycastResult} keinen \texttt{ARPlaneAnchor} enthält und der Fokus daher nicht auf einer erkannten Fläche liegt, wird die \texttt{FocusEntity} auf die Orientierung des Zielpunkts des \texttt{ARRaycastResult} ausgerichtet. Dies ermöglicht eine präzise Platzierung der \texttt{FocusEntity} auf beliebigen Oberflächen, auch wenn diese nicht als erkannte Flächen identifiziert wurden.
+
+\subsection{Performance-Optimierung}
+
+Wie in den Anforderungen betont, ist die Performance ein entscheidender Faktor bei der Entwicklung von Augmented-Reality-Anwendungen. Sie wird von verschiedenen Aspekten beeinflusst, darunter die Verarbeitungsgeschwindigkeit der Sensordaten, die Darstellung virtueller Objekte und die Benutzerinteraktion. Um eine hohe Performance zu gewährleisten, wurden gezielte Optimierungsmaßnahmen implementiert, die sowohl die Datenverarbeitung effizienter gestalten als auch die Darstellung der AR-Szene beschleunigen.
+
+Zunächst lag der Fokus auf der Verbesserung der synchronen Implementierung, bevor Multithreading als Optimierungsstrategie in Betracht gezogen wurde. Drei wesentliche Maßnahmen wurden identifiziert, um die Performance zu steigern:
+
+\begin{itemize}
+\item Reduktion der Verarbeitungsfrequenz der ARFrame-Daten
+\item Optimierung der Raycast-Abstandsprüfung
+\item Filterung der ARMeshAnchors zur effizienteren Abstandsanalyse
+\end{itemize}
+
+Die Verarbeitung der ARFrame-Daten wurde optimiert, indem die Regelprüfung nur noch alle zehn Frames ausgeführt wird. Diese Reduktion der Berechnungsfrequenz verringert die Anzahl der Operationen erheblich und steigert die Verarbeitungsgeschwindigkeit.
+
+Die Anzal der Raycasts zur Abstandskontrolle wurde zunächst auf 30 gesetzt, um die nicht abgedeckten Winkelbereiche zu minimieren. Tests haben jedoch gezeigt, dass eine geringere Anzahl von Raycasts ausreicht, um die notwendigen Informationen zu erhalten. Aus diesem Grund wurde die Anzahl der Raycasts auf 9 reduziert, was zu einer deutlichen Effizienzsteigerung bei der Überprüfung der Abstände führt.
+
+Darüber hinaus wurde die Analyse der ARMeshAnchors optimiert, indem eine Vorabfilterung durchgeführt wird: Anker, die sich außerhalb des festgelegten Mindestabstands zu Türen und Fenstern befinden, werden bereits im Vorfeld ausgeschlossen. Dies reduziert die Anzahl der zu überprüfenden Anker erheblich und beschleunigt die Abstandskontrollen.
+
+Dank dieser Maßnahmen konnte die Performance der Anwendung deutlich verbessert werden, ohne dass sofort auf parallele Verarbeitung zurückgegriffen werden musste.
+
+Im nächsten Schritt wurde Multithreading eingeführt, um die Verarbeitung der ARFrame-Daten weiter zu beschleunigen. Dabei wurde das \texttt{async/await}-Feature von Swift genutzt, das eine einfache und effiziente Handhabung asynchroner Operationen ermöglicht. Die Funktionen zur Überprüfung der Montageregeln wurden in einen separaten Thread ausgelagert, wodurch die Hauptverarbeitungsschleife und damit die \texttt{ARView} nicht blockiert wird. Diese Maßnahme verbessert die Reaktionszeit der Anwendung und steigert die Gesamtperformance.

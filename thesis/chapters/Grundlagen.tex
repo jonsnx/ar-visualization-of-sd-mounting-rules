@@ -1,130 +1,178 @@
 \chapter{Theoretische Grundlagen}
 
-Um die Funktionsweise von Augmented Reality (AR) und verwandten Technologien zu verstehen, ist ein grundlegendes Wissen über die zugrunde liegenden Konzepte und Techniken erforderlich. In diesem Kapitel werden die theoretischen Grundlagen der Computer Vision und Computergrafik erläutert, die für die Entwicklung von AR-Anwendungen relevant sind. Dabei wird vor der Fokus vor allem auf die Konzepte gelegt, die eine Relevanz für mobile AR-Anwendungen haben. Dazu gehören die Rekonstruktion von 3D-Szenen, die Kamerakalibrierung, die Sensorik, das Tracking und Rendering von virtuellen Objekten. (\cite{doerner2022virtual})
+Um die Funktionsweise von Augmented Reality und verwandten Technologien zu verstehen, ist ein grundlegendes Wissen über die zugrunde liegenden Konzepte und Technologien erforderlich. In diesem Kapitel werden die theoretischen Grundlagen der AR erläutert, die für die Entwicklung von mobilen Anwendungen relevant sind. Dazu gehören Themen, wie die Sensorik, die Kalibrierung, das Tracking und die dreidimensionale Rekonstruktion der Umgebung. \cite{doerner2022virtual}
 
-\section{Dreidimensionale Computergrafik}
+\section{Mathematische und Geometrische Grundlagen}
 
-In der Computergrafik werden dreidimensionale Objekte, auch als Modelle bezeichnet, durch geometrische und relationale Informationen beschrieben. Diese Objekte bestehen in der Regel aus Polygonen, die durch ihre Eckpunkte (Vertices) definiert sind. Ein Polygon ist eine geschlossene Fläche, die durch das Verbinden der Vertices mit geraden Linien entsteht. Ein 3D-Modell wird in einem kartesischen Koordinatensystem beschrieben, wobei die Positionen der Vertices durch ihre \(x\)-, \(y\)- und \(z\)-Koordinaten angegeben werden. (\cite{kore2018space})
+Die Mathematik bildet die Grundlage für viele Algorithmen und Technologien in der Augmented Reality. Insbesondere die Geometrie und Algebra spielen eine wichtige Rolle bei der Bestimmung der Position und Orientierung von Objekten in der realen Welt. In diesem Abschnitt werden die mathematischen Grundlagen erläutert, die für die Entwicklung von AR-Anwendungen relevant sind.
 
-Das einfachste Polygon ist ein Dreieck, das nur drei Eckpunkte benötigt. Dreiecke sind planar und konvex, was sie ideal für Berechnungen in der Computergrafik macht, wie beispielsweise bei der Beleuchtung oder Kollisionserkennung. Obwohl komplexere Polygone existieren, werden diese oft in Dreiecke zerlegt, da sie von Grafikpipelines effizienter verarbeitet werden können. Solche Modelle bestehen dann aus Dreiecksnetzen (Meshes), die als Arrays von Vertices und Indizes gespeichert werden. (\cite{wikipedia2023polygons})
+\subsection{Dreidimensionale Computergrafik}
 
-Virtuelle 3D-Szenen und Objekte werden in einem kartesischen Koordinatensystem beschrieben. Dieses Koordinatensystem wird üblicherweise als Weltkoordinatensystem bezeichnet, in dem die \(x\)-, \(y\)- und \(z\)-Achsen die drei Dimensionen repräsentieren. In einem rechtshändigen Koordinatensystem zeigt die \(x\)-Achse nach rechts, die \(y\)-Achse nach oben und die \(z\)-Achse nach vorne. Die Position eines Objekts im Raum wird oft mithilfe einer Transformationsmatrix beschrieben. (\cite{appledevdoc, usau2023appleARCamera})
+In der Computergrafik werden dreidimensionale Objekte, auch als Modelle bezeichnet, durch geometrische und relationale Informationen beschrieben. Diese Objekte bestehen in der Regel aus Polygonen, die durch ihre Eckpunkte (\textit{Vertices}) definiert sind. Ein Polygon ist eine geschlossene Fläche, die durch das Verbinden der Vertices mit geraden Linien entsteht. \cite{wikipedia2023polygons, espinoza2024graphics}
 
-\section{Matrixalgebra}
+Das einfachsten Polygone sind Dreiecke, die die Grundbausteine der Computergrafik und die Basis für die Darstellung komplexerer Objekte bilden. Obwohl komplexere Polygone existieren, werden diese oft in Dreiecke zerlegt, da sie von Grafikpipelines effizienter verarbeitet werden können. Solche Modelle bestehen dann aus Dreiecksnetzen (\textit{Meshes}), die als Arrays von Vertices und Indizes gespeichert werden. \cite{wikipedia2023polygons, espinoza2024graphics}
 
-Das Anwenden von mathematischen Operationen auf Matrizen ist ein grundlegendes Konzept für viele Algorithmen in der Computer Vision. Diese Arbeit setzt voraus, dass der Leser mit den Grundladen der Matrixalgebra vertraut ist. Im Folgenden werden dennoch die wichtigsten Operationen und Konzepte anhand der Transformationen in der Computergrafik erläutert.
+Die Abbildung \ref{fig:TriangleMesh} zeigt, wie das Polygonnetz eines Delfins in Dreiecke zerlegt wird. Um dieses Modell im dreidimensionalen Raum zu transformieren, werden mathematische Konzepte wie Vektoren, Matrizen und Transformationen verwendet. Diese Konzepte bilden die Grundlage für die Positionierung und Darstellung von 3D-Objekten in der Augmented Reality und werden in den kommenden Abschnitten näher erläutert. \cite{wikipedia2023mesh, espinoza2024graphics}
 
-Unter der Transformation eines Objektes in einer 3D-Szene versteht man das Verschieben, Drehen oder Skalieren dieses Objektes. Diese Vorgänge können durch Transformationsmatrizen beschrieben werden, die einheitlich auf alle Vertices eines Objekts angewendet werden. Solche Matrizen haben typischerweise die Größe \(4 \times 4\) und kombinieren Translation, Rotation und Skalierung. Dies hat den Vorteil, dass alle Transformationen in einer einzigen Matrix zusammengefasst werden können, was die Berechnungen effizienter macht. (\cite{jazz2020transformMatrix, pezzi2021matrices, freescale2010math3d})
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{TriangleMesh}
+    \caption{Dreiecksnetz eines Delfin-Modells \cite{wikipedia2023mesh}\label{fig:TriangleMesh}}\par
+\end{figure}
 
-\subsection{Translation}
+\subsection{Koordinationssysteme}
 
-Die Translation verschiebt ein Objekt entlang der \(x\)-, \(y\)- oder \(z\)-Achse. Die Transformationsmatrix für eine Translation ist wie folgt definiert:
+Dreidimensionale Szenen und Objekte werden in kartesischen Koordinatensystemen beschrieben. Man unterscheidet zwischen verschiedenen Koordinatensystemen, die für unterschiedliche Zwecke verwendet werden. Die wichtigsten Koordinatensysteme in der Computergrafik sind das Weltkoordinatensystem, das Kamerakoordinatensystem und das Objektkoordinatensystem. Während das Weltkoordinatensystem die Position und Orientierung der Objekte im Raum beschreibt, bezieht sich das Objektkoordinatensystem auf die Relationen der Vertices eines Objekts zueinander. \cite{doerner2022virtual, gao2021vSLAM, usau2023appleARCamera}
+
+Die Koordinatensysteme weisen \(x\)-, \(y\)- und \(z\)-Achsen auf, die die drei Dimensionen repräsentieren. In einem rechtshändigen Koordinatensystem zeigt die \(x\)-Achse nach links, die \(y\)-Achse nach oben und die \(z\)-Achse nach vorne (siehe Abbildung \ref{fig:Koordinatensystem}). Die Vertices eines dreidimensionalen Objekts werden durch die Koordinaten \(x\), \(y\) und \(z\) definiert. Diese Koordinaten werden meist als Vektoren dargestellt, die die Position eines Punktes im Raum beschreiben. Ein Vektor \(v\) wird durch die Koordinaten \(x\), \(y\) und \(z\) wie folgt definiert (\cite{doerner2022virtual, gao2021vSLAM, freescale2010math3d, pezzi2021matrices}):
 
 \begin{equation}
-\begin{bmatrix}
-x' \\ y' \\ z' \\ 1
-\end{bmatrix}
-=
-\begin{bmatrix}
-1 & 0 & 0 & t_x \\
-0 & 1 & 0 & t_y \\
-0 & 0 & 1 & t_z \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-\begin{bmatrix}
-x \\ y \\ z \\ 1
+v = \begin{bmatrix} x \\ y \\ z \end{bmatrix}
+\end{equation}
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{CoordinateSystem}
+    \caption{Rechtshändiges Koordinatensystem \cite{noakes2013coordinateSystem}\label{fig:Koordinatensystem}}\par
+\end{figure}
+
+\section{Transformationsmatrizen}
+
+Eine Transformation beschreibt die Änderung der Position, Orientierung oder Skalierung eines Objekts im Raum. In der Computergrafik werden Transformationen mithilfe von Matrizen durchgeführt, die die Koordinaten eines Objekts in ein anderes Koordinatensystem überführen. Die wichtigsten Transformationen sind Translation, Rotation und Skalierung, die durch spezielle Transformationsmatrizen beschrieben werden. \cite{doerner2022virtual, gao2021vSLAM, pezzi2021matrices}
+
+Um die Translation und Rotation mit einer einzigen Transformationsmatrix zu beschreiben, werden homogene Koordinaten verwendet. Homogene Koordinaten erweitern den dreidimensionalen Vektor um eine vierte Dimension, die als W-Koordinate bezeichnet wird. Die homogenen Koordinaten eines Punktes \(P\) werden als Vektor \(P_h\) dargestellt (\cite{doerner2022virtual, gao2021vSLAM, freescale2010math3d}):
+
+\begin{equation}
+P_h = \begin{bmatrix} x \\ y \\ z \\ 1 \end{bmatrix}
+\end{equation}
+
+Die Transformationsmatrix, die die Translation t und die Rotation R kombiniert, wird wie folgt definiert (\cite{doerner2022virtual, gao2021vSLAM, freescale2010math3d}):
+
+\begin{equation}
+T = \begin{bmatrix} R & t \\ 0^T & 1 \end{bmatrix} = 
+\begin{bmatrix} 
+    r_{11} & r_{12} & r_{13} & t_x \\ 
+    r_{21} & r_{22} & r_{23} & t_y \\ 
+    r_{31} & r_{32} & r_{33} & t_z \\ 
+    0 & 0 & 0 & 1 
 \end{bmatrix}
 \end{equation}
 
-Hierbei verschieben die Parameter \(t_x\), \(t_y\) und \(t_z\) das Objekt entlang der jeweiligen Achsen.
+Hierbei entspricht R der Rotationsmatrix und t dem Translationsvektor. Die Transformationsmatrix T wird auf den homogenen Vektor \(P_h\) angewendet, um die transformierten Koordinaten \(P'_h\) zu erhalten (\cite{doerner2022virtual, gao2021vSLAM, freescale2010math3d}):
 
-\subsection{Rotation}
-
-Die Rotation eines Objekts erfolgt um eine der drei Achsen. Die Rotationsmatrizen sind für jede Achse wie folgt definiert:
-
-\paragraph{Rotation um die \(x\)-Achse:}
-\begin{equation}
-\begin{bmatrix}
-1 & 0 & 0 & 0 \\
-0 & \cos(\alpha) & -\sin(\alpha) & 0 \\
-0 & \sin(\alpha) & \cos(\alpha) & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
+\begin{equation} 
+    P'_h = T \cdot P_h \label{eq:transformationsmatrix}
 \end{equation}
 
-\paragraph{Rotation um die \(y\)-Achse:}
-\begin{equation}
-\begin{bmatrix}
-\cos(\alpha) & 0 & \sin(\alpha) & 0 \\
-0 & 1 & 0 & 0 \\
--\sin(\alpha) & 0 & \cos(\alpha) & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-\end{equation}
+In diesem Zusammenhang wird die Rotation oft durch eine 3x3 Rotationsmatrix R beschrieben, die die Drehung um die \(x\)-, \(y\)- und \(z\)-Achsen repräsentiert. Die Rotationen um die drei Achsen werden durch die Matrizen \(R_x\), \(R_y\) und \(R_z\) beschrieben (\cite{doerner2022virtual, gao2021vSLAM, freescale2010math3d}):
 
-\paragraph{Rotation um die \(z\)-Achse:}
-\begin{equation}
-\begin{bmatrix}
-\cos(\alpha) & -\sin(\alpha) & 0 & 0 \\
-\sin(\alpha) & \cos(\alpha) & 0 & 0 \\
-0 & 0 & 1 & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-\end{equation}
-
-Die Reihenfolge, in der Rotationen um verschiedene Achsen durchgeführt werden, ist entscheidend, da sie die finale Orientierung und Position des Objektes beeinflussen. Diese Reihenfolge wird durch Euler-Winkel beschrieben.
-
-\subsection{Skalierung}
-
-Die Skalierung verändert die Größe eines Objekts proportional entlang der \(x\)-, \(y\)- und \(z\)-Achsen. Die Skalierungsmatrix ist wie folgt definiert:
 
 \begin{equation}
-\begin{bmatrix}
-x' \\ y' \\ z' \\ 1
-\end{bmatrix}
-=
-\begin{bmatrix}
-s_x & 0 & 0 & 0 \\
-0 & s_y & 0 & 0 \\
-0 & 0 & s_z & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-\begin{bmatrix}
-x \\ y \\ z \\ 1
-\end{bmatrix}
+    R_x(\alpha) =
+    \begin{bmatrix}
+        1 & 0 & 0 & 0 \\
+        0 & \cos(\alpha) & -\sin(\alpha) & 0 \\
+        0 & \sin(\alpha) & \cos(\alpha) & 0 \\
+        0 & 0 & 0 & 1
+    \end{bmatrix}
 \end{equation}
-
-Hierbei sind \(s_x\), \(s_y\) und \(s_z\) die Skalierungsfaktoren entlang der jeweiligen Achsen.
-
-\subsection{Anwendung der Transformationen}
-
-Die lokalen Koordinaten eines Objekts können mithilfe einer Transformationsmatrix in Weltkoordinaten umgerechnet werden:
 
 \begin{equation}
-P_{world} = T_{object} \cdot P_{object}
+    R_y(\alpha) =
+    \begin{bmatrix}
+        \cos(\alpha) & 0 & \sin(\alpha) & 0 \\
+        0 & 1 & 0 & 0 \\
+        -\sin(\alpha) & 0 & \cos(\alpha) & 0 \\
+        0 & 0 & 0 & 1
+    \end{bmatrix}
 \end{equation}
 
-Hierbei ist \(T_{object}\) die Transformationsmatrix des Objekts, und \(P_{object}\) sind die lokalen Koordinaten. Das Ergebnis \(P_{world}\) beschreibt die Position des Objekts im Weltkoordinatensystem.
+\begin{equation}
+    R_z(\alpha) =
+    \begin{bmatrix}
+        \cos(\alpha) & -\sin(\alpha) & 0 & 0 \\
+        \sin(\alpha) & \cos(\alpha) & 0 & 0 \\
+        0 & 0 & 1 & 0 \\
+        0 & 0 & 0 & 1
+    \end{bmatrix}
+\end{equation}
+
+Zusätzlich zu den Transformationen Translation und Rotation können auch Skalierungen durchgeführt werden. Die Skalierungsmatrix S wird wie folgt definiert (\cite{doerner2022virtual, gao2021vSLAM, freescale2010math3d}):
+
+\begin{equation}
+    S = 
+    \begin{bmatrix} 
+        s_x & 0 & 0 & 0 \\ 
+        0 & s_y & 0 & 0 \\ 
+        0 & 0 & s_z & 0 \\ 
+        0 & 0 & 0 & 1 
+    \end{bmatrix}
+\end{equation}
+
+Die Transformationsmatrix wird, wie eingehend erläutert, häufig verwendet, um dreidimensionale Modelle vom lokalen Koordinatensystem in das Weltkoordinatensystem zu überführen. Entsprechend der Gleichung \ref{eq:transformationsmatrix}, werden dazu die lokalen Koordinaten \( P_{\text{local}} \) der Vertices des 3D-Modells mit der Transformationsmatrix \( T_{\text{world}} \) multipliziert, um die Weltkoordinaten \( P_{\text{world}} \) zu erhalten (\cite{doerner2022virtual, gao2021vSLAM, freescale2010math3d}):
+
+\begin{equation}
+    P_{\text{world}} = T_{\text{world}} \cdot P_{\text{local}}
+\end{equation}
+
+\section{Sensorik}
+
+Die Erfassung der Umgebung in Augmented-Reality-Anwendungen erfolgt mithilfe verschiedener Sensoren, die Daten über die physische Welt liefern. Je nach Anwendungsfall und Eingabegerät können unterschiedliche Sensoren verwendet werden, um die Position und Bewegung des Geräts zu bestimmen. Bei vielen Tracking-Verfahren werden eine Kombination von Sensoren verwendet, um die Genauigkeit und Zuverlässigkeit der Positionsschätzung zu verbessern. Beispielsweise kann die Kamera für visuelle Tracking-Anwendungen verwendet werden, während das IMU für die Schätzung der Bewegung des Geräts verwendet wird. Durch die Fusion von Daten aus verschiedenen Sensoren können AR-Anwendungen eine präzise und konsistente Darstellung der virtuellen Objekte in der realen Welt erreichen. Die wichtigsten Sensorenarten für die Implementierung von AR-Anwendungen für mobile Smartgeräte werden in diesem Abschnitt erläutert. \cite{doerner2022virtual}
+
+\subsection{Inertiale Sensoren}
+
+Inertiale Sensoren erfassen die Bewegung und Ausrichtung eines Geräts, indem sie Beschleunigung und Rotation messen. Sie bestehen typischerweise aus zwei Hauptkomponenten: einem Gyroskop und einem Beschleunigungsmesser. Das Gyroskop misst die Winkelgeschwindigkeit und erkennt Drehbewegungen, während der Beschleunigungsmesser lineare Beschleunigungen erfasst. Durch die Kombination beider Sensoren in einer Inertial Measurement Unit (IMU) können Bewegungen in sechs Freiheitsgraden (dreidimensionale Position und Orientierung) präzise bestimmt werden. Diese Technologie ist essenziell für die Echtzeiterfassung von Bewegungen und wird in AR-Brillen, Smartphones sowie anderen mobilen Geräten eingesetzt. \cite{doerner2022virtual}
+
+\begin{tcolorbox}[colback=THAi-Blue!20!white, colframe=THAi-Blue]
+    Als \textbf{Freiheitsgrade} (engl. Degrees of Freedom – DOF) werden voneinander unabhängige Bewegungsmöglichkeiten eines physikalischen Systems bezeichnet. Ein starrer Körper besitzt sechs Freiheitsgrade: je drei für die Translation und Rotation. \cite{wikipedia2024dof}
+\end{tcolorbox}  
+
+\subsection{Kamera}
+
+Die Kamera spielt eine zentrale Rolle in AR-Anwendungen, da sie visuelle Informationen erfasst, die für viele Tracking-Verfahren essenziell sind. Die aufgenommenen Bilder dienen nicht nur als Grundlage der Ausgabe für die Darstellung virtueller Objekte, sondern ermöglichen auch die Erkennung von Markern, Features oder Objekten. Durch die Analyse dieser Bilddaten kann die Position und Orientierung des Geräts bestimmt werden, wodurch eine präzise Überlagerung virtueller Inhalte mit der realen Umgebung ermöglicht wird. \cite{doerner2022virtual}
+
+\subsection{Lasersensoren}\label{LiDAR}
+
+LiDAR-Sensoren (\textit{Light Detection and Ranging}) sind eine spezielle Art von Lasersensoren, die die Entfernung zu Objekten mithilfe von Laserstrahlen messen. Dabei wird, entsprechend des ToF-Prinzips (\textit{Time of Flight}), die Zeit gemessen, die das Licht benötigt, um von der Lichtquelle zum Objekt und zurück zum Sensor zu gelangen. Durch die Messung der Laufzeit des Lichts kann die Entfernung zum Objekt präzise bestimmt werden. LiDAR-Sensoren sind besonders nützlich für die Erfassung von Tiefeninformationen in der Umgebung und bieten große Vorteile für die Genauigkeit und Zuverlässigkeit des Trackings in AR-Anwendungen. \cite{doerner2022virtual, ibm2024lidar}
+
+\subsection{Satellitengestütze Systeme}
+
+Satellitengestützte Systeme wie das \textit{Global Positioning System} (GPS) ermöglichen die Bestimmung der geografischen Position eines Geräts anhand von Satellitensignalen. Sie sind besonders vorteilhaft für die Ortung in Außenbereichen. Allerdings können GPS-Signale durch Gebäude und andere Hindernisse blockiert werden, wodurch die Genauigkeit in Innenräumen stark eingeschränkt ist. Zudem können Abweichungen von bis zu 10 Metern auftreten, was für viele AR-Anwendungen nicht präzise genug ist.
+
+Um die Positionsbestimmung zu verbessern, nutzen moderne Smartphones häufig \textit{Assisted GPS} (A-GPS). Dabei werden GPS-Daten durch zusätzliche Informationen aus Mobilfunk- und WLAN-Netzen ergänzt, um die Genauigkeit und Verfügbarkeit der Standortbestimmung zu erhöhen. \cite{doerner2022virtual}
+
+\subsection{Magnetfeldbasierte Sensoren}
+
+Magnetfeldbasierte Sensoren, wie das Magnetometer in \textit{Inertial Measurement Units} (IMU), messen das Erdmagnetfeld und ermöglichen so die Bestimmung der Geräteausrichtung relativ zu den magnetischen Feldlinien. Sie spielen eine wichtige Rolle bei der Orientierung im Raum und ergänzen andere Sensoren zur präzisen Positionsbestimmung in AR-Anwendungen. \cite{doerner2022virtual}
+
+Allerdings sind Magnetometer anfällig für Störungen durch elektrische Geräte, Metallgegenstände und magnetische Felder in der Umgebung, was die Genauigkeit der Messungen beeinträchtigen kann. Trotz dieser Einschränkungen sind sie eine wertvolle Ergänzung zu Gyroskopen und Beschleunigungssensoren, da sie zur Stabilisierung und Korrektur der Ausrichtung beitragen. \cite{doerner2022virtual}
 
 \section{Kalibrierung}\label{Kalibrierung}
 
-Die Kalibrierung ist ein essenzieller Schritt in der Augmented-Reality-Pipeline. Sie dient der Bestimmung der intrinsischen und extrinsischen Kameraparameter, um eine korrekte Transformation von 2D-Bildpunkten in 3D-Weltkoordinaten zu ermöglichen. (\cite{mw2024calibration})
+Die Kalibrierung ist ein zentraler Schritt in der Augmented-Reality-Pipeline, da sie die Bestimmung der intrinsischen und extrinsischen Kameraparameter ermöglicht. Diese Parameter sind essenziell, um Bildpunkte korrekt in die dreidimensionalen Weltkoordinaten zu transformieren. (\cite{mw2024calibration})
 
-Dabei wird häufig das sogenannte „Pinhole“-Modell verwendet, das die grundlegenden Eigenschaften einer idealisierten Kamera beschreibt (siehe Abbildung \ref{fig:Pinhole}). Dieses Modell basiert auf der Annahme einer Kamera ohne Objektiv, die lediglich eine kleine Blendenöffnung besitzt. Das Licht fällt durch diese Blende und projiziert ein umgekehrtes Abbild der Szene auf die Rückwand der Kamera. (\cite{mw2024calibration})
+Ein häufig verwendetes Modell zur Beschreibung der Kamera ist das \textit{Pinhole}-Kameramodell, das die grundlegenden Eigenschaften einer idealisierten Kamera abstrahiert (siehe Abbildung \ref{fig:Pinhole}). Es geht von einer Kamera ohne Objektiv aus, die lediglich eine kleine Blendenöffnung besitzt. Das Licht tritt durch diese Öffnung ein und projiziert ein invertiertes Abbild der Szene auf eine Bildebene. \cite{mw2024calibration}
 
-\begin{figure}
+Durch die Kalibrierung lassen sich die intrinsischen und extrinsischen Parameter bestimmen, die gemeinsam eine Projektionsmatrix definieren. Diese Matrix ermöglicht die Umrechnung von Bildkoordinaten in das reale 3D-Koordinatensystem (siehe Abbildung \ref{fig:Kalibrierung}). Die intrinsischen Parameter umfassen die Brennweite, die Objektivverzerrung und die Position des optischen Zentrums der Kamera. Die extrinsischen Parameter hingegen beschreiben die Position und Orientierung der Kamera im Raum. \cite{mw2024calibration}
+
+\begin{figure}[h]
     \centering
-    \includegraphics[ width=.5\textwidth ]{pinhole}
-    \caption{Pinhole-Modell (\cite{mw2024calibration})\label{fig:Pinhole}}\par
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pinhole}
+        \caption{Pinhole-Modell \cite{mw2024calibration}\label{fig:Pinhole}}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{calibration-cameramodel-coords}
+        \caption{Modell für die Kamerakalibrierung \cite{mw2024calibration}\label{fig:Kalibrierung}}
+    \end{minipage}
 \end{figure}
 
-Mithilfe der intrinsischen und extrinsischen Parameter kann eine Projektionsmatrix bestimmt werden, die es ermöglicht, Bildpixel in das Koordinatensystem der realen Welt zu überführen (siehe Abbildung \ref{fig:Kalibrierung}). Die intrinsischen Parameter umfassen die Brennweite, die Objektivverzerrung und die Position des optischen Zentrums der Kamera. Die extrinsischen Parameter hingegen beschreiben die Position und Orientierung der Kamera im Raum. (\cite{mw2024calibration})
+Es gibt verschiedene Methoden zur Kamerakalibrierung, die auf unterschiedlichen Ansätzen basieren. Eine der bekanntesten Methoden ist die \textit{Flexible camera calibration by viewing a plane from unknown orientations} (\citet{zhang1999calibration}), die auf der Verwendung eines Schachbrettmusters beruht. Dabei wird das Schachbrettmuster aus verschiedenen Perspektiven aufgenommen, um die intrinsischen und extrinsischen Parameter der Kamera zu bestimmen. \cite{stachniss2021calibration, zhang1999calibration}
 
-\begin{figure}
-    \centering
-    \includegraphics[ width=.5\textwidth ]{calibration-cameramodel-coords}
-    \caption{Modell für die Kamerakalibrierung (\cite{mw2024calibration})\label{fig:Kalibrierung}}\par
-\end{figure}
+\subsection{Mathematische Beschreibung der Projektionsmatrix}
 
 Mathematisch wird die Projektionsmatrix \(P\) wie folgt definiert (\cite{mw2024calibration, szeliski2022computerVision}):
 
@@ -132,7 +180,7 @@ Mathematisch wird die Projektionsmatrix \(P\) wie folgt definiert (\cite{mw2024c
 P = K[R|t]
 \]
 
-Hierbei entspricht \(K\) der intrinsischen Matrix. \(R\) die Rotationsmatrix und \(t\) der Translationsvektor der extrinsischen Matrix. Die intrinsische Matrix \(K\) ist definiert als (\cite{mw2024calibration}):
+Hierbei entspricht \(K\) der intrinsischen Matrix, \(R\) die Rotationsmatrix und \(t\) der Translationsvektor der extrinsischen Matrix. Die intrinsische Matrix \(K\) ist definiert als \cite{mw2024calibration}:
 
 \[
 K = 
@@ -143,7 +191,7 @@ f_x & s & c_x \\
 \end{bmatrix}
 \]
 
-Hier gilt:
+Dabei gilt:
 
 \begin{itemize}
     \item \( f_x \) und \( f_y \): Brennweiten der Kamera in Pixeln, bezogen auf die horizontalen und vertikalen Achsen.
@@ -151,72 +199,50 @@ Hier gilt:
     \item \( s \): Skew-Faktor, der berücksichtigt, ob die Kameraachsen orthogonal sind.
 \end{itemize}
 
-Die Projektion eines 3D-Punktes \( X = [X, Y, Z, 1]^T \) in das Bildkoordinatensystem \( x = [x, y, 1]^T \) erfolgt dann durch die Gleichung (\cite{mw2024calibration}):
+Ein dreidimensionaler Punkt \( X = [X, Y, Z, 1]^T \) wird mithilfe der folgenden Gleichung in das Bildkoordinatensystem \( x = [x, y, 1]^T \) projiziert \cite{mw2024calibration}:
 
 \[
 x = PX
 \]
 
-Ein Bestandteil der intrinsischen Parameter, das gesondert betrachtet werden muss, sind die Verzerrungen der Linse (engl. Lens-Distortions). Diese entstehen zum einen durch die Krümmung der Linse (Radiale Verzerrzng) und zum anderen durch Unterschiede der Ausrichtung der Linse und des Sensors (Tangentiale Verzerrung). Ohne diese Verzerrungen in die Berechnungen einzubeziehen, kann es Unstimmigkeiten zwischen den berechneten Weltkoordinaten und den realen Weltkoordinaten für einen Bildpunkt geben. (\cite{mw2024calibration, szeliski2022computerVision})
+\subsection{Objektivverzerrungen und Korrektur}
 
-Dazu werden oft Polynommodelle, wie das Brown-Conrady-Modell, verwendet. Dieses Modell relative Position zwischen der Linse und des Sensors. die radiale und tangentialen Verzerrungen der Linse und wird durch die Koeffizienten \( k_1, k_2, k_3 \) und \( p_1, p_2 \) definiert (\cite{brown1966distortion}). Die radiale Verzerrung kann somit durch folgende Gleichung beschrieben werden (\cite{mw2024calibration, szeliski2022computerVision}):
+Ein wichtiger Bestandteil der Kalibrierung ist die Korrektur von Objektivverzerrungen, da sie die Genauigkeit der Projektion beeinträchtigen können. Diese Verzerrungen entstehen durch die Krümmung der Linse (radiale Verzerrung, siehe Abbildung \ref{fig:Distortion}) oder durch Fehlausrichtungen zwischen Linse und Sensor (tangentiale Verzerrung). Werden sie nicht berücksichtigt, können sich Fehler in der Umrechnung zwischen Bild- und Weltkoordinaten ergeben. \cite{mw2024calibration, szeliski2022computerVision}
 
-\[
-x_{\text{distorted}}   
-=
-x_{\text{undistorted}}
-\left( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6 \right)
-\]
-\[
-y_{\text{distorted}}   
-=
-y_{\text{undistorted}}
-\left( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6 \right)
-\]
+\begin{figure}
+    \centering
+    \includegraphics[width=.5\textwidth]{Distortion}
+    \caption{Radiale Verzerrungen der Linse \cite{stachniss2021calibration}\label{fig:Distortion}}
+\end{figure}
 
-In diesem Kapitel wurde die Kamera-Kalibrierung anhand einfacher Modelle erläutert. In der Praxis sind die intrinsischen Parameter jedoch in den meisten Kameras bereits vorkalibriert und können von den Herstellern bereitgestellt werden. So integriert beispielsweise Apples ARKit die intrinsischen Kameraparameter direkt und stellt sie über die Klasse \texttt{AVCameraCalibrationData} zur Verfügung, wodurch sie einfach genutzt werden können. (\cite{appledevdoc})
+Dazu werden oft Polynommodelle, wie das Brown-Conrady-Modell, verwendet. Dieses Modell beschreibt die relative Position eines Punktes zwischen der Linse und des Sensors. Die radiale und tangentiale Verzerrung der Linse wird durch die Koeffizienten \( k_1, k_2, k_3 \) und \( p_1, p_2 \) bestimmt \cite{brown1966distortion} und wie folgt beschrieben:
 
-Die extrinsischen Parameter hingegen müssen häufig manuell bestimmt werden, um die exakte Position und Orientierung der Kamera zu ermitteln. In der Augmented Reality ist die präzise Bestimmung der Kameraposition essenziell für viele Tracking-Verfahren. Dabei unterscheidet man zwischen markerbasiertem Tracking (siehe Kapitel \ref{Markerbasiertes Tracking}), bei dem die Position und Größe eines bekannten Markers – oft ein Schachbrettmuster – in der realen Welt genutzt wird, und markerlosem Tracking (siehe Kapitel \ref{SfM} und \ref{SLAM}), bei dem die Kameraposition durch die Analyse von Bilddaten ermittelt wird. (\cite{doerner2022virtual, alam2024calibration})
+Die radiale Verzerrung kann somit durch folgende Gleichung beschrieben werden (\cite{mw2024calibration, szeliski2022computerVision}):
+\begin{itemize}
+    \item \textbf{Radiale Verzerrung}:
+    \[ x_{\text{corr}} = x \left( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6 \right) \]
+    \[ y_{\text{corr}} = y \left( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6 \right) \]
+    \item \textbf{Tangentiale Verzerrung}:
+    \[ x_{\text{corr}} = x + [2p_1xy + p_2(r^2 + 2x^2)] \]
+    \[ y_{\text{corr}} = y + [p_1(r^2 + 2y^2) + 2p_2xy] \]
+\end{itemize}
 
-\section{Sensorik}
+\subsection{Praktische Relevanz der Kalibrierung in AR}
 
-Die Erfassung der Umgebung in Augmented-Reality-Anwendungen erfolgt mithilfe verschiedener Sensoren, die Daten über die physische Welt liefern. Je nach Anwendungsfall und Eingabegerät können unterschiedliche Sensoren verwendet werden, um die Position und Bewegung des Geräts zu bestimmen. Bei vielen Tracking-Verfahren werden eine Kombination von Sensoren verwendet, um die Genauigkeit und Zuverlässigkeit der Positionsschätzung zu verbessern. Beispielsweise kann die Kamera für visuelle Tracking-Anwendungen verwendet werden, während das IMU für die Schätzung der Bewegung des Geräts verwendet wird. Durch die Fusion von Daten aus verschiedenen Sensoren können AR-Anwendungen eine präzise und konsistente Darstellung der virtuellen Objekte in der realen Welt erreichen. Die wichtigsten Sensorenarten werden in diesem Abschnitt erläutert.
+In den vorangegangenen Abschnitten wurde die Kamerakalibrierung anhand einfacher Modelle erläutert. In der Praxis sind die intrinsischen Parameter jedoch bereits vorkalibriert und können von den Herstellern der Kameras bereitgestellt werden. So integriert beispielsweise Apples ARKit die intrinsischen Kameraparameter direkt und stellt sie über die Klasse \texttt{AVCameraCalibrationData} zur Verfügung, wodurch sie einfach genutzt werden können. \cite{appledevdoc}
 
-\subsection{Inertiale Sensoren}
-
-Inertiale Sensoren erfassen die Beschleunigung und Rotation eines Geräts und bestehen typischerweise aus einem Gyroskop und einem Beschleunigungsmesser. Während das Gyroskop die Winkelgeschwindigkeit misst und Drehbewegungen erkennt, erfasst der Beschleunigungsmesser lineare Beschleunigungen. Durch die Kombination beider Sensoren in einer Inertial Measurement Unit (IMU) lassen sich Bewegungen in sechs Freiheitsgraden (3D-Position und -Orientierung) präzise bestimmen. Diese Technologie ist besonders nützlich zur Erfassung schneller Bewegungen und findet Anwendung in AR-Brillen, Smartphones und anderen mobilen Geräten. (\cite{doerner2022virtual})
-
-\begin{tcolorbox}[colback=THAi-Blue!20!white, colframe=THAi-Blue]
-    Als \textbf{Freiheitsgrade} (engl. Degrees of Freedom – DOF) werden voneinander unabhängige Bewegungsmöglichkeiten eines physikalischen Systems bezeichnet. Ein starrer Körper besitzt sechs Freiheitsgrade: je drei für die Translation und Rotation. //TODO: Quelle
-\end{tcolorbox}
-    
-
-\subsection{Kamera}
-
-Die Kamera ist ein essentieller Sensor für AR-Anwendungen, da die visuellen Informationen von vielen Tracking-Verfahren genutzt werden und die aufgenommenen Bilder die Grundlage für die Darstellung von virtuellen Objekten in der realen Welt bilden. Die Kamera liefert Bilddaten, die zur Erkennung von Markern, Features oder Objekten verwendet werden. Durch die Analyse der Kamerabilder können AR-Anwendungen die Position und Orientierung des Geräts bestimmen und virtuelle Objekte in die reale Welt einfügen. (\cite{doerner2022virtual})
-
-\subsection{Lasersensoren}\label{LiDAR}
-
-Lasersensoren messen die Entfernung zu Objekten mithilfe von Laserstrahlen. LiDAR (Light Detection and Ranging) ist ein bekannter Lasersensor, der in der Robotik, Automobilindustrie und Augmented Reality weit verbreitet ist. Der Sensor strahlt Laserlicht aus und misst die Zeit, die das Licht benötigt, um zu einem Punkt in der Umgebung zu gelangen und zurückzukehren. Dadurch ist die exakte Bestimmung der Position und Entfernung des Punktes zum Sensor möglich. Dies ermöglicht die präzise Erfassung von Tiefeninformationen in der Umgebung und bietet somit große Vorteile für die Genauigkeit und Zuverlässigkeit des Trackings in AR-Anwendungen. (\cite{doerner2022virtual})
-
-\subsection{Satellitengestütze Systeme}
-
-Satellitengestützte Systeme wie GPS (Global Positioning System) bestimmen die geografische Position des Geräts mithilfe von Satellitensignalen. Diese Systeme sind besonders nützlich für die Lokalisierung des Geräts in großen Außenbereichen. Da GPS-Signale jedoch durch Gebäude und andere Hindernisse blockiert werden können, sind sie in Innenräumen oft ungenau. Zusätzlich dazu sind Abweichungen von bis zu 10m möglich, was für viele AR-Anwendungen nicht ausreichend ist. Smartphones setzen daher häufig A-GPS (Assisted GPS) ein um die GPS-Daten mithilfe von Mobilfunknetz- bzw. WLAN-Daten zu präzisieren. (\cite{doerner2022virtual}) 
-
-\subsection{Magnetfeldbasierte Sensoren}
-
-Magnetfeldbasierte Sensoren, wie das Magnetometer in IMUs, messen das Magnetfeld der Erde und liefern so Rückschlüsse bezüglich der Orientierung des Geräts relativ zum Magnetfeld. Diese Sensoren sind besonders nützlich für die Bestimmung der Ausrichtung des Geräts im Raum. Allerdings sind Magnetfelder anfällig für Störungen durch elektrische Geräte und Metallgegenstände, was die Genauigkeit der Messungen beeinträchtigen kann. Dennoch sind magnetfeldbasierte Sensoren eine wichtige Ergänzung zu anderen Sensoren für die präzise Lokalisierung und Orientierung in AR-Anwendungen. (\cite{doerner2022virtual})
+Die extrinsischen Parameter hingegen müssen häufig manuell bestimmt werden, um die exakte Position und Orientierung der Kamera zu ermitteln. In der Augmented Reality ist die präzise Bestimmung der Kameraposition essenziell für viele Tracking-Verfahren. Dabei unterscheidet man zwischen markerbasiertem Tracking, bei dem die Position und Größe eines bekannten Markers in der realen Welt genutzt wird, und markerlosem Tracking (siehe Kapitel \ref{SLAM}), bei dem die Kameraposition durch die Analyse von Bilddaten ermittelt wird. Im Kontext mobiler AR-Anwendungen sind markerlose Tracking-Verfahren, wie SLAM, aufgrund ihrer Flexibilität und Genauigkeit besonders relevant. Deswegen wird der Fokus in den folgenden Abschnitten auf diese Verfahren gelegt. \cite{doerner2022virtual, alam2024calibration}
 
 \section{Markenbasiertes Tracking}\label{Markerbasiertes Tracking}
 
-Das markenbasierte Tracking nutzt spezielle Marker, die in der realen Welt platziert werden und als Referenzpunkte für die Positionierung virtueller Objekte dienen. Diese Marker ermöglichen die Bestimmung der extrinsischen Kameraparameter und weisen in der Regel ein eindeutiges Muster auf, das von der Kamera erkannt und verfolgt wird. Da die Dimensionen des Markers bekannt sind, kann seine Position und Orientierung im Raum präzise berechnet werden. Es gibt verschiedene Verfahren, die unterschiedliche Marker-Typen verwenden und jeweils eigene Methoden zur Positions- und Orientierungsbestimmung nutzen. (\cite{doerner2022virtual}) 
+Das markenbasierte Tracking nutzt spezielle Marker, die in der realen Welt platziert werden und als Referenzpunkte für die Positionierung virtueller Objekte dienen. Diese Marker ermöglichen die Bestimmung der extrinsischen Kameraparameter und weisen in der Regel ein eindeutiges Muster auf, das von der Kamera erkannt und verfolgt wird. Da die Dimensionen des Markers bekannt sind, kann seine Position und Orientierung im Raum präzise berechnet werden. Es gibt verschiedene Verfahren, die unterschiedliche Marker-Typen verwenden und jeweils eigene Methoden zur Positions- und Orientierungsbestimmung nutzen. \cite{doerner2022virtual}
 
-Vereinfacht dargestellt, funktioniert das markenbasierte Tracking wie folgt (\cite{doerner2022virtual}) :
+Vereinfacht dargestellt, funktioniert das markenbasierte Tracking wie folgt \cite{doerner2022virtual}:
 
 \begin{figure}
     \centering
     \includegraphics[ width=.5\textwidth ]{Marker}
-    \caption{Darstellung eines markenbasiertes Tracking (\cite{doerner2022virtual}) \label{fig:Marker}}\par
+    \caption{Darstellung eines markenbasiertes Tracking \cite{doerner2022virtual} \label{fig:Marker}}\par
 \end{figure}
 
 Wie in Abbildung \ref{fig:Marker} dargestellt, wird die Kamera auf den Marker ausgerichtet, um ihn zu erfassen. Anhand der intrinsischen Kameraparameter und der bekannten Abmessungen des Markers lässt sich die Position und Orientierung des Kamerakoordinatensystems \( S \) relativ zum Marker bestimmen. Dadurch kann die Transformationsmatrix \( T_{cm} \) berechnet werden, mit der die Koordinaten des Markers aus dem Markerkoordinatensystem in das Kamerakoordinatensystem überführt werden. 
@@ -242,29 +268,29 @@ Da sowohl \( v_s \) als auch \( v_m \) bekannt sind, also die Pixelkoordinaten d
 
 //TODO: Berechnung der Transformationsmatrix
 
-Das markenbasierte Tracking zeichnet sich durch hohe Präzision und Robustheit aus. Deshalb wird diese Methode häufig in Anwendungen eingesetzt, bei denen die exakte Position des darzustellenden Objekts im Vorfeld bekannt ist. Allerdings ist das markenbasierte Tracking auf die Verwendung von speziellen Markern beschränkt, was die Flexibilität und Anwendbarkeit in verschiedenen Szenarien einschränken kann. Daher werden zunehmend markerlose Tracking-Verfahren bevorzugt, die ohne spezielle Marker auskommen und die Kameraposition anhand von Bildinformationen schätzen. Diese Verfahren werden im folgenden Abschnitt erläutert. (\cite{doerner2022virtual})
+Das markenbasierte Tracking zeichnet sich durch hohe Präzision und Robustheit aus. Deshalb wird diese Methode häufig in Anwendungen eingesetzt, bei denen die exakte Position des darzustellenden Objekts im Vorfeld bekannt ist. Allerdings ist das markenbasierte Tracking auf die Verwendung von speziellen Markern beschränkt, was die Flexibilität und Anwendbarkeit in verschiedenen Szenarien einschränken kann. Daher werden zunehmend markerlose Tracking-Verfahren bevorzugt, die ohne spezielle Marker auskommen und die Kameraposition anhand von Bildinformationen schätzen. Diese Verfahren werden im folgenden Abschnitt erläutert. \cite{doerner2022virtual}
 
 \section{SLAM}\label{SLAM}
 
-Simultanous Localization and Mapping (SLAM) hat sich als eine der wichtigsten Technologien in der Augmented Reality etabliert. Das Verfahren, das ursprünglich aus der Robotik stammt, stellt eine performante und zuverlässige Möglichkeit dar, die gleichzeitige Bestimmung der Position und Orientierung eines Geräts und die Extraktion dreidimensionaler Informationen der Umgebung zu implementieren. SLAM wird in einer Vielzahl von AR-Framworks und -Anwendung eingesetzt. (\cite{doerner2022virtual})
+Simultanous Localization and Mapping (SLAM) hat sich als eine der wichtigsten Technologien in der Augmented Reality etabliert. Das Verfahren, das ursprünglich aus der Robotik stammt, stellt eine performante und zuverlässige Möglichkeit dar, die gleichzeitige Bestimmung der Position und Orientierung eines Geräts und die Extraktion dreidimensionaler Informationen der Umgebung zu implementieren. SLAM wird in einer Vielzahl von AR-Framworks und -Anwendung eingesetzt. \cite{doerner2022virtual}
 
 SLAM beruht in vieler Hinsicht auf Konzepte des Structure from Motion (SfM), bei dem die 3D-Struktur einer Szene aus einer Sequenz von 2D-Bildern rekonstruiert wird. SfM wird in der Computer Vision und Photogrammetrie eingesetzt, um die räumliche Struktur einer Szene anhand von Merkmalen zu rekonstruieren. SLAM erweitert dieses Konzept, indem es die Kameraposition und -orientierung in Echtzeit bestimmt und gleichzeitig eine Karte der Umgebung erstellt.
 
-SLAM wird in mobilen AR-Anwendungen häufig in Form des Visual SLAM (vSLAM) eingesetzt, bei dem sowohl visuelle Informationen der Kamera als auch Informationen anderer Sensoren, wie IMUs oder LiDAR, genutzt werden. Das vSLAM-Verfahren besteht aus zwei Hauptkomponenten: dem Tracking (Frontend) und dem Mapping bzw. der Loop Detection/Closure (Backend). Das Tracking umfasst die Schätzung der Kameraposition und der 3D-Struktur der Szene, während das Mapping die Optimierung der Schätzungen und die Erstellung einer konsistenten Karte übernimmt. Die Abbildung \ref{fig:VSLAM} zeigt die wichtigsten Schritte des SLAM-Algorithmus. Diese werden im Folgenden näher erläutert. Dabei wird der Fokus auf die Funktionsweise des vSLAM gelegt, da dieser in mobilen AR-Anwendungen weit verbreitet ist und eine ausführliche Erklärung aller Konzepte ermöglicht. Anschließend wird auf das speziellere LiDAR-SLAM eingegangen und Unterschiede zum vSLAM aufgezeigt, da hier eine besondere Relevanz für den Prototypen besteht. (\cite{gao2021vSLAM, tourani2022vSLAMTrends, doerner2022virtual})
+SLAM wird in mobilen AR-Anwendungen häufig in Form des Visual SLAM (vSLAM) eingesetzt, bei dem sowohl visuelle Informationen der Kamera als auch Informationen anderer Sensoren, wie IMUs oder LiDAR, genutzt werden. Das vSLAM-Verfahren besteht aus zwei Hauptkomponenten: dem Tracking (Frontend) und dem Mapping bzw. der Loop Detection/Closure (Backend). Das Tracking umfasst die Schätzung der Kameraposition und der 3D-Struktur der Szene, während das Mapping die Optimierung der Schätzungen und die Erstellung einer konsistenten Karte übernimmt. Die Abbildung \ref{fig:VSLAM} zeigt die wichtigsten Schritte des SLAM-Algorithmus. Diese werden im Folgenden näher erläutert. Dabei wird der Fokus auf die Funktionsweise des vSLAM gelegt, da dieser in mobilen AR-Anwendungen weit verbreitet ist und eine ausführliche Erklärung aller Konzepte ermöglicht. Anschließend wird auf das speziellere LiDAR-SLAM eingegangen und Unterschiede zum vSLAM aufgezeigt, da hier eine besondere Relevanz für den Prototypen besteht. \cite{gao2021vSLAM, tourani2022vSLAMTrends, doerner2022virtual}
 
 \begin{figure}
     \centering
     \includegraphics[ width=1\textwidth ]{VSLAM}
-    \caption{Flowchart zur Funktionsweise des Visual SLAM (\cite{tourani2022vSLAMTrends})\label{fig:VSLAM}}\par
+    \caption{Flowchart zur Funktionsweise des Visual SLAM \cite{tourani2022vSLAMTrends}\label{fig:VSLAM}}\par
 \end{figure}
 
 \subsection{Feature Detection}
 
-Bei der Feature Detection werden Feature-Punkte in Bildern identifiziert. Ein Feature-Punkt (Merkmal) ist ein charakteristischer Punkt in einem Bild, der durch seine einzigartige Struktur oder Helligkeitsverteilung hervorsticht. Ein Feature-Punkt kann beispielsweise ein Eckpunkt, ein Kantenpunkt oder ein Texturpunkt sein. Feature-Punkte bestehen aus einem Key Point, also einem zweidimensionalen Punkt im Bild, und einem Descriptor. (\cite{gao2021vSLAM, szeliski2022computerVision})
+Bei der Feature Detection werden Feature-Punkte in Bildern identifiziert. Ein Feature-Punkt (Merkmal) ist ein charakteristischer Punkt in einem Bild, der durch seine einzigartige Struktur oder Helligkeitsverteilung hervorsticht. Ein Feature-Punkt kann beispielsweise ein Eckpunkt, ein Kantenpunkt oder ein Texturpunkt sein. Feature-Punkte bestehen aus einem Key Point, also einem zweidimensionalen Punkt im Bild, und einem Descriptor. \cite{gao2021vSLAM, szeliski2022computerVision}
 
-Der Descriptor entspricht einer numerischen Beschreibung des erkannten Merkmals, um sie über mehrere Bilder hinweg vergleichbar zu machen. Diese Deskriptoren bestehen in der Regel aus Vektoren, die die verschiedene Charakteristiken, wie der Helligkeitsverteilung, um den jeweiligen Feature-Punkt erfassen. Korrespondierende Feature Punkte werden anhand der Ähnlichkeiten der Deskriptoren im Vektorraum gefunden. (\cite{gao2021vSLAM, szeliski2022computerVision})
+Der Descriptor entspricht einer numerischen Beschreibung des erkannten Merkmals, um sie über mehrere Bilder hinweg vergleichbar zu machen. Diese Deskriptoren bestehen in der Regel aus Vektoren, die die verschiedene Charakteristiken, wie der Helligkeitsverteilung, um den jeweiligen Feature-Punkt erfassen. Korrespondierende Feature Punkte werden anhand der Ähnlichkeiten der Deskriptoren im Vektorraum gefunden. \cite{gao2021vSLAM, szeliski2022computerVision}
 
-Es gibt verschiedene Algorithmen, die für das Erkennen und Nachverfolgen von Feature-Punkten verwendet werden können, wie z. B. SIFT (Scale-Invariant Feature Transform), SURF (Speeded-Up Robust Features) oder ORB (Oriented FAST and Rotated BRIEF). Die folgende Tabelle vergleicht die Geschwindigkeit der erwähnten Algorithmen bei einer Extraktion von 1000 Feature-Punkten aus dem gleichen Bild (\cite{gao2021vSLAM}):
+Es gibt verschiedene Algorithmen, die für das Erkennen und Nachverfolgen von Feature-Punkten verwendet werden können, wie z. B. SIFT (Scale-Invariant Feature Transform), SURF (Speeded-Up Robust Features) oder ORB (Oriented FAST and Rotated BRIEF). Die folgende Tabelle vergleicht die Geschwindigkeit der erwähnten Algorithmen bei einer Extraktion von 1000 Feature-Punkten aus dem gleichen Bild \cite{gao2021vSLAM}:
 
 \begin{center}
     \begin{tabular}{ |c|c| } 
@@ -276,22 +302,22 @@ Es gibt verschiedene Algorithmen, die für das Erkennen und Nachverfolgen von Fe
         ORB & 15.3 \\
         \hline
     \end{tabular} \\
-    (\cite{gao2021vSLAM})
+    \cite{gao2021vSLAM}
 \end{center}
 
-Aufgrund der Echtzeit-Anforderung in AR-Anwendungen wird neben der Robustheit, vor allem die Geschwindigkeit der Algorithmen betrachtet. ORB stellt hierbei eine gute Balance zwischen Geschwindigkeit und Robustheit dar und wird daher häufig in AR-Anwendungen eingesetzt. Aus diesem Grund wird ORB im folgenden Abschnitt näher erläutert. (\cite{gao2021vSLAM, rublee2011orb})
+Aufgrund der Echtzeit-Anforderung in AR-Anwendungen wird neben der Robustheit, vor allem die Geschwindigkeit der Algorithmen betrachtet. ORB stellt hierbei eine gute Balance zwischen Geschwindigkeit und Robustheit dar und wird daher häufig in AR-Anwendungen eingesetzt. Aus diesem Grund wird ORB im folgenden Abschnitt näher erläutert. \cite{gao2021vSLAM, rublee2011orb}
 
-Oriented FAST and Rotated BRIEF (ORB) setzt sich aus zwei Komponenten zusammen: FAST (Features from Accelerated Segment Test) und BRIEF (Binary Robust Independent Elementary Features). Der FAST-Algorithmus identifiziert Punkte mit starken Helligkeitsänderungen in den Grauwerten, indem er benachbarte Pixel in einem Kreis um den zu prüfenden Pixel vergleicht. (\cite{gao2021vSLAM, rublee2011orb})
+Oriented FAST and Rotated BRIEF (ORB) setzt sich aus zwei Komponenten zusammen: FAST (Features from Accelerated Segment Test) und BRIEF (Binary Robust Independent Elementary Features). Der FAST-Algorithmus identifiziert Punkte mit starken Helligkeitsänderungen in den Grauwerten, indem er benachbarte Pixel in einem Kreis um den zu prüfenden Pixel vergleicht. \cite{gao2021vSLAM, rublee2011orb}
 
-Die Abbildung \ref{fig:FAST} zeigt die Funktionsweise des FAST-Algorithmus. Zunächst wird ein Pixel \( p \) mit einem Helligkeitswert \( I_p \) ausgewählt. Ausgehend von diesem Pixel werden die Helligkeitswerte der 16 benachbarte Pixel \( p \) in einem Kreis mit einem Radius von 3 verglichen. Übersteigt die Anzahl der aufeinander folgenden, signifikant helleren oder dunkleren Pixel einen bestimmten Schwellenwert \( N \), wird \( p \) als Feature identifiziert. Diese Schritte werden für alle Pixel im Bild wiederholt, um alle Feature-Punkte zu identifizieren. Der Algorithmus kann optimiert werden, indem zunächst die Nachbarpixel 1, 5, 9, und 13 (siehe Abbildung \ref{fig:FAST}) betrachtet werden. Falls drei der vier Pixel heller oder dunkler sind als \( I_p \), kann es sich um einen potenziellen Feature-Punkt handeln. (\cite{gao2021vSLAM, rosten2006fast})
+Die Abbildung \ref{fig:FAST} zeigt die Funktionsweise des FAST-Algorithmus. Zunächst wird ein Pixel \( p \) mit einem Helligkeitswert \( I_p \) ausgewählt. Ausgehend von diesem Pixel werden die Helligkeitswerte der 16 benachbarte Pixel \( p \) in einem Kreis mit einem Radius von 3 verglichen. Übersteigt die Anzahl der aufeinander folgenden, signifikant helleren oder dunkleren Pixel einen bestimmten Schwellenwert \( N \), wird \( p \) als Feature identifiziert. Diese Schritte werden für alle Pixel im Bild wiederholt, um alle Feature-Punkte zu identifizieren. Der Algorithmus kann optimiert werden, indem zunächst die Nachbarpixel 1, 5, 9, und 13 (siehe Abbildung \ref{fig:FAST}) betrachtet werden. Falls drei der vier Pixel heller oder dunkler sind als \( I_p \), kann es sich um einen potenziellen Feature-Punkt handeln. \cite{gao2021vSLAM, rosten2006fast}
 
 \begin{figure}
     \centering
     \includegraphics[ width=.5\textwidth ]{FAST}
-    \caption{FAST-Feature-Punkte (\cite{rosten2006fast})\label{fig:FAST}}\par
+    \caption{FAST-Feature-Punkte \cite{rosten2006fast}\label{fig:FAST}}\par
 \end{figure}
 
-Zusätzlich zu den erkannten Feature-Punkten berechnet ORB Rotations- bzw. Richtungsinformationen für jedes Feature. Dazu wird ein sogenannter Zentroid berechnet, der den Grauwert des Bildblocks in der Nähe des Feature-Punkts als Schwerpunkt verwendet. Diese Zentroide werden wie folgt berechnet (\cite{gao2021vSLAM, rublee2011orb}):
+Zusätzlich zu den erkannten Feature-Punkten berechnet ORB Rotations- bzw. Richtungsinformationen für jedes Feature. Dazu wird ein sogenannter Zentroid berechnet, der den Grauwert des Bildblocks in der Nähe des Feature-Punkts als Schwerpunkt verwendet. Diese Zentroide werden wie folgt berechnet \cite{gao2021vSLAM, rublee2011orb}:
 
 Zunächst wird das Moment \( m_{pq} \) im Bildblock \( B \) berechnet, wobei \( p \) und \( q \) entweder 0 oder 1 sind:
 
@@ -319,27 +345,27 @@ Schließlich wird die Orientierung des Features bestimmt, die durch den Vektor \
     \theta = \arctan \left( \frac{m_{01}}{m_{10}} \right)
 \end{equation}
 
-Nachdem die Feature-Punkte erkannt wurden, werden die Deskriptoren für jedes Feature berechnet. Der BRIEF-Algorithmus erstellt binäre Deskriptoren, die die Helligkeitsverteilung um den Feature-Punkt beschreiben. Dabei werden zufällige Paare von Pixeln um den Feature-Punkt ausgewählt und verglichen. Die resultierenden binären Werte werden in einem 128-bit Vektor gespeichert und bilden den Deskriptor für das Feature. (\cite{gao2021vSLAM, calonder2010brief})
+Nachdem die Feature-Punkte erkannt wurden, werden die Deskriptoren für jedes Feature berechnet. Der BRIEF-Algorithmus erstellt binäre Deskriptoren, die die Helligkeitsverteilung um den Feature-Punkt beschreiben. Dabei werden zufällige Paare von Pixeln um den Feature-Punkt ausgewählt und verglichen. Die resultierenden binären Werte werden in einem 128-bit Vektor gespeichert und bilden den Deskriptor für das Feature. \cite{gao2021vSLAM, calonder2010brief}
 
-Die verbesserte Implementierung des FAST- und BRIEF-Algorithmus in ORB ermöglicht eine schnelle und robuste Merkmalsextraktion, die in Echtzeit auf mobilen Geräten ausgeführt werden kann. Die Features sind invariant gegenüber Rotationen und Skalierungen und eignen sich daher gut für das Feature-Matching in AR-Anwendungen. ORB wird daher häufig in AR-Anwendungen eingesetzt, um Feature-Punkte zu erkennen und zu verfolgen. (\cite{gao2021vSLAM, rublee2011orb})
+Die verbesserte Implementierung des FAST- und BRIEF-Algorithmus in ORB ermöglicht eine schnelle und robuste Merkmalsextraktion, die in Echtzeit auf mobilen Geräten ausgeführt werden kann. Die Features sind invariant gegenüber Rotationen und Skalierungen und eignen sich daher gut für das Feature-Matching in AR-Anwendungen. ORB wird daher häufig in AR-Anwendungen eingesetzt, um Feature-Punkte zu erkennen und zu verfolgen. \cite{gao2021vSLAM, rublee2011orb}
 
-Neben klassischen Feature-Detection-Verfahren, wie ORB, gewinnen Deep-Learning-Modelle zunehmend an Bedeutung für das Feature Matching. Besonders Convolutional Neural Networks (CNNs) und Transformer-Modelle liefern vielversprechende Ergebnisse. Ein Beispiel hierfür ist XFeat (Accelerated Features), ein optimiertes neuronales Netzwerk, das die Merkmalsextraktion beschleunigt. Auch OmniGlue, eine Kombination aus CNNs und Transformer-Modellen, setzt neue Maßstäbe in der robusten und anpassungsfähigen Feature-Matching-Strategie. Diese modernen Ansätze bieten oft eine höhere Genauigkeit und Stabilität, insbesondere in komplexen Szenen oder bei stark variierenden Lichtverhältnissen. (\cite{ghosh2024fmNN})
+Neben klassischen Feature-Detection-Verfahren, wie ORB, gewinnen Deep-Learning-Modelle zunehmend an Bedeutung für das Feature Matching. Besonders Convolutional Neural Networks (CNNs) und Transformer-Modelle liefern vielversprechende Ergebnisse. Ein Beispiel hierfür ist XFeat (Accelerated Features), ein optimiertes neuronales Netzwerk, das die Merkmalsextraktion beschleunigt. Auch OmniGlue, eine Kombination aus CNNs und Transformer-Modellen, setzt neue Maßstäbe in der robusten und anpassungsfähigen Feature-Matching-Strategie. Diese modernen Ansätze bieten oft eine höhere Genauigkeit und Stabilität, insbesondere in komplexen Szenen oder bei stark variierenden Lichtverhältnissen. \cite{ghosh2024fmNN}
 
 \subsection{Feature Matching}
 
-Das Feature Matching ist ein wichtiger Schritt im visual SLAM, bei dem die Korrespondenzen zwischen den Feature-Punkten in aufeinanderfolgenden Bildern gefunden werden. Dies ermöglicht die spätere Bestimmung der Kamerabewegung. (\cite{gao2021vSLAM, szeliski2022computerVision})
+Das Feature Matching ist ein wichtiger Schritt im visual SLAM, bei dem die Korrespondenzen zwischen den Feature-Punkten in aufeinanderfolgenden Bildern gefunden werden. Dies ermöglicht die spätere Bestimmung der Kamerabewegung. \cite{gao2021vSLAM, szeliski2022computerVision}
 
-Die Feature-Matching-Algorithmen vergleichen die Deskriptoren der Feature-Punkte und bestimmen die Ähnlichkeiten zwischen den Merkmalen. Korrespondierende Feature-Punkte werden anhand der Ähnlichkeiten der Deskriptoren mithilfe von Distanzmaßen, wie dem euklidischen Abstand oder dem Hamming-Abstand, gefunden. (\cite{gao2021vSLAM, szeliski2022computerVision})
+Die Feature-Matching-Algorithmen vergleichen die Deskriptoren der Feature-Punkte und bestimmen die Ähnlichkeiten zwischen den Merkmalen. Korrespondierende Feature-Punkte werden anhand der Ähnlichkeiten der Deskriptoren mithilfe von Distanzmaßen, wie dem euklidischen Abstand oder dem Hamming-Abstand, gefunden. \cite{gao2021vSLAM, szeliski2022computerVision}
 
-Da die Anzahl der Feature-Punkte in den Bildern hoch sein kann, ist es wichtig, effiziente Algorithmen für das Feature Matching zu verwenden. Ein bekannter Algorithmus ist der FLANN-Algorithmus (Fast Library for Approximate Nearest Neighbors), der eine effiziente Suche nach den nächsten Nachbarn in großen Datensätzen ermöglicht. Der FLANN-Algorithmus verwendet k-d-Bäume oder andere Datenstrukturen, um die Suche nach den nächsten Nachbarn zu beschleunigen. (\cite{gao2021vSLAM, szeliski2022computerVision})
+Da die Anzahl der Feature-Punkte in den Bildern hoch sein kann, ist es wichtig, effiziente Algorithmen für das Feature Matching zu verwenden. Ein bekannter Algorithmus ist der FLANN-Algorithmus (Fast Library for Approximate Nearest Neighbors), der eine effiziente Suche nach den nächsten Nachbarn in großen Datensätzen ermöglicht. Der FLANN-Algorithmus verwendet k-d-Bäume oder andere Datenstrukturen, um die Suche nach den nächsten Nachbarn zu beschleunigen. \cite{gao2021vSLAM, szeliski2022computerVision}
 
 \subsection{Pose Estimation}
 
-Die Schätzung der Kameraposition (Pose Estimation) ist ein essenzieller Schritt in der SLAM-Pipeline. Sie liefert die Grundlage für die Rekonstruktion der dreidimensionalen Szene und die Bestimmung der extrinsischen Kameraparameter. Die Pose Estimation basiert auf der Triangulation, bei der die dreidimensionale Position eines Punktes im Raum anhand der korrespondierenden Punkte in zwei oder mehr Bildern bestimmt wird. (\cite{gao2021vSLAM})
+Die Schätzung der Kameraposition (Pose Estimation) ist ein essenzieller Schritt in der SLAM-Pipeline. Sie liefert die Grundlage für die Rekonstruktion der dreidimensionalen Szene und die Bestimmung der extrinsischen Kameraparameter. Die Pose Estimation basiert auf der Triangulation, bei der die dreidimensionale Position eines Punktes im Raum anhand der korrespondierenden Punkte in zwei oder mehr Bildern bestimmt wird. \cite{gao2021vSLAM}
 
-Dazu wird zunächst identifiziert, wie sich die Kamera zwischen zwei oder mehreren Bildern bewegt hat. Die Epipolargeometrie beschreibt die Beziehung zwischen den Bildern und ermöglicht die Bestimmung der Kameraposition.  Das Ziel ist es, eine sogenannte Essential Matrix zu berechnen, die die Rotation \( R \) und Translation \( t \) der Kamera zwischen den Bildern beschreibt. (\cite{gao2021vSLAM})
+Dazu wird zunächst identifiziert, wie sich die Kamera zwischen zwei oder mehreren Bildern bewegt hat. Die Epipolargeometrie beschreibt die Beziehung zwischen den Bildern und ermöglicht die Bestimmung der Kameraposition.  Das Ziel ist es, eine sogenannte Essential Matrix zu berechnen, die die Rotation \( R \) und Translation \( t \) der Kamera zwischen den Bildern beschreibt. \cite{gao2021vSLAM}
 
-Dazu betrachten wir die Situation in Abbildung \ref{fig:Epipolar} mit zwei Bildern \( I_1 \) und \( I_2 \) und den korrespondierenden Punkten \( p_1 \) und \( p_2 \). Die Kamerapositionen \( C_1 \) und \( C_2 \) sind ebenfalls dargestellt. (\cite{gao2021vSLAM})
+Dazu betrachten wir die Situation in Abbildung \ref{fig:Epipolar} mit zwei Bildern \( I_1 \) und \( I_2 \) und den korrespondierenden Punkten \( p_1 \) und \( p_2 \). Die Kamerapositionen \( C_1 \) und \( C_2 \) sind ebenfalls dargestellt. \cite{gao2021vSLAM}
 
 \begin{figure}
     \centering
@@ -347,17 +373,17 @@ Dazu betrachten wir die Situation in Abbildung \ref{fig:Epipolar} mit zwei Bilde
     \caption{Situation der Epipolargeometrie bei zwei Bildern\label{fig:Epipolar}}\par
 \end{figure}
 
-Die epipolare Bedingung beschreibt, dass die Kamerapositionen \( C_1 \) und \( C_2 \) zusammen mit dem Punkt \( P \), der dem Schnittpunkt der Linien \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \) entspricht, auf einer Ebene liegen. Diese Bedingung kann durch die folgende Gleichung ausgedrückt werden (\cite{gao2021vSLAM}):
+Die epipolare Bedingung beschreibt, dass die Kamerapositionen \( C_1 \) und \( C_2 \) zusammen mit dem Punkt \( P \), der dem Schnittpunkt der Linien \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \) entspricht, auf einer Ebene liegen. Diese Bedingung kann durch die folgende Gleichung ausgedrückt werden \cite{gao2021vSLAM}:
 \begin{equation}
     x_2^T t \times R x_1 = 0
 \end{equation}
 
-Hierbei entsprechen \( x_1 \) und \( x_2 \) den homogenen Koordinaten der korrespondierenden Punkte \( p_1 \) und \( p_2 \) in den Bildern \( I_1 \) und \( I_2 \). Die Essential Matrix \( E \) wird nun wie folgt definiert (\cite{gao2021vSLAM}):
+Hierbei entsprechen \( x_1 \) und \( x_2 \) den homogenen Koordinaten der korrespondierenden Punkte \( p_1 \) und \( p_2 \) in den Bildern \( I_1 \) und \( I_2 \). Die Essential Matrix \( E \) wird nun wie folgt definiert \cite{gao2021vSLAM}:
 \begin{equation}
     E = t \times R
 \end{equation}
 
-Diese Matrix entspricht einer 3x3-Matrix mit neun unbekannten Variablen. Die Essential Matrix kann mithilfe des Eight-Point-Algorithmus geschätzt werden, der die epipolare Bedingung für mindestens acht korrespondierende Punkte in den Bildern verwendet. Dazu wird ein Lineares Gleichungssystem wie folgt aufgestellt (\cite{gao2021vSLAM, stachniss2020FandEmatrix}): 
+Diese Matrix entspricht einer 3x3-Matrix mit neun unbekannten Variablen. Die Essential Matrix kann mithilfe des Eight-Point-Algorithmus geschätzt werden, der die epipolare Bedingung für mindestens acht korrespondierende Punkte in den Bildern verwendet. Dazu wird ein Lineares Gleichungssystem wie folgt aufgestellt \cite{gao2021vSLAM, stachniss2020FandEmatrix}: 
 \begin{equation}
     \begin{pmatrix}
         u_2^1 u_1^1 & u_2^1 v_1^1 & u_2^1 & v_2^1 u_1^1 & v_2^1 v_1^1 & v_2^1 & u_1^1 & v_1^1 & 1 \\
@@ -371,9 +397,9 @@ Diese Matrix entspricht einer 3x3-Matrix mit neun unbekannten Variablen. Die Ess
     = 0
 \end{equation}
 
-Die Essential Matrix \( E \) kann durch die Singulärwertzerlegung (SVD) in die Rotationsmatrix \( R \) und die Translationsmatrix \( t \) zerlegt werden. Die genaue Beschreibung dieser Zerlegung ist kein Bestandteil dieses Kapitels. Stattdessen wird auf weiterführende Literatur verwiesen. (\cite{gao2021vSLAM, tsai1984svd})
+Die Essential Matrix \( E \) kann durch die Singulärwertzerlegung (SVD) in die Rotationsmatrix \( R \) und die Translationsmatrix \( t \) zerlegt werden. Die genaue Beschreibung dieser Zerlegung ist kein Bestandteil dieses Kapitels. Stattdessen wird auf weiterführende Literatur verwiesen. \cite{gao2021vSLAM, tsai1984svd}
 
-Wichtig ist, dass die Zerlegung der Essential Matrix vier mögliche Lösungen liefert, die durch die Wahl der korrekten Lösung bestimmt werden müssen. Die Abbildung \ref{fig:SVD} zeigt ein Beispiel für die vier möglichen Lösungen der Zerlegung der Essential Matrix. In diesem Fall kann die korrekte Lösung durch die Überprüfung der positiven Parallaxe bestimmt werden, die angibt, ob die Punkte vor oder hinter der Kamera liegen. Die korrekte Lösung entspricht derjenigen, bei der die meisten Punkte vor der Kamera liegen. Das Ergebnis der Zerlegung ist die Rotation \( R \) und die Translation \( t \), die die Bewegung der Kamera zwischen den Bildern beschreiben. (\cite{gao2021vSLAM})
+Wichtig ist, dass die Zerlegung der Essential Matrix vier mögliche Lösungen liefert, die durch die Wahl der korrekten Lösung bestimmt werden müssen. Die Abbildung \ref{fig:SVD} zeigt ein Beispiel für die vier möglichen Lösungen der Zerlegung der Essential Matrix. In diesem Fall kann die korrekte Lösung durch die Überprüfung der positiven Parallaxe bestimmt werden, die angibt, ob die Punkte vor oder hinter der Kamera liegen. Die korrekte Lösung entspricht derjenigen, bei der die meisten Punkte vor der Kamera liegen. Das Ergebnis der Zerlegung ist die Rotation \( R \) und die Translation \( t \), die die Bewegung der Kamera zwischen den Bildern beschreiben. \cite{gao2021vSLAM}
 
 \begin{figure}
     \centering
@@ -381,13 +407,13 @@ Wichtig ist, dass die Zerlegung der Essential Matrix vier mögliche Lösungen li
     \caption{Zerlegung der Essential Matrix\label{fig:SVD}}\par
 \end{figure}
 
-Offensichtlich können wir allein von der Bewegung der Kamera zwischen zwei Bildern nicht direkt auf die Position der Kamera im Weltkoordinatensystem schließen. Dazu wird meistens bei der Initialisierung des AR-Systems das Weltkoordinatensystem auf die Position der Kamera im ersten Bild gelegt. Die Position der Kamera im Weltkoordinatensystem wird dann durch die Bewegung der Kamera zwischen den Bildern bestimmt. (\cite{gao2021vSLAM})
+Offensichtlich können wir allein von der Bewegung der Kamera zwischen zwei Bildern nicht direkt auf die Position der Kamera im Weltkoordinatensystem schließen. Dazu wird meistens bei der Initialisierung des AR-Systems das Weltkoordinatensystem auf die Position der Kamera im ersten Bild gelegt. Die Position der Kamera im Weltkoordinatensystem wird dann durch die Bewegung der Kamera zwischen den Bildern bestimmt. \cite{gao2021vSLAM}
 
 \subsection{Triangulation}
 
 Bei der Triangulation werden die kartesischen Koordinaten eines Feature-Punktes in zwei oder mehr Bildern im Raum bestimmt. Dies führt zur Extraktion von Tiefeninformationen aus den vohanden Bildern und ermöglicht die Rekonstruktion der dreidimensionalen Struktur der Szene. 
 
-Die Abbildung \ref{fig:Triangulation} zeigt die Triangulation eines Punktes im dreidimensionalen Raum anhand von zwei Bildern. Die Kamerapositionen \( O_1 \) und \( O_2 \) sowie die korrespondierenden Punkte \( p_1 \) und \( p_2 \) sind dargestellt. Der Punkt \( P \) entspricht dem gesuchten Feature-Punkt im Raum. In einer idealen Welt entspricht \( P \) dem Schnittpunkt der Strahlen \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \). Aufgrund von Rauschen und Ungenauigkeiten in den Bildern ist die exakte Bestimmung des Punktes durch die Berechnung des Schnittpunktes meist nicht möglich. Stattdessen wird der gesuchte Punkt durch die Minimierung der quadratischen Abstände zwischen den Strahlen und dem Punkt berechnet. Der gesuchte Punkt \( P \) ist derjenige, der sich im minimalen Abstand zu allen Strahlen befindet (siehe Abbildung \ref{fig:Triangulation}). (\cite{gao2021vSLAM})
+Die Abbildung \ref{fig:Triangulation} zeigt die Triangulation eines Punktes im dreidimensionalen Raum anhand von zwei Bildern. Die Kamerapositionen \( O_1 \) und \( O_2 \) sowie die korrespondierenden Punkte \( p_1 \) und \( p_2 \) sind dargestellt. Der Punkt \( P \) entspricht dem gesuchten Feature-Punkt im Raum. In einer idealen Welt entspricht \( P \) dem Schnittpunkt der Strahlen \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \). Aufgrund von Rauschen und Ungenauigkeiten in den Bildern ist die exakte Bestimmung des Punktes durch die Berechnung des Schnittpunktes meist nicht möglich. Stattdessen wird der gesuchte Punkt durch die Minimierung der quadratischen Abstände zwischen den Strahlen und dem Punkt berechnet. Der gesuchte Punkt \( P \) ist derjenige, der sich im minimalen Abstand zu allen Strahlen befindet (siehe Abbildung \ref{fig:Triangulation}). \cite{gao2021vSLAM}
 
 \begin{figure}
     \centering
@@ -407,7 +433,7 @@ Das Ergebnis der Triangulation verschiedener Feature-Punkte über mehrere Bilder
 
 Aufgrund der Ungenauigkeiten in den Bildern und der dadurch entstehenden ungenauen Schätzungen der Kamerapositionen und Feature-Punkte im Weltkoordinatensystem ist es notwendig, die gesamte Szene zu optimieren, um eine konsistente und präzise Rekonstruktion zu erhalten. 
 
-In SLAM-Systemen (Simultaneous Localization and Mapping) ist das Bundle Adjustment (BA) eine zentrale Methode zur gleichzeitigen Optimierung von Kameraposen und 3D-Punktwolken. Ziel des Verfahrens ist es, den sogenannten Reprojektionsfehler zu minimieren, also die Differenz zwischen den in den Bildern gemessenen 2D-Punkten und den Projektionen der rekonstruierbaren 3D-Punkte zu reduzieren. (\cite{gao2021vSLAM})
+In SLAM-Systemen (Simultaneous Localization and Mapping) ist das Bundle Adjustment (BA) eine zentrale Methode zur gleichzeitigen Optimierung von Kameraposen und 3D-Punktwolken. Ziel des Verfahrens ist es, den sogenannten Reprojektionsfehler zu minimieren, also die Differenz zwischen den in den Bildern gemessenen 2D-Punkten und den Projektionen der rekonstruierbaren 3D-Punkte zu reduzieren. \cite{gao2021vSLAM}
 
 \begin{figure}
     \centering
@@ -451,32 +477,32 @@ Wobei \( z \) der beobachtete 2D-Punkte und \( h(T,p) \) der reprojizierte 2D-Pu
     \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{n} \| e_{ij} \|^2 = \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{n} \| z_{ij} - h(T_i, p_j) \|^2
 \end{equation}
 
-Bei dieser Summe handelt es sich um ein nichtlineares Optimierungsproblem, das mithilfe von numerischen Optimierungsmethoden gelöst werden kann. Ein bekanntes Verfahren zur Lösung des Bundle Adjustment ist das Levenberg-Marquardt-Verfahren, das eine Kombination aus dem Gauss-Newton-Verfahren und der Methode der kleinsten Quadrate darstellt. (\cite{gao2021vSLAM})
+Bei dieser Summe handelt es sich um ein nichtlineares Optimierungsproblem, das mithilfe von numerischen Optimierungsmethoden gelöst werden kann. Ein bekanntes Verfahren zur Lösung des Bundle Adjustment ist das Levenberg-Marquardt-Verfahren, das eine Kombination aus dem Gauss-Newton-Verfahren und der Methode der kleinsten Quadrate darstellt. \cite{gao2021vSLAM}
 
 \subsection{Loop Closure}
 
-Während das Bundle Adjustment die Optimierung der Kamerapositionen und Feature-Punkte über aufeinanderfolgende Bilder ermöglicht, ist es nicht in der Lage, Fehler zu korrigieren, die durch wiederkehrende Strukturen oder Schleifen in der Szene entstehen. Diese Fehler entstehen durch die Akkumulation von Ungenauigkeiten in der Schätzung der Kamerapositionen und Feature-Punkte über mehrere Bilder hinweg. (\cite{gao2021vSLAM, cadena2016slam})
+Während das Bundle Adjustment die Optimierung der Kamerapositionen und Feature-Punkte über aufeinanderfolgende Bilder ermöglicht, ist es nicht in der Lage, Fehler zu korrigieren, die durch wiederkehrende Strukturen oder Schleifen in der Szene entstehen. Diese Fehler entstehen durch die Akkumulation von Ungenauigkeiten in der Schätzung der Kamerapositionen und Feature-Punkte über mehrere Bilder hinweg. \cite{gao2021vSLAM, cadena2016slam}
 
-Die Loop Closure Detection ist ein Verfahren zur Erkennung und Korrektur von Fehlern in der Kamerapositionsschätzung. Dabei werden Schleifen in der Szene erkannt und die Kamerapositionen entsprechend korrigiert. Anstatt die einzelnen Deskriptoren der Feature-Punkte mehrerer Bilder zu vergleichen, werden die Bilder als Ganzes betrachtet und anhand ihrer visuellen Ähnlichkeit miteinander verglichen. (\cite{gao2021vSLAM, cadena2016slam})
+Die Loop Closure Detection ist ein Verfahren zur Erkennung und Korrektur von Fehlern in der Kamerapositionsschätzung. Dabei werden Schleifen in der Szene erkannt und die Kamerapositionen entsprechend korrigiert. Anstatt die einzelnen Deskriptoren der Feature-Punkte mehrerer Bilder zu vergleichen, werden die Bilder als Ganzes betrachtet und anhand ihrer visuellen Ähnlichkeit miteinander verglichen. \cite{gao2021vSLAM, cadena2016slam}
 
-Dazu wird das sogenannte Bag-of-Words-Modell eingesetzt. Dieses Modell bestimmt die Ähnlichkeit von Bildern anhand von visuellen Wörtern. Ein Wort kann dabei als eine Menge benachbarter Merkmalspunkte angesehen werden. Ein Wörterbuch mit fixer Größe repräsentiert die häufigsten Wörter in den Bildern. Anschließend werden die Bilder mithilfe des Wörterbuches in eine Vektorform kodiert. Ein Bild \( A \) könnte somit wie folgt kodiert werden (\cite{gao2021vSLAM, yoon2024BoW}): 
+Dazu wird das sogenannte Bag-of-Words-Modell eingesetzt. Dieses Modell bestimmt die Ähnlichkeit von Bildern anhand von visuellen Wörtern. Ein Wort kann dabei als eine Menge benachbarter Merkmalspunkte angesehen werden. Ein Wörterbuch mit fixer Größe repräsentiert die häufigsten Wörter in den Bildern. Anschließend werden die Bilder mithilfe des Wörterbuches in eine Vektorform kodiert. Ein Bild \( A \) könnte somit wie folgt kodiert werden \cite{gao2021vSLAM, yoon2024BoW}: 
 \begin{equation}
     A = [1, 1, 0]^T
 \end{equation}
 
-Wobei die Länge des Vektoren der Anzahl der Wörter im Wörterbuch entrspricht und der Vektor das Vorhandensein der visuellen Wörter \( w_1 \) und \( w_2 \) und die Abwesenheit von \( w_3 \) in einem Bild repräsentiert. Eine andere Möglichkeit ist die Kodierung der Häufigkeiten der visuellen Wörter in einem Bild (\cite{gao2021vSLAM}):
+Wobei die Länge des Vektoren der Anzahl der Wörter im Wörterbuch entrspricht und der Vektor das Vorhandensein der visuellen Wörter \( w_1 \) und \( w_2 \) und die Abwesenheit von \( w_3 \) in einem Bild repräsentiert. Eine andere Möglichkeit ist die Kodierung der Häufigkeiten der visuellen Wörter in einem Bild \cite{gao2021vSLAM}:
 \begin{equation}
     B = [2, 1, 0]^T
 \end{equation}
 
-Hier repräsentiert der Vektor \( B \) wie oft die visuellen Wörter \( w_1 \), \( w_2 \), \( w_3 \) in einem Bild vorkommen. Die Ähnlichkeit von Bildern kann dann mithilfe von Distanzmaßen, wie dem euklidischen Abstand, wie folgt berechnet werden(\cite{gao2021vSLAM}):
+Hier repräsentiert der Vektor \( B \) wie oft die visuellen Wörter \( w_1 \), \( w_2 \), \( w_3 \) in einem Bild vorkommen. Die Ähnlichkeit von Bildern kann dann mithilfe von Distanzmaßen, wie dem euklidischen Abstand, wie folgt berechnet werden \cite{gao2021vSLAM}:
 \begin{equation}
     s(\mathbf{A}, \mathbf{B}) = \|\mathbf{A} - \mathbf{B}\|
 \end{equation}
 
-Die Distanz \( s \) kann als Maß für die Ähnlichkeit (Score) der Bilder interpretiert werden. Ein Score von 0 bedeutet, dass die Bilder identisch sind, während ein hoher Score auf eine geringe Ähnlichkeit hinweist. Abhängig von einem Schwellenwert können somit mögliche Schleifen in der Szene erkannt. (\cite{gao2021vSLAM})
+Die Distanz \( s \) kann als Maß für die Ähnlichkeit (Score) der Bilder interpretiert werden. Ein Score von 0 bedeutet, dass die Bilder identisch sind, während ein hoher Score auf eine geringe Ähnlichkeit hinweist. Abhängig von einem Schwellenwert können somit mögliche Schleifen in der Szene erkannt. \cite{gao2021vSLAM}
 
-Eine weitaus elegantere Lösung der Loop Closure Detection ist die Bestimmung eines Wörtebuches mithilfe eines k-d-Baums (siehe Abbildung \ref{fig:Dictionary}). Dieser Baum weist eine Tiefe von \( d \) auf und besitzt \( k \) Verzweigungen am Wurzelknoten. Mithilfe des k-Means Clustering wird das Wörterbuch erstellt, indem die Merkmalspunkte der betrachteten Bilder in \( k \) Cluster unterteilt werden. Diese Cluster entsprechen der ersten Ebene des k-d-Baums. Anschließend werden die Cluster in weitere Cluster unterteilt, bis die gewünschte Tiefe \( d \) erreicht ist. Die Blätter des Baumes entsprechen den visuellen Wörtern im Wörterbuch. (\cite{gao2021vSLAM})
+Eine weitaus elegantere Lösung der Loop Closure Detection ist die Bestimmung eines Wörtebuches mithilfe eines k-d-Baums (siehe Abbildung \ref{fig:Dictionary}). Dieser Baum weist eine Tiefe von \( d \) auf und besitzt \( k \) Verzweigungen am Wurzelknoten. Mithilfe des k-Means Clustering wird das Wörterbuch erstellt, indem die Merkmalspunkte der betrachteten Bilder in \( k \) Cluster unterteilt werden. Diese Cluster entsprechen der ersten Ebene des k-d-Baums. Anschließend werden die Cluster in weitere Cluster unterteilt, bis die gewünschte Tiefe \( d \) erreicht ist. Die Blätter des Baumes entsprechen den visuellen Wörtern im Wörterbuch. \cite{gao2021vSLAM}
 
 \begin{figure}
     \centering
@@ -488,66 +514,58 @@ Eine weitaus elegantere Lösung der Loop Closure Detection ist die Bestimmung ei
     Clustering ist ein Verfahren des unüberwachten, maschinellen Lernens, bei dem ähnliche Objekte in Gruppen (Cluster) zusammengefasst werden. Ziel ist es, Muster oder Strukturen in unklassifizierten Daten zu erkennen. \cite{wikipedia2025clusteranalyse}
 \end{tcolorbox}
 
-Das Clustering wird meistens im Vorfeld mithilfe von großen Datensätzen durchgeführt, um eine möglichst große Varianz der visuellen Wörter abzudecken. Anschließend werden während des SLAM-Prozesses die Deskriptoren der Merkmalspunkte der Bilder anhand des Wörterbuches kodiert. Die Kombination von visuellen Wörter in einem Bild wird als Satz bezeichnet. (\cite{gao2021vSLAM})
+Das Clustering wird meistens im Vorfeld mithilfe von großen Datensätzen durchgeführt, um eine möglichst große Varianz der visuellen Wörter abzudecken. Anschließend werden während des SLAM-Prozesses die Deskriptoren der Merkmalspunkte der Bilder anhand des Wörterbuches kodiert. Die Kombination von visuellen Wörter in einem Bild wird als Satz bezeichnet. \cite{gao2021vSLAM}
 
-Häufig wird eine Gewichtung der visuellen Wörter vorgenommen, um die Relevanz der Wörter in einem Bild zu berücksichtigen. Die Gewichtung kann beispielsweise durch die Häufigkeit des Auftretens eines Wortes in einem Bild oder durch die Inverse Document Frequency (IDF) bestimmt werden. Die IDF gibt an, wie selten ein Wort in einem Korpus vorkommt und wird wie folgt berechnet (\cite{gao2021vSLAM}):
+Häufig wird eine Gewichtung der visuellen Wörter vorgenommen, um die Relevanz der Wörter in einem Bild zu berücksichtigen. Die Gewichtung kann beispielsweise durch die Häufigkeit des Auftretens eines Wortes in einem Bild oder durch die Inverse Document Frequency (IDF) bestimmt werden. Die IDF gibt an, wie selten ein Wort in einem Korpus vorkommt und wird wie folgt berechnet \cite{gao2021vSLAM}:
 \begin{equation}
     \text{IDF}(w) = \log \left( \frac{N}{n_w} \right)
 \end{equation}
 
-Wobei \( N \) die Anzahl der Dokumente im Korpus und \( n_w \) die Anzahl der Dokumente, die das Wort \( w \) enthalten, sind. Die Gewichtung eines Wortes \( w \) in einem Dokument \( d \) kann dann wie folgt berechnet werden (\cite{gao2021vSLAM}):
+Wobei \( N \) die Anzahl der Dokumente im Korpus und \( n_w \) die Anzahl der Dokumente, die das Wort \( w \) enthalten, sind. Die Gewichtung eines Wortes \( w \) in einem Dokument \( d \) kann dann wie folgt berechnet werden \cite{gao2021vSLAM}:
 \begin{equation}
     \text{TF-IDF}(w, d) = \text{TF}(w, d) \times \text{IDF}(w)
 \end{equation}
 
-Das Ergebnis der vorgestellten Verfahren ist eine effiziente und robuste Methode zur Erkennung von Schleifen in der Szene. Die Kamera- und Feature-Punktschätzungen können dann entsprechend angepasst werden, um den akkumulierten Fehler zu eliminieren und eine konsistente Rekonstruktion der Szene zu gewährleisten. (\cite{gao2021vSLAM})
+Das Ergebnis der vorgestellten Verfahren ist eine effiziente und robuste Methode zur Erkennung von Schleifen in der Szene. Die Kamera- und Feature-Punktschätzungen können dann entsprechend angepasst werden, um den akkumulierten Fehler zu eliminieren und eine konsistente Rekonstruktion der Szene zu gewährleisten. \cite{gao2021vSLAM}
 
 \section{Scene Understanding} \label{sec:SceneUnderstanding}
 
-Die Scene Understanding bezeichnet die Fähigkeit eines Systems, die Umgebung zu interpretieren und zu verstehen. Ein wichtiger Bestandteil des Scene Understanding des, in dieser Arbeit implementierten, Prototypen ist die semantische Segmentierung, bei der die Pixel eines Bildes in verschiedene Klassen eingeteilt werden. Dadurch lassen sich einzelne Elemente in der Szene, wie Wände, Decken oder Möbel, identifizieren und voneinander unterscheiden. Die semantische Segmentierung ist ein wichtiger Schritt in der Augmented Reality, da sie die Grundlage für die Interaktion zwischen virtuellen und realen Objekten bildet. (\cite{szeliski2022computerVision})
+Die Scene Understanding bezeichnet die Fähigkeit eines Systems, die Umgebung zu interpretieren und zu verstehen. Ein wichtiger Bestandteil des Scene Understanding des, in dieser Arbeit implementierten, Prototypen ist die semantische Segmentierung, bei der die Pixel eines Bildes in verschiedene Klassen eingeteilt werden. Dadurch lassen sich einzelne Elemente in der Szene, wie Wände, Decken oder Möbel, identifizieren und voneinander unterscheiden. Die semantische Segmentierung ist ein wichtiger Schritt in der Augmented Reality, da sie die Grundlage für die Interaktion zwischen virtuellen und realen Objekten bildet. \cite{szeliski2022computerVision}
 
-In der Vergangenheit wurden für die semantische Segmentierung vor allem klassische Bildverarbeitungstechniken, wie die Histogramm-basierte Segmentierung oder die Regionen-basierte Segmentierung, verwendet. Diese Techniken haben jedoch ihre Grenzen, insbesondere bei der Erkennung komplexer Strukturen oder bei der Unterscheidung ähnlicher Objekte. (\cite{szeliski2022computerVision})
+In der Vergangenheit wurden für die semantische Segmentierung vor allem klassische Bildverarbeitungstechniken, wie die Histogramm-basierte Segmentierung oder die Regionen-basierte Segmentierung, verwendet. Diese Techniken haben jedoch ihre Grenzen, insbesondere bei der Erkennung komplexer Strukturen oder bei der Unterscheidung ähnlicher Objekte. \cite{szeliski2022computerVision}
 
-In den letzten Jahren haben sich Deep-Learning-Modelle, insbesondere Convolutional Neural Networks (CNNs), als effektive Methode für die semantische Segmentierung etabliert. CNNs sind in der Lage, komplexe Muster in den Bildern zu erkennen und die Pixel in verschiedene Klassen zu segmentieren. Ein bekanntes CNN-Modell für die semantische Segmentierung ist die Fully Convolutional Nerual Network (FCNN) Architektur, die speziell für die Segmentierung von Bildern entwickelt wurde. (\cite{long2014fcnn})
+In den letzten Jahren haben sich Deep-Learning-Modelle, insbesondere Convolutional Neural Networks (CNNs), als effektive Methode für die semantische Segmentierung etabliert. CNNs sind in der Lage, komplexe Muster in den Bildern zu erkennen und die Pixel in verschiedene Klassen zu segmentieren. Ein bekanntes CNN-Modell für die semantische Segmentierung ist die Fully Convolutional Nerual Network (FCNN) Architektur, die speziell für die Segmentierung von Bildern entwickelt wurde. \cite{long2014fcnn}
 
-Die FCNN-Architektur besteht aus mehreren Convolutional-Schichten (siehe Abbildung \ref{fig:FCNN}), die die Merkmale der Bilder extrahieren und die Pixel in verschiedene Klassen segmentieren. Die Architektur umfasst sowohl die Kodierung (Encoding) als auch die Dekodierung (Decoding) der Bilder. In der Kodierung werden die Merkmale der Bilder extrahiert und in einer kompakten Darstellung kodiert. In der Dekodierung werden die Merkmale wieder in die ursprüngliche Bildgröße dekodiert und die Pixel in verschiedene Klassen segmentiert. (\cite{long2014fcnn})
+Die FCNN-Architektur besteht aus mehreren Convolutional-Schichten (siehe Abbildung \ref{fig:FCNN}), die die Merkmale der Bilder extrahieren und die Pixel in verschiedene Klassen segmentieren. Die Architektur umfasst sowohl die Kodierung (Encoding) als auch die Dekodierung (Decoding) der Bilder. In der Kodierung werden die Merkmale der Bilder extrahiert und in einer kompakten Darstellung kodiert. In der Dekodierung werden die Merkmale wieder in die ursprüngliche Bildgröße dekodiert und die Pixel in verschiedene Klassen segmentiert. \cite{long2014fcnn}
 
 \begin{figure}
     \centering
     \includegraphics[ width=.5\textwidth ]{FCNN}
-    \caption{Darstellung der FCNN-Architektur (\cite{long2014fcnn})\label{fig:FCNN}}\par
+    \caption{Darstellung der FCNN-Architektur \cite{long2014fcnn}\label{fig:FCNN}}\par
 \end{figure}
 
-Auf eine detaillierte Beschreibung der Funktionsweise von CNNs und FCNs wird aufgrund des gesetzten Rahmens dieser Arbeit verzichtet. Stattdessen wird auf weiterführende Literatur verwiesen. (\cite{long2014fcnn})
+Auf eine detaillierte Beschreibung der Funktionsweise von CNNs und FCNs wird aufgrund des gesetzten Rahmens dieser Arbeit verzichtet. Stattdessen wird auf weiterführende Literatur verwiesen. \cite{long2014fcnn}
 
-\section{LiDAR-inertial-visual (LIV) fusion}
+\section{LiDAR-inertial-visual (LIV) fusion} \label{sec:LIV}
 
-Einige Augmented Reality Frameworks ermöglichen die Verwendung von LiDAR-Sensoren, sofern die mobilen Geräte mit dieser Art von Sensor ausgestattet sind. Wie in Kapitel \ref{LiDAR} beschrieben funktionieren diese Sensoren mithilfe von Lasern die Punkte im Raum mit den Abständen zum Gerät liefern. (\cite{appledevdoc, arcoredevdoc})
+Einige Augmented Reality Frameworks ermöglichen die Verwendung von LiDAR-Sensoren, sofern die mobilen Geräte mit dieser Art von Sensor ausgestattet sind. Wie in Kapitel \ref{LiDAR} beschrieben funktionieren diese Sensoren mithilfe von Lasern die Punkte im Raum mit den Abständen zum Gerät liefern. \cite{appledevdoc, arcoredevdoc}
 
-Da reines LiDAR-SLAM aber nicht in der Lage ist, die visuellen Informationen der Kamera zu nutzen, um die Umgebung zu interpretieren, wird häufig eine Fusion von LiDAR- und Kameradaten durchgeführt. Zusätzlich dazu können auch die IMU-Daten (Inertial Measurement Unit) genutzt werden, um die Bewegung des Gerätes zu schätzen. Die Fusion von LiDAR-, Kamera- und IMU-Daten wird als LiDAR-inertial-visual (LIV) fusion bezeichnet. (\cite{zhang2024lidarslam})
+Da reines LiDAR-SLAM aber nicht in der Lage ist, die visuellen Informationen der Kamera zu nutzen, um die Umgebung zu interpretieren, wird häufig eine Fusion von LiDAR- und Kameradaten durchgeführt. Zusätzlich dazu können auch die IMU-Daten (Inertial Measurement Unit) genutzt werden, um die Bewegung des Gerätes zu schätzen. Die Fusion von LiDAR-, Kamera- und IMU-Daten wird als LiDAR-inertial-visual (LIV) fusion bezeichnet. \cite{zhang2024lidarslam}
 
-Faktisch ergänzen sich die verschiedenen Sensoren in ihren Stärken und Schwächen. Während LiDAR-Sensoren präzise Distanzinformationen liefern, sind sie anfällig für Rauschen und können Schwierigkeiten bei der Erfassung von Texturen oder Farben haben. Kamera-Sensoren hingegen liefern detaillierte visuelle Informationen, sind jedoch anfällig für schlechte Lichtverhältnisse oder schnelle Bewegungen. IMU-Sensoren können die Bewegung des Gerätes schätzen, sind jedoch anfällig für Driftfehler. Somit wird eine weitaus präzisere und robustere Rekonstruktion der Szene als beim reinen Visual SLAM ermöglicht. (\cite{zhang2024lidarslam})
+Faktisch ergänzen sich die verschiedenen Sensoren in ihren Stärken und Schwächen. Während LiDAR-Sensoren präzise Distanzinformationen liefern, sind sie anfällig für Rauschen und können Schwierigkeiten bei der Erfassung von Texturen oder Farben haben. Kamera-Sensoren hingegen liefern detaillierte visuelle Informationen, sind jedoch anfällig für schlechte Lichtverhältnisse oder schnelle Bewegungen. IMU-Sensoren können die Bewegung des Gerätes schätzen, sind jedoch anfällig für Driftfehler. Somit wird eine weitaus präzisere und robustere Rekonstruktion der Szene als beim reinen Visual SLAM ermöglicht. \cite{zhang2024lidarslam}
 
-Bei der LIV-Fusion gibt es zwei unterschiedliche Ansätze: loosely coupled und tightly coupled. Beim loosely coupled Ansatz werden die Daten der verschiedenen Sensoren unabhängig voneinander verarbeitet und anschließend fusioniert. Beim tightly coupled Ansatz hingegen werden die Daten der verschiedenen Sensoren direkt in einem gemeinsamen Optimierungsprozess verarbeitet. Der tightly coupled Ansatz ermöglicht eine präzisere und robustere Schätzung der Kameraposition und der 3D-Rekonstruktion, da die Daten der verschiedenen Sensoren direkt miteinander verknüpft werden. (\cite{zhang2024lidarslam})
+Bei der LIV-Fusion gibt es zwei unterschiedliche Ansätze: loosely coupled und tightly coupled. Beim loosely coupled Ansatz werden die Daten der verschiedenen Sensoren unabhängig voneinander verarbeitet und anschließend fusioniert. Beim tightly coupled Ansatz hingegen werden die Daten der verschiedenen Sensoren direkt in einem gemeinsamen Optimierungsprozess verarbeitet. Der tightly coupled Ansatz ermöglicht eine präzisere und robustere Schätzung der Kameraposition und der 3D-Rekonstruktion, da die Daten der verschiedenen Sensoren direkt miteinander verknüpft werden. \cite{zhang2024lidarslam}
 
 \begin{figure}
     \centering
     \includegraphics[ width=.8\textwidth ]{LIVSLAM}
-    \caption{Mögliche LIV-SLAM-Architekturen (\cite{zhang2024lidarslam})\label{fig:LIVSLAM}}\par
+    \caption{Mögliche LIV-SLAM-Architekturen \cite{zhang2024lidarslam}\label{fig:LIVSLAM}}\par
 \end{figure}
 
 Die Abbildung \ref{fig:LIVSLAM} zeigt drei verschiedene Architekturen für die Fusion von LiDAR-, IMU- und Bilddaten in einem SLAM-System mit unterschiedlichem Kopplungsgrad.
 
-Im ersten Fall (a) ist das System lose gekoppelt, wobei eine visuell-inertiale Odometrie (VIO) und eine LiDAR-Odometrie getrennt voneinander arbeiten. Die VIO kombiniert Bild- und IMU-Daten und liefert eine Bewegungsschätzung, die als Initialisierung für die LiDAR-Odometrie dient. Dadurch wird eine einfache Implementierung mit hoher Effizienz ermöglicht, jedoch ohne eine vollständige gemeinsame Optimierung aller Sensordaten. (\cite{zhang2024lidarslam})
+Im ersten Fall (a) ist das System lose gekoppelt, wobei eine visuell-inertiale Odometrie (VIO) und eine LiDAR-Odometrie getrennt voneinander arbeiten. Die VIO kombiniert Bild- und IMU-Daten und liefert eine Bewegungsschätzung, die als Initialisierung für die LiDAR-Odometrie dient. Dadurch wird eine einfache Implementierung mit hoher Effizienz ermöglicht, jedoch ohne eine vollständige gemeinsame Optimierung aller Sensordaten. \cite{zhang2024lidarslam}
 
-Im zweiten Fall (b) enthält das System zwei eng gekoppelte Module: eines für die VIO (Bild- und IMU-Daten) und eines für die LiDAR-Odometrie (LIO). Beide Module führen eine interne gemeinsame Optimierung ihrer jeweiligen Sensordaten durch, sind jedoch untereinander nur lose gekoppelt. Dies verbessert die Genauigkeit und Robustheit gegenüber reinen losen Kopplungen, ohne eine vollständig integrierte Optimierung aller Sensordaten zu erreichen. (\cite{zhang2024lidarslam})
+Im zweiten Fall (b) enthält das System zwei eng gekoppelte Module: eines für die VIO (Bild- und IMU-Daten) und eines für die LiDAR-Odometrie (LIO). Beide Module führen eine interne gemeinsame Optimierung ihrer jeweiligen Sensordaten durch, sind jedoch untereinander nur lose gekoppelt. Dies verbessert die Genauigkeit und Robustheit gegenüber reinen losen Kopplungen, ohne eine vollständig integrierte Optimierung aller Sensordaten zu erreichen. \cite{zhang2024lidarslam}
 
-Der dritte Fall (c) stellt ein vollständig eng gekoppeltes System dar, in dem alle Sensordaten – Bild, IMU und LiDAR – gemeinsam in einer einzigen Optimierung verarbeitet werden. Diese Methode bietet die höchste Genauigkeit und Robustheit, erfordert jedoch einen höheren Rechenaufwand und eine komplexere Implementierung. (\cite{zhang2024lidarslam})
-
-%\section{Technische Limitationen}
-
-%Viele der gängigen Algorithmen zur Feature-Erkennung und -Verfolgung, wie SIFT oder ORB, verlassen sich stark auf die visuelle Qualität der Eingabebilder. In Umgebungen mit schlechten Lichtverhältnissen (z. B. bei schwacher Beleuchtung, direkter Sonneneinstrahlung oder Nachtaufnahmen) wird die Fähigkeit der Algorithmen zur präzisen Merkmalserkennung und -verfolgung beeinträchtigt. Dies kann zu fehlerhaften Schätzungen der Kameraposition oder der 3D-Rekonstruktion führen.
-
-%Ein weiteres Problem tritt auf, wenn sich die Umgebung schnell verändert, etwa bei Bewegungen von Objekten, plötzlichen Änderungen der Szene oder in dynamischen Umgebungen. In solchen Fällen können Feature-Punkte in den Bildern verschwinden oder durch neue, nicht korrespondierende Punkte ersetzt werden, was die Stabilität der Berechnungen negativ beeinflusst.
-
-%Auch LiDAR-basierte Systeme sind von technischen Einschränkungen betroffen. Zum einen haben LiDAR-Sensoren eine begrenzte Reichweite, die oft auf wenige Meter beschränkt ist, wodurch sie nicht für alle Anwendungen geeignet sind, insbesondere bei großen Distanzen oder in weiten offenen Bereichen. Zudem sind LiDAR-Sensoren in der Regel teuer und daher nur vereinzelt in Smartphones verbaut.
+Der dritte Fall (c) stellt ein vollständig eng gekoppeltes System dar, in dem alle Sensordaten – Bild, IMU und LiDAR – gemeinsam in einer einzigen Optimierung verarbeitet werden. Diese Methode bietet die höchste Genauigkeit und Robustheit, erfordert jedoch einen höheren Rechenaufwand und eine komplexere Implementierung. \cite{zhang2024lidarslam}
