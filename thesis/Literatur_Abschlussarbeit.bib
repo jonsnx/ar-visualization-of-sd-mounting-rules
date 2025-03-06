@@ -136,14 +136,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 @misc{wikipedia2023polygons,
- editor = {Wikipedia},
+ author = {Wikipedia},
  title = {Polygonal modeling},
  url = {https://en.wikipedia.org/w/index.php?title=Polygonal_modeling&oldid=1185415049},
  urldate = {03.02.2025},
 }
 
 @misc{wikipedia2023mesh,
- editor = {Wikipedia},
+ author = {Wikipedia},
  title = {Polygon mesh},
  url = {https://en.wikipedia.org/wiki/Polygon_mesh},
  urldate = {04.03.2025},
@@ -263,6 +263,7 @@ Zhang's Method},
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 @misc{wikipedia2024dof,
+author = {Wikipedia},
  year = {2024},
  title = {Degrees of freedom (mechanics)},
  url = {https://en.wikipedia.org/w/index.php?title=Degrees_of_freedom_(mechanics)&oldid=1236488869},
@@ -274,6 +275,14 @@ Zhang's Method},
  title = {Was ist LiDAR?},
  url = {https://www.ibm.com/de-de/topics/lidar},
  urldate = {04.03.2025},
+}
+
+@misc{wikipedia2024tracking,
+author = {Wikipedia},
+ year = {2024},
+ title = {Tracking (Spurverfolgung)},
+ url = {https://de.wikipedia.org/wiki/Tracking_(Spurverfolgung)},
+ urldate = {05.03.2025},
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -304,7 +313,8 @@ Zhang's Method},
   number={6},
   pages={1309-1332},
   keywords={Graph theory;Simultaneous location and mapping;Service robots;Robustness;Localization;Factor graphs;localization;mapping;maximum a posteriori estimation;perception;robots;sensing;simultaneous localization and mapping (SLAM)},
-  doi={10.1109/TRO.2016.2624754}}
+  doi={10.1109/TRO.2016.2624754}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%Feature Detection/Matching%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -373,6 +383,24 @@ abstract="We propose to use binary strings as an efficient feature point descrip
 isbn="978-3-642-15561-1"
 }
 
+@misc{wikipedia2024moment,
+ author = {Wikipedia},
+ year = {2024},
+ title = {Moment (Bildverarbeitung)},
+ url = {https://de.wikipedia.org/wiki/Moment_(Bildverarbeitung)},
+ urldate = {05.03.2025},
+}
+
+@inproceedings{muja2009flann,
+  author    = {Marius Muja and David G. Lowe},
+  title     = {Fast Approximate Nearest Neighbors with Automatic Algorithm Configuration},
+  booktitle = {International Conference on Computer Vision Theory and Application 
+               VISSAPP'09)},
+  publisher = {INSTICC Press},
+  year      = {2009},
+  pages     = {331-340}
+}
+
 %%%%%%%%%%%%%%%%%%%%%%Pose Estimation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 @misc{stachniss2020FandEmatrix,
@@ -393,9 +421,77 @@ isbn="978-3-642-15561-1"
   number={1},
   pages={13-27},
   keywords={Motion estimation;Nonlinear equations;Image analysis;Image sequence analysis;Motion analysis;Image motion analysis;Cameras;Geometry;Singular value decomposition;Matrix decomposition;Dynamic scene analysis;image sequence analysis;motion estimation;motion stereo;optical flow},
-  doi={10.1109/TPAMI.1984.4767471}}
+  doi={10.1109/TPAMI.1984.4767471}
+}
+
+@article{hartley1997eightpoint,
+  author={Hartley, R.I.},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+  title={In defense of the eight-point algorithm}, 
+  year={1997},
+  volume={19},
+  number={6},
+  pages={580-593},
+  keywords={Iterative algorithms;Layout;Cameras;Equations;Image reconstruction;Algorithm design and analysis;Stereo vision;Computer vision;Least squares methods},
+  doi={10.1109/34.601246}
+}
 
 %%%%%%%%%%%%%%%%%%%%%Triangulation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@techreport{yang2010planeDetection,
+title = {Plane Detection in Point Cloud Data},
+abstract = {Plane detection is a prerequisite to a wide variety of vision tasks. RANdomSAmple Consensus (RANSAC) algorithm is widely used for plane detectionin point cloud data. Minimum description length (MDL) principle is used todeal with several competing hypothesis. This paper presents a new approachto the plane detection by integrating RANSAC and MDL. The method couldavoid detecting wrong planes due to the complex geometry of the 3D data.The paper tests the performance of proposed method on both synthetic andreal data.},
+author = {Yang, {Michael Ying} and Wolfgang Förstner},
+year = {2010},
+language = {Undefined},
+series = {IGG : Technical Report},
+publisher = {University of Bonn},
+pages = {1--16},
+type = {WorkingPaper},
+institution = {University of Bonn},
+}
+
+@misc{ajith2020ransac,
+ author = {Raj Ajith},
+ year = {2020},
+ title = {3D RANSAC Algorithm for Lidar PCD Segmentation},
+ url = {https://medium.com/@ajithraj_gangadharan/3d-ransac-algorithm-for-lidar-pcd-segmentation-315d2a51351},
+ urldate = {06.03.2025}
+}
+
+@inproceedings{kazhdan2006poisson,
+  abstract = {We show that surface reconstruction from oriented points can be cast as a spatial Poisson problem. This Poisson formulation considers all the points at once, without resorting to heuristic spatial partitioning or blending, and is therefore highly resilient to data noise. Unlike radial basis function schemes, our Poisson approach allows a hierarchy of locally supported basis functions, and therefore the solution reduces to a well conditioned sparse linear system. We describe a spatially adaptive multiscale algorithm whose time and space complexities are proportional to the size of the reconstructed model. Experimenting with publicly available scan data, we demonstrate reconstruction of surfaces with greater detail than previously achievable.},
+  acmid = {1281965},
+  added-at = {2018-11-13T02:38:38.000+0100},
+  address = {Aire-la-Ville, Switzerland, Switzerland},
+  author = {Kazhdan, Michael M. and Bolitho, Matthew and Hoppe, Hugues},
+  biburl = {https://www.bibsonomy.org/bibtex/2faa91f1a0d59361cc4e3cbdb41de6376/jbayardo},
+  booktitle = {Proceedings of the Fourth Eurographics Symposium on Geometry Processing},
+  description = {Poisson surface reconstruction},
+  editor = {Sheffer, Alla and Polthier, Konrad},
+  interhash = {a4b2fa4540bbf7906dc93e03f62aa4f1},
+  intrahash = {faa91f1a0d59361cc4e3cbdb41de6376},
+  isbn = {3-905673-36-3},
+  keywords = {3d-reconstruction fitting},
+  location = {Cagliari, Sardinia, Italy},
+  numpages = {10},
+  pages = {61-70},
+  publisher = {Eurographics Association},
+  series = {SGP '06},
+  timestamp = {2018-11-13T02:38:38.000+0100},
+  title = {Poisson Surface Reconstruction},
+  url = {http://dl.acm.org/citation.cfm?id=1281957.1281965},
+  volume = 256,
+  year = 2006
+}
+
+@misc{open3d2025pointcloud,
+  author = {open3d},
+  url = {https://www.open3d.org/docs/latest/tutorial/geometry/pointcloud.html},
+  title = {Point cloud},
+  urldate = {06.03.2025},
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%Bundle Adjustment%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

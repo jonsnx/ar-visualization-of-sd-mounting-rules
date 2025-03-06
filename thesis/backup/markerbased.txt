@@ -1,0 +1,37 @@
+
+\section{Markenbasiertes Tracking}\label{Markerbasiertes Tracking}
+
+Das markenbasierte Tracking nutzt spezielle Marker, die in der realen Welt platziert werden und als Referenzpunkte für die Positionierung virtueller Objekte dienen. Diese Marker ermöglichen die Bestimmung der extrinsischen Kameraparameter und weisen in der Regel ein eindeutiges Muster auf, das von der Kamera erkannt und verfolgt wird. Da die Dimensionen des Markers bekannt sind, kann seine Position und Orientierung im Raum präzise berechnet werden. Es gibt verschiedene Verfahren, die unterschiedliche Marker-Typen verwenden und jeweils eigene Methoden zur Positions- und Orientierungsbestimmung nutzen. \cite{doerner2022virtual}
+
+Vereinfacht dargestellt, funktioniert das markenbasierte Tracking wie folgt \cite{doerner2022virtual}:
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.5\textwidth ]{Marker}
+    \caption{Darstellung eines markenbasiertes Tracking \cite{doerner2022virtual} \label{fig:Marker}}\par
+\end{figure}
+
+Wie in Abbildung \ref{fig:Marker} dargestellt, wird die Kamera auf den Marker ausgerichtet, um ihn zu erfassen. Anhand der intrinsischen Kameraparameter und der bekannten Abmessungen des Markers lässt sich die Position und Orientierung des Kamerakoordinatensystems \( S \) relativ zum Marker bestimmen. Dadurch kann die Transformationsmatrix \( T_{cm} \) berechnet werden, mit der die Koordinaten des Markers aus dem Markerkoordinatensystem in das Kamerakoordinatensystem überführt werden. 
+
+Entsprechend der Abbildung \ref{fig:Marker} lässt sich die Transformation \( T_{cm} \) wie folgt definieren:
+\begin{equation}\label{eq:v_c}
+    v_c = T_{cm} * v_m
+\end{equation}
+
+Dabei bezeichnet \( v_c \) Koordinaten im Kamerakoordinatensystem, während \( v_m \) Koordinaten im Markerkoordinatensystem darstellen.  
+
+Die Koordinaten \( v_s \) im Bildkoordinatensystem \( C \) lassen sich unter Verwendung der intrinsischen Kameraparameter (siehe Kapitel \ref{Kalibrierung}) sowie der Koordinaten \( v_c \) im Kamerakoordinatensystem wie folgt ausdrücken:
+\begin{equation}
+    v_s = K * v_c
+\end{equation}
+
+Unter Verwendung der Gleichung \ref{eq:v_c} kann die Transformation \( T_{cm} \) in die Gleichung eingesetzt werden:
+\begin{equation}
+    v_s = K * T_{cm} * v_m
+\end{equation}
+
+Da sowohl \( v_s \) als auch \( v_m \) bekannt sind, also die Pixelkoordinaten des Markers und seine realen Abmessungen, lässt sich die Transformationsmatrix \( T_{cm} \) bestimmen. Diese entspricht der extrinsischen Kameramatrix \( [R|t] \), welche die Position und Orientierung der Kamera relativ zum Marker beschreibt. Die berechnete Transformation kann anschließend zur präzisen Platzierung virtueller Objekte genutzt werden.
+
+//TODO: Berechnung der Transformationsmatrix
+
+Das markenbasierte Tracking zeichnet sich durch hohe Präzision und Robustheit aus. Deshalb wird diese Methode häufig in Anwendungen eingesetzt, bei denen die exakte Position des darzustellenden Objekts im Vorfeld bekannt ist. Allerdings ist das markenbasierte Tracking auf die Verwendung von speziellen Markern beschränkt, was die Flexibilität und Anwendbarkeit in verschiedenen Szenarien einschränken kann. Daher werden zunehmend markerlose Tracking-Verfahren bevorzugt, die ohne spezielle Marker auskommen und die Kameraposition anhand von Bildinformationen schätzen. Diese Verfahren werden im folgenden Abschnitt erläutert. \cite{doerner2022virtual}
