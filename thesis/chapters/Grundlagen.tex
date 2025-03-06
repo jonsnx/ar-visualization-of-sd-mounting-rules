@@ -332,7 +332,7 @@ Nachdem die Feature-Punkte erkannt wurden, werden die Deskriptoren mithilfe des 
 
 Durch die Kombination der FAST-Feature-Detection und der BRIEF-Deskriptoren ermöglicht ORB eine schnelle und robuste Merkmalsextraktion. Die ORB-Features sind invariant gegenüber Rotationen und Skalierungen und eignen sich daher gut für das Feature-Matching. Aus diesem Grund wird ORB häufig in AR-Systemen eingesetzt, um Feature-Punkte zu erkennen und zu beschreiben. \cite{gao2021vSLAM, rublee2011orb}
 
-Neben klassischen Feature-Detection-Verfahren gewinnen Deep-Learning-Modelle zunehmend an Bedeutung für die Feature Detection. Besonders Convolutional Neural Networks (CNNs) und Transformer-Modelle liefern vielversprechende Ergebnisse. Ein Beispiel hierfür ist XFeat (Accelerated Features), ein optimiertes neuronales Netzwerk, das die Merkmalsextraktion beschleunigt. Auch OmniGlue, eine Kombination aus CNNs und Transformer-Modellen, setzt neue Maßstäbe in der robusten und anpassungsfähigen Feature-Matching-Strategie. Diese modernen Ansätze bieten oft eine höhere Genauigkeit und Stabilität, insbesondere in komplexen Szenen oder bei stark variierenden Lichtverhältnissen. \cite{ghosh2024fmNN}
+Neben klassischen Feature-Detection-Verfahren gewinnen Deep-Learning-Modelle zunehmend an Bedeutung für die Feature Detection. Besonders \emph{Convolutional Neural Networks} (CNNs) und Transformer-Modelle liefern vielversprechende Ergebnisse. Ein Beispiel hierfür ist \emph{XFeat} (Accelerated Features), ein optimiertes neuronales Netzwerk, das die Merkmalsextraktion beschleunigt. Auch \emph{OmniGlue}, eine Kombination aus CNNs und Transformer-Modellen, setzt neue Maßstäbe in der robusten und anpassungsfähigen Feature-Matching-Strategie. Diese modernen Ansätze bieten oft eine höhere Genauigkeit und Stabilität, insbesondere in komplexen Szenen oder bei stark variierenden Lichtverhältnissen. \cite{ghosh2024fmNN}
 
 \subsection{Feature Matching}
 
@@ -457,9 +457,9 @@ Durch die Erkennung von Flächen in der Punktwolke können die 3D-Modelle der Sz
 
 \subsection{Bundle Adjustment}
 
-Aufgrund der Ungenauigkeiten in den Bildern und der dadurch entstehenden ungenauen Schätzungen der Kamerapositionen und Feature-Punkte im Weltkoordinatensystem ist es notwendig, die gesamte Szene zu optimieren, um eine konsistente und präzise Rekonstruktion zu erhalten. 
+Bei der Rekonstruktion einer Szene treten zwangsläufig Ungenauigkeiten auf. Diese entstehen zum Beispiel durch Bildrauschen, Unsicherheiten bei der Schätzung der Kamerapositionen oder Fehlern bei der Triangulation. Um diese Fehler zu minimieren und eine präzisere Rekonstruktion zu erreichen, wird das \textit{Bundle Adjustment} (BA) eingesetzt. Dieses Verfahren optimiert die gesamte Szene, indem es die Kameraposen und die 3D-Feature-Punkte gleichzeitig anpasst. \cite{gao2021vSLAM}
 
-In SLAM-Systemen (Simultaneous Localization and Mapping) ist das Bundle Adjustment (BA) eine zentrale Methode zur gleichzeitigen Optimierung von Kameraposen und 3D-Punktwolken. Ziel des Verfahrens ist es, den sogenannten Reprojektionsfehler zu minimieren, also die Differenz zwischen den in den Bildern gemessenen 2D-Punkten und den Projektionen der rekonstruierbaren 3D-Punkte zu reduzieren. \cite{gao2021vSLAM}
+In SLAM-Systemen ist das Bundle Adjustment eine der wichtigsten Methoden zur globalen Optimierung. Ziel ist es, den sogenannten \textit{Reprojektionsfehler} zu minimieren. Dieser Fehler beschreibt die Differenz zwischen den erkannten Feature-Punkten und den reprojizierten Punkten auf der zweidimensionalen Bildebene. Die reprojizierten Punkte können durch die Projektion der triangulierten Feature-Punkte im Weltkoordinatensystem zurück auf die zweidimensionale Bildebene berechnet werden. \cite{gao2021vSLAM}
 
 \begin{figure}
     \centering
@@ -467,102 +467,103 @@ In SLAM-Systemen (Simultaneous Localization and Mapping) ist das Bundle Adjustme
     \caption{Beispiel einer Situation mit Reprojektionsfehler\label{fig:BA}}\par
 \end{figure}
 
-Dieser, in Abbildung \ref{fig:BA} dargestellte, Reprojektionsfehler tritt aufgrund der Ungenauigkeiten bei der Triangulation und der Schätzung der Kamerapositionen auf. Um diesen Fehler zu minimieren, wird zunächst der triangulierte Punkt im Weltkoordinatensystem zurück in das Kamerabild projiziert. Dazu werden sowohl die extrinsische Parameter als auch die intrinschen Parameter der Kamera (siehe Kapitel \ref{Kalibrierung}) wie folgt verwendet (\cite{gao2021vSLAM}): 
+Die Abbildung \ref{fig:BA} veranschaulicht den Reprojektionsfehler eines Feature-Punktes. Um diesen triangulierten Punkt zurück in die Bildebene zu projizieren, werden sowohl die extrinsischen als auch die intrinsischen Kameraparameter (siehe Kapitel \ref{Kalibrierung}) benötigt. Die Projektion erfolgt in mehreren Schritten \cite{gao2021vSLAM}:
+
+Zunächst wird der triangulierte Punkt \( P \) unter Berücksichtigung der extrinsischen Kameraparameter \( [R|t] \) in das Bildkoordinatensystem transformiert:
 \begin{equation}
     P' = Rp+t = [X', Y', Z']^T
 \end{equation}
 
 Anschließend wird der Punkt \( P' \) in die normalisierte Bildebene projiziert:
 \begin{equation}
-    P_c = [u_c, v_c, 1]^T = \frac{1}{Z'}[X', Y', Z']^T = [X'/Z', Y'/Z', 1]^T
+    P_b = [u_b, v_b, 1]^T = \frac{1}{Z'}[X', Y', Z']^T = [X'/Z', Y'/Z', 1]^T
 \end{equation}
 
-Nun können Verzeichnungen der Linse einbezogen werden:
+Unter Verwendung der Verzerrungsmodelle aus Kapitel \ref{Kalibrierung} können die korrigierten Koordinaten \( [u'_c, v'_c] \) des Punktes berechnet werden. Die Anwendung der intrinsischen Parameter liefert die Pixelkoordinaten des reprojizierten Punktes im Bild:
 \begin{equation}
     \begin{aligned}
-        u'_c &= u_c(1 + k_1r^2 + k_2r^4 + k_3r^6) \\
-        v'_c &= v_c(1 + k_1r^2 + k_2r^4 + k_3r^6)
+        u_c = Ku'_b = f_xu'_b + c_x \\
+        v_c = Kv'_b = f_yv'_b + c_y
     \end{aligned}
 \end{equation}
 
-Die Anwendung der intrinsischen Parameter liefert die Pixelkoordinaten des reprojizierten Punktes im Bild:
-\begin{equation}
-    \begin{aligned}
-        u &= f_xu'_c + c_x \\
-        v &= f_yv'_c + c_y
-    \end{aligned}
-\end{equation}
-
-Der Reprojektionsfehler kann nun wie folgt berechnet werden:
+Der Reprojektionsfehler ergibt sich aus der Differenz zwischen dem beobachteten Punkt \( z \) und dem berechneten reprojizierten Punkt \( h(T,p) \):
 \begin{equation}
     e = z - h(T,p)
 \end{equation}
 
-Wobei \( z \) der beobachtete 2D-Punkte und \( h(T,p) \) der reprojizierte 2D-Punkt ist. Der Reprojektionsfehler wird dann über alle Merkmale summiert:
+Somit kann nun eine ganzheitliche Fehlerfunktion formuliert werden, die die Summe der quadrierten Reprojektionsfehler über alle Feature-Punkte und Kamerapositionen darstellt \cite{gao2021vSLAM}:
 \begin{equation}
     \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{n} \| e_{ij} \|^2 = \frac{1}{2} \sum_{i=1}^{m} \sum_{j=1}^{n} \| z_{ij} - h(T_i, p_j) \|^2
 \end{equation}
 
-Bei dieser Summe handelt es sich um ein nichtlineares Optimierungsproblem, das mithilfe von numerischen Optimierungsmethoden gelöst werden kann. Ein bekanntes Verfahren zur Lösung des Bundle Adjustment ist das Levenberg-Marquardt-Verfahren, das eine Kombination aus dem Gauss-Newton-Verfahren und der Methode der kleinsten Quadrate darstellt. \cite{gao2021vSLAM}
+Bei dieser Summe handelt es sich um ein nichtlineares Optimierungsproblem, das mithilfe von numerischen Optimierungsmethoden gelöst werden kann. Ein bekanntes Verfahren zur Lösung des Bundle Adjustment ist das Levenberg-Marquardt-Verfahren, das eine Kombination aus dem Gauss-Newton-Verfahren und der Methode der kleinsten Quadrate darstellt. Dieses Verfahren versucht, die Fehlerfunktion iterativ zu minimieren, indem es die Parameter der Kamerapositionen und Feature-Punkte optimiert. \cite{gao2021vSLAM, levenberg2024minimization}
+
+Eine Optimierungsstrategie, die nur die Kameraposenschätzungen betrachtet, ist die sogenannte \emph{Pose Graph Optimization}. Die Abbildung \ref{fig:PoseGraph} verdeutlicht den Unterschied zwischen der Pose Graph Optimization und dem Bundle Adjustment. Während das Bundle Adjustment alle Feature-Punkte und Kamerapositionen in einem einzigen Bündel (,,Bundle'') optimiert, konzentriert sich die Pose Graph Optimization nur auf die Kamerapositionen. Dies ermöglicht eine schnellere und effizientere Optimierung, da die Feature-Punkte oft keine Optimierung benötigen. \cite{gao2021vSLAM}
+
+\begin{figure}
+    \centering
+    \includegraphics[ width=.8\textwidth ]{PoseGraphOptimization}
+    \caption{Bundle Adjustment vs. Pose Graph Optimization \cite{gao2021vSLAM}\label{fig:PoseGraph}}\par
+\end{figure}
 
 \subsection{Loop Closure}
 
-Während das Bundle Adjustment die Optimierung der Kamerapositionen und Feature-Punkte über aufeinanderfolgende Bilder ermöglicht, ist es nicht in der Lage, Fehler zu korrigieren, die durch wiederkehrende Strukturen oder Schleifen in der Szene entstehen. Diese Fehler entstehen durch die Akkumulation von Ungenauigkeiten in der Schätzung der Kamerapositionen und Feature-Punkte über mehrere Bilder hinweg. \cite{gao2021vSLAM, cadena2016slam}
+Während das Bundle Adjustment die Optimierung von Kamerapositionen und Feature-Punkte über aufeinanderfolgende Bilder hinweg ermöglicht, ist es nicht in der Lage, Fehler zu korrigieren, die durch wiederkehrende Strukturen oder Schleifen in der Szene entstehen. Solche Fehler entstehen durch die Akkumulation von Ungenauigkeiten in den Kamerapositionen und der Feature-Triangulation über längere Sequenzen hinweg. \cite{gao2021vSLAM, cadena2016slam}
 
-Die Loop Closure Detection ist ein Verfahren zur Erkennung und Korrektur von Fehlern in der Kamerapositionsschätzung. Dabei werden Schleifen in der Szene erkannt und die Kamerapositionen entsprechend korrigiert. Anstatt die einzelnen Deskriptoren der Feature-Punkte mehrerer Bilder zu vergleichen, werden die Bilder als Ganzes betrachtet und anhand ihrer visuellen Ähnlichkeit miteinander verglichen. \cite{gao2021vSLAM, cadena2016slam}
+Die \textit{Loop Closure Detection} dient dazu, diese Fehler zu erkennen und zu korrigieren. Sie identifiziert bereits besuchte Orte in der Szene und passt die Rekonstruktion der Umgebung sowie die Kamerapositionen entsprechend an. Anstatt einzelne Feature-Deskriptoren direkt zu vergleichen, wird häufig ein globaler Ansatz gewählt, der die Bilder als Ganzes betrachtet und anhand ihrer visuellen Ähnlichkeit bewertet. \cite{gao2021vSLAM, cadena2016slam}
 
-Dazu wird das sogenannte Bag-of-Words-Modell eingesetzt. Dieses Modell bestimmt die Ähnlichkeit von Bildern anhand von visuellen Wörtern. Ein Wort kann dabei als eine Menge benachbarter Merkmalspunkte angesehen werden. Ein Wörterbuch mit fixer Größe repräsentiert die häufigsten Wörter in den Bildern. Anschließend werden die Bilder mithilfe des Wörterbuches in eine Vektorform kodiert. Ein Bild \( A \) könnte somit wie folgt kodiert werden \cite{gao2021vSLAM, yoon2024BoW}: 
+Eine weit verbreitete Methode zur Erkennung von Schleifen ist das \emph{Bag-of-Words}-Modell (BoW). Dabei wird die Ähnlichkeit von Bildern durch sogenannte \emph{visuelle Wörter} beschrieben. Diese Wörter können als Gruppen benachbarter Merkmalspunkte angesehen werden. Ein Wörterbuch mit fixer Größe repräsentiert die häufigsten Wörter in einer Menge an Bildern. Jedes Bild wird dann anhand dieses Wörterbuchs in einen Merkmalsvektor umgewandelt. Ein Bild \( A \) könnte beispielsweise wie folgt kodiert werden \cite{gao2021vSLAM, yoon2024BoW}: 
 \begin{equation}
     A = [1, 1, 0]^T
 \end{equation}
 
-Wobei die Länge des Vektoren der Anzahl der Wörter im Wörterbuch entrspricht und der Vektor das Vorhandensein der visuellen Wörter \( w_1 \) und \( w_2 \) und die Abwesenheit von \( w_3 \) in einem Bild repräsentiert. Eine andere Möglichkeit ist die Kodierung der Häufigkeiten der visuellen Wörter in einem Bild \cite{gao2021vSLAM}:
+Hier entspricht die Länge des Vektors der Anzahl der Wörter im Wörterbuch. Die Einträge geben an, ob bestimmte visuelle Wörter im Bild vorhanden sind. Eine andere Möglichkeit ist die Kodierung der Häufigkeiten der visuellen Wörter in einem Bild \cite{gao2021vSLAM}:
 \begin{equation}
     B = [2, 1, 0]^T
 \end{equation}
 
-Hier repräsentiert der Vektor \( B \) wie oft die visuellen Wörter \( w_1 \), \( w_2 \), \( w_3 \) in einem Bild vorkommen. Die Ähnlichkeit von Bildern kann dann mithilfe von Distanzmaßen, wie dem euklidischen Abstand, wie folgt berechnet werden \cite{gao2021vSLAM}:
+Dieser Vektor \( B \) beschreibt, wie oft die visuellen Wörter \( w_1 \), \( w_2 \), \( w_3 \) in einem Bild vorkommen. Die Ähnlichkeit von Bildern kann dann mithilfe von Distanzmaßen, wie dem euklidischen Abstand, wie folgt berechnet werden \cite{gao2021vSLAM}:
 \begin{equation}
     s(\mathbf{A}, \mathbf{B}) = \|\mathbf{A} - \mathbf{B}\|
 \end{equation}
 
-Die Distanz \( s \) kann als Maß für die Ähnlichkeit (Score) der Bilder interpretiert werden. Ein Score von 0 bedeutet, dass die Bilder identisch sind, während ein hoher Score auf eine geringe Ähnlichkeit hinweist. Abhängig von einem Schwellenwert können somit mögliche Schleifen in der Szene erkannt. \cite{gao2021vSLAM}
+Die Distanz \( s \) kann als Maß für die Ähnlichkeit (\emph{Score}) der Bilder interpretiert werden. Ein Score von 0 bedeutet, dass die Bilder identisch sind, während ein hoher Score auf eine geringe Ähnlichkeit hinweist. Abhängig von einem Schwellenwert können somit mögliche Schleifen in der Szene erkannt werden. \cite{gao2021vSLAM}
 
-Eine weitaus elegantere Lösung der Loop Closure Detection ist die Bestimmung eines Wörtebuches mithilfe eines k-d-Baums (siehe Abbildung \ref{fig:Dictionary}). Dieser Baum weist eine Tiefe von \( d \) auf und besitzt \( k \) Verzweigungen am Wurzelknoten. Mithilfe des k-Means Clustering wird das Wörterbuch erstellt, indem die Merkmalspunkte der betrachteten Bilder in \( k \) Cluster unterteilt werden. Diese Cluster entsprechen der ersten Ebene des k-d-Baums. Anschließend werden die Cluster in weitere Cluster unterteilt, bis die gewünschte Tiefe \( d \) erreicht ist. Die Blätter des Baumes entsprechen den visuellen Wörtern im Wörterbuch. \cite{gao2021vSLAM}
+Um das visuelle Wörterbuch zu erstellen, werden die Merkmalspunkte der Bilder mithilfe des k-Means-Algorithmus in Cluster unterteilt und in einem k-d-Baum (siehe Abbildung \ref{fig:Dictionary}) organisiert. Diese Unterteilung wird so lange wiederholt, bis die gewünschte Tiefe des Baumes erreicht ist. Die Blätter des Baumes entsprechen den visuellen Wörtern im Wörterbuch. \cite{gao2021vSLAM}
+
+Der k-Mean-Algorithmus ist ein Verfahren, das die Merkmalspunkte in \( k \) Cluster unterteilt. Er funktioniert wie folgt \cite{teynor2024ml}:
+
+\begin{enumerate}
+    \item Initialisierung von k zufälligen Clusterzentren.
+    \item Zuweisung jedes Punktes zum nächstgelegenen Clusterzentrum.
+    \item Neuberechnung der Clusterzentren als Mittelwerte der zugehörigen Punkte.
+    \item Wiederholung der Schritte 2 und 3, bis die Clusterzentren konvergieren.
+\end{enumerate}
 
 \begin{figure}
     \centering
     \includegraphics[ width=.5\textwidth ]{Dictionary}
-    \caption{Aufbau eines Wörterbuches mithilfe eines k-d-Baumes\label{fig:Dictionary}}\par
+    \caption{Aufbau eines Wörterbuches mithilfe eines k-d-Baumes \cite{gao2021vSLAM}\label{fig:Dictionary}}\par
 \end{figure}
 
 \begin{tcolorbox}[colback=THAi-Blue!20!white, colframe=THAi-Blue]
-    Clustering ist ein Verfahren des unüberwachten, maschinellen Lernens, bei dem ähnliche Objekte in Gruppen (Cluster) zusammengefasst werden. Ziel ist es, Muster oder Strukturen in unklassifizierten Daten zu erkennen. \cite{wikipedia2025clusteranalyse}
+    Clustering ist ein Algorithmus des unüberwachten, maschinellen Lernens, bei dem ähnliche Objekte in Gruppen (Cluster) zusammengefasst werden. Ziel ist es, Muster oder Strukturen in unklassifizierten Daten zu erkennen. \cite{wikipedia2025clusteranalyse}
 \end{tcolorbox}
 
-Das Clustering wird meistens im Vorfeld mithilfe von großen Datensätzen durchgeführt, um eine möglichst große Varianz der visuellen Wörter abzudecken. Anschließend werden während des SLAM-Prozesses die Deskriptoren der Merkmalspunkte der Bilder anhand des Wörterbuches kodiert. Die Kombination von visuellen Wörter in einem Bild wird als Satz bezeichnet. \cite{gao2021vSLAM}
-
-Häufig wird eine Gewichtung der visuellen Wörter vorgenommen, um die Relevanz der Wörter in einem Bild zu berücksichtigen. Die Gewichtung kann beispielsweise durch die Häufigkeit des Auftretens eines Wortes in einem Bild oder durch die Inverse Document Frequency (IDF) bestimmt werden. Die IDF gibt an, wie selten ein Wort in einem Korpus vorkommt und wird wie folgt berechnet \cite{gao2021vSLAM}:
-\begin{equation}
-    \text{IDF}(w) = \log \left( \frac{N}{n_w} \right)
-\end{equation}
-
-Wobei \( N \) die Anzahl der Dokumente im Korpus und \( n_w \) die Anzahl der Dokumente, die das Wort \( w \) enthalten, sind. Die Gewichtung eines Wortes \( w \) in einem Dokument \( d \) kann dann wie folgt berechnet werden \cite{gao2021vSLAM}:
-\begin{equation}
-    \text{TF-IDF}(w, d) = \text{TF}(w, d) \times \text{IDF}(w)
-\end{equation}
-
-Das Ergebnis der vorgestellten Verfahren ist eine effiziente und robuste Methode zur Erkennung von Schleifen in der Szene. Die Kamera- und Feature-Punktschätzungen können dann entsprechend angepasst werden, um den akkumulierten Fehler zu eliminieren und eine konsistente Rekonstruktion der Szene zu gewährleisten. \cite{gao2021vSLAM}
+Das Wörterbuch kann entweder im Vorfeld mithilfe von großen Datensätzen trainiert werden oder während des SLAM-Prozesses inkrementell aufgebaut werden. \cite{ta2023loopClosure, khan2015ibuild, gao2021vSLAM}
 
 \section{Scene Understanding} \label{sec:SceneUnderstanding}
 
-Die Scene Understanding bezeichnet die Fähigkeit eines Systems, die Umgebung zu interpretieren und zu verstehen. Ein wichtiger Bestandteil des Scene Understanding des, in dieser Arbeit implementierten, Prototypen ist die semantische Segmentierung, bei der die Pixel eines Bildes in verschiedene Klassen eingeteilt werden. Dadurch lassen sich einzelne Elemente in der Szene, wie Wände, Decken oder Möbel, identifizieren und voneinander unterscheiden. Die semantische Segmentierung ist ein wichtiger Schritt in der Augmented Reality, da sie die Grundlage für die Interaktion zwischen virtuellen und realen Objekten bildet. \cite{szeliski2022computerVision}
+Scene Understanding bezeichnet die Fähigkeit eines Systems, die Umgebung zu interpretieren und zu verstehen. Es existiert eine Vielzahl von Techniken und Methoden, um die Szene zu analysieren. Dazu zählen zum Beispiel die Objekterkennung, die Gesichtserkennung oder die \emph{semantische Segmentierung}. \cite{szeliski2022computerVision}
 
-In der Vergangenheit wurden für die semantische Segmentierung vor allem klassische Bildverarbeitungstechniken, wie die Histogramm-basierte Segmentierung oder die Regionen-basierte Segmentierung, verwendet. Diese Techniken haben jedoch ihre Grenzen, insbesondere bei der Erkennung komplexer Strukturen oder bei der Unterscheidung ähnlicher Objekte. \cite{szeliski2022computerVision}
+Die semantische Segmentierung, ermöglicht es, die Pixel eines Bildes in verschiedene Klassen, wie beispielsweise Wände, Decken oder Möbel, zu unterteilen. Dadurch lassen sich einzelne Elemente der Szene identifizieren und voneinander unterscheiden. Besonders in der Augmented Reality spielt die semantische Segmentierung eine entscheidende Rolle, da sie die Grundlage für die Interaktion zwischen virtuellen und realen Objekten bildet. \cite{szeliski2022computerVision, appledevdoc, arcoredevdoc}
 
-In den letzten Jahren haben sich Deep-Learning-Modelle, insbesondere Convolutional Neural Networks (CNNs), als effektive Methode für die semantische Segmentierung etabliert. CNNs sind in der Lage, komplexe Muster in den Bildern zu erkennen und die Pixel in verschiedene Klassen zu segmentieren. Ein bekanntes CNN-Modell für die semantische Segmentierung ist die Fully Convolutional Nerual Network (FCNN) Architektur, die speziell für die Segmentierung von Bildern entwickelt wurde. \cite{long2014fcnn}
+Frühere Verfahren zur semantischen Segmentierung basierten auf klassischen Bildverarbeitungstechniken wie der Histogramm-basierten oder der Regionen-basierten Segmentierung. Diese Methoden analysieren Farbverteilungen oder Gruppierungen von benachbarten Pixeln mit ähnlichen Eigenschaften, um verschiedene Bereiche im Bild zu identifizieren. Allerdings stoßen diese Techniken an ihre Grenzen, insbesondere bei der Erkennung komplexer Strukturen oder der Unterscheidung visuell ähnlicher Objekte. \cite{szeliski2022computerVision}
 
-Die FCNN-Architektur besteht aus mehreren Convolutional-Schichten (siehe Abbildung \ref{fig:FCNN}), die die Merkmale der Bilder extrahieren und die Pixel in verschiedene Klassen segmentieren. Die Architektur umfasst sowohl die Kodierung (Encoding) als auch die Dekodierung (Decoding) der Bilder. In der Kodierung werden die Merkmale der Bilder extrahiert und in einer kompakten Darstellung kodiert. In der Dekodierung werden die Merkmale wieder in die ursprüngliche Bildgröße dekodiert und die Pixel in verschiedene Klassen segmentiert. \cite{long2014fcnn}
+In den letzten Jahren haben sich Deep-Learning-Modelle, insbesondere Convolutional Neural Networks (CNNs), als effektive Methode für die semantische Segmentierung etabliert. Ein bekanntes CNN-Modell für die semantische Segmentierung ist die Fully Convolutional Neural Network (FCNN) Architektur, die speziell für die Segmentierung von Bildern entwickelt wurde. FCNNs sind in der Lage, komplexe Muster in den Bildern zu erkennen und die Pixel in verschiedene Klassen zu segmentieren. \cite{long2014fcnn}
+
+Die FCNN-Architektur besteht aus mehreren Convolutional-Schichten (siehe Abbildung \ref{fig:FCNN}), die die Klassifizierung pro Pixel implementieren. Auf eine detaillierte Beschreibung der Funktionsweise von FCNNs wird aufgrund des gesetzten Rahmens dieser Arbeit verzichtet. Stattdessen wird auf weiterführende Literatur verwiesen. \cite{long2014fcnn, ronneberger2015unet}
 
 \begin{figure}
     \centering
@@ -570,28 +571,61 @@ Die FCNN-Architektur besteht aus mehreren Convolutional-Schichten (siehe Abbildu
     \caption{Darstellung der FCNN-Architektur \cite{long2014fcnn}\label{fig:FCNN}}\par
 \end{figure}
 
-Auf eine detaillierte Beschreibung der Funktionsweise von CNNs und FCNs wird aufgrund des gesetzten Rahmens dieser Arbeit verzichtet. Stattdessen wird auf weiterführende Literatur verwiesen. \cite{long2014fcnn}
-
 \section{LiDAR-inertial-visual (LIV) fusion} \label{sec:LIV}
 
-Einige Augmented Reality Frameworks ermöglichen die Verwendung von LiDAR-Sensoren, sofern die mobilen Geräte mit dieser Art von Sensor ausgestattet sind. Wie in Kapitel \ref{LiDAR} beschrieben funktionieren diese Sensoren mithilfe von Lasern die Punkte im Raum mit den Abständen zum Gerät liefern. \cite{appledevdoc, arcoredevdoc}
+Einige Augmented Reality Frameworks ermöglichen die Verwendung von LiDAR-Sensoren, sofern die entsprechenden mobilen Geräte mit dieser Art von Sensor ausgestattet sind. Wie in Kapitel \ref{LiDAR} erfassen diese Sensoren mithilfe von Lasern präzise dreidimensionale Punktwolken der Umgebung. \cite{appledevdoc, doerner2022virtual}
 
-Da reines LiDAR-SLAM aber nicht in der Lage ist, die visuellen Informationen der Kamera zu nutzen, um die Umgebung zu interpretieren, wird häufig eine Fusion von LiDAR- und Kameradaten durchgeführt. Zusätzlich dazu können auch die IMU-Daten (Inertial Measurement Unit) genutzt werden, um die Bewegung des Gerätes zu schätzen. Die Fusion von LiDAR-, Kamera- und IMU-Daten wird als LiDAR-inertial-visual (LIV) fusion bezeichnet. \cite{zhang2024lidarslam}
+Da ein reines LiDAR-SLAM-System keine visuellen Informationen der Kamera nutzt, um die Szene zu interpretieren, wird häufig eine Fusion von LiDAR- und Kameradaten vorgenommen. Zusätzlich können IMU-Daten verwendet werden, um die Bewegung des Geräts zu schätzen. Die Kombination dieser drei Sensoren wird als \emph{LiDAR-Inertial-Visual (LIV) Fusion} bezeichnet. \cite{zhang2024lidarslam}
 
-Faktisch ergänzen sich die verschiedenen Sensoren in ihren Stärken und Schwächen. Während LiDAR-Sensoren präzise Distanzinformationen liefern, sind sie anfällig für Rauschen und können Schwierigkeiten bei der Erfassung von Texturen oder Farben haben. Kamera-Sensoren hingegen liefern detaillierte visuelle Informationen, sind jedoch anfällig für schlechte Lichtverhältnisse oder schnelle Bewegungen. IMU-Sensoren können die Bewegung des Gerätes schätzen, sind jedoch anfällig für Driftfehler. Somit wird eine weitaus präzisere und robustere Rekonstruktion der Szene als beim reinen Visual SLAM ermöglicht. \cite{zhang2024lidarslam}
+Faktisch ergänzen sich die verschiedenen Sensoren in ihren Stärken und Schwächen. Während LiDAR-Sensoren präzise Distanzinformationen liefern, sind sie anfällig für Rauschen und können Schwierigkeiten bei der Erfassung von Texturen oder Farben haben. Kamera-Sensoren hingegen liefern detaillierte visuelle Informationen, sind jedoch anfällig für schlechte Lichtverhältnisse oder schnelle Bewegungen. IMU-Sensoren können die Bewegung des Gerätes schätzen, sind jedoch anfällig für Driftfehler. Somit wird eine weitaus präzisere und robustere Rekonstruktion der Szene als beim reinen vSLAM beziehungsweise LiDAR-SLAM ermöglicht. \cite{zhang2024lidarslam}
 
-Bei der LIV-Fusion gibt es zwei unterschiedliche Ansätze: loosely coupled und tightly coupled. Beim loosely coupled Ansatz werden die Daten der verschiedenen Sensoren unabhängig voneinander verarbeitet und anschließend fusioniert. Beim tightly coupled Ansatz hingegen werden die Daten der verschiedenen Sensoren direkt in einem gemeinsamen Optimierungsprozess verarbeitet. Der tightly coupled Ansatz ermöglicht eine präzisere und robustere Schätzung der Kameraposition und der 3D-Rekonstruktion, da die Daten der verschiedenen Sensoren direkt miteinander verknüpft werden. \cite{zhang2024lidarslam}
+Die Integration von LiDAR-, Kamera- und IMU-Daten kann auf zwei Arten erfolgen \cite{zhang2024lidarslam}:
+\begin{itemize}
+    \item \textbf{Loosely Coupled Fusion:} Hier werden die Sensordaten unabhängig voneinander verarbeitet und erst im Nachhinein fusioniert. Dies ermöglicht eine einfachere Implementierung, kann jedoch zu geringerer Präzision führen, da die Sensoren nicht direkt in einem gemeinsamen Modell optimiert werden.
+    \item \textbf{Tightly Coupled Fusion:} Bei diesem Verfahren werden alle Sensordaten innerhalb eines einzigen Optimierungsprozesses verarbeitet. Dadurch lassen sich genauere Schätzungen der Kameraposition und der dreidimensionalen Rekonstruktion erzielen. Allerdings ist dieser Ansatz rechenaufwändiger und komplexer zu implementieren.
+\end{itemize}
 
 \begin{figure}
     \centering
     \includegraphics[ width=.8\textwidth ]{LIVSLAM}
-    \caption{Mögliche LIV-SLAM-Architekturen \cite{zhang2024lidarslam}\label{fig:LIVSLAM}}\par
+    \caption{Mögliche LIV-SLAM-Architektur \cite{zhang2024lidarslam}\label{fig:LIVSLAM}}\par
 \end{figure}
 
-Die Abbildung \ref{fig:LIVSLAM} zeigt drei verschiedene Architekturen für die Fusion von LiDAR-, IMU- und Bilddaten in einem SLAM-System mit unterschiedlichem Kopplungsgrad.
+Die Abbildung \ref{fig:LIVSLAM} zeigt eine lose gekoppelte Architektur. Dabei werden die Daten der verschiedenen Sensoren zunächst unabhängig voneinander verarbeitet. Die visuell-inertiale Odometrie (VIO) kombiniert die Bilddaten mit den IMU-Daten, um die Bewegung des Gerätes zu schätzen. Die LiDAR-Odometrie (LIO) hingegen schätzt die Bewegung des Gerätes anhand der LiDAR-Daten. Die beiden Schätzungen werden anschließend fusioniert, um eine präzisere und robustere Schätzung der Kameraposition zu erhalten. \cite{zhang2024lidarslam}
 
-Im ersten Fall (a) ist das System lose gekoppelt, wobei eine visuell-inertiale Odometrie (VIO) und eine LiDAR-Odometrie getrennt voneinander arbeiten. Die VIO kombiniert Bild- und IMU-Daten und liefert eine Bewegungsschätzung, die als Initialisierung für die LiDAR-Odometrie dient. Dadurch wird eine einfache Implementierung mit hoher Effizienz ermöglicht, jedoch ohne eine vollständige gemeinsame Optimierung aller Sensordaten. \cite{zhang2024lidarslam}
+Die LiDAR-Odometrie unterscheidet sich von der visuellen Odometrie, da keine Extraktion von Feature-Punkten erforderlich ist. Stattdessen wird die Bewegung des Geräts direkt aus den LiDAR-Daten abgeleitet. Ein gängiger Algorithmus zur Schätzung der Bewegung zwischen zwei LiDAR-Punktwolken ist der \emph{Iterative Closest Point} (ICP) Algorithmus. Die Abbildung \ref{fig:ICP} zeigt wie der ICP-Algorithmus funktioniert. Die zwei Punktwolken ,,rot'' und ,,blau'' werden so transformiert, dass sie möglichst aufeinander liegen. Die Transformation wird iterativ berechnet, bis die Punktwolken übereinstimmen. Daraus kann die Bewegung der Kamera abgeleitet werden. Der ICP-Algorithmus funktioniert wie folgt \cite{gao2021vSLAM, bogoslavskyi2017icp}:
 
-Im zweiten Fall (b) enthält das System zwei eng gekoppelte Module: eines für die VIO (Bild- und IMU-Daten) und eines für die LiDAR-Odometrie (LIO). Beide Module führen eine interne gemeinsame Optimierung ihrer jeweiligen Sensordaten durch, sind jedoch untereinander nur lose gekoppelt. Dies verbessert die Genauigkeit und Robustheit gegenüber reinen losen Kopplungen, ohne eine vollständig integrierte Optimierung aller Sensordaten zu erreichen. \cite{zhang2024lidarslam}
+\begin{enumerate}
+    \item Initialisierung der Kameraposition.
+    \item Berechnung des nächsten Nachbarn für jeden Punkt der blauen Punktwolke in der roten Punktwolke.
+    \item Schätzung der Transformation, die die blaue Punktwolke an die rote Punktwolke anpasst.
+    \item Anwendung der Transformation auf die blaue Punktwolke.
+    \item Wiederholung der Schritte 2 bis 4, bis die Transformation konvergiert.
+\end{enumerate}
 
-Der dritte Fall (c) stellt ein vollständig eng gekoppeltes System dar, in dem alle Sensordaten – Bild, IMU und LiDAR – gemeinsam in einer einzigen Optimierung verarbeitet werden. Diese Methode bietet die höchste Genauigkeit und Robustheit, erfordert jedoch einen höheren Rechenaufwand und eine komplexere Implementierung. \cite{zhang2024lidarslam}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ICP1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ICP2}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ICP3}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ICP4}
+    \end{minipage}
+    \caption{Darstellung des ICP-Algorithmus \cite{bogoslavskyi2017icp}}
+    \label{fig:ICP}
+\end{figure}
+
+Die Implementierung dieser LIV-Architektur unter Verwendung des ICP-Algorithmus ermöglicht eine einfach und effiziente Lösung für die LIV-Fusion, jedoch ohne eine vollständige gemeinsame Optimierung aller Sensordaten zu integrieren. \cite{zhang2024lidarslam}
