@@ -2,23 +2,23 @@
 
 In diesem Kapitel wird untersucht, ob die in Kapitel \ref{cha:Problemstellung} formulierte Forschungsfrage beantwortet wurde. Die zentrale Fragestellung lautete:
 
-\textbf{"Wie kann eine Augmented-Reality-Anwendung f"ur mobile Smart-Ger"ate entwickelt werden, die Monteuren hilft, die korrekten Installationspositionen f"ur Rauchmelder zu visualisieren und so die Einhaltung der Montagevorschriften sowie die Qualit"at und Effizienz des Installationsprozesses zu verbessern?"}
+\textbf{"Wie kann eine Augmented-Reality-Anwendung f"ur mobile Smart-Geräte entwickelt werden, die Monteuren hilft, die korrekten Installationspositionen für Rauchmelder zu visualisieren und so die Einhaltung der Montagevorschriften sowie die Qualität und Effizienz des Installationsprozesses zu verbessern?"}
 
 Zur Beurteilung der entwickelten Lösung werden die definierten Anforderungen und Bewertungskriterien herangezogen, die in Kapitel \ref{sec:requirements} festgelegt wurden.
 
 \section{Visualisierung des Montageprozesses in einer AR-Umgebung}
 
-Der entwickelte Prototyp implementiert die Visualisierung von virtuellen Objekten in einer Augemented-Reality-Umgebung für mobile Smart-Geräte. Zwar werden die Montageregeln nicht direkt an der Decke dargestellt, jedoch wird der Monteur durch den Prozess der Platzierung und Ausrichtung des Rauchmelders visuell unterstützt. Dadurch wird indirekt auf die korrekten Installationspositionen hingewiesen. Die Visualisierung der Montageregeln erfolgt in Echtzeit und passt sich dynamisch an die Umgebung an. Der Monteur kann die Platzierung des virtuellen Rauchmelders nutzen, um vor der eigentlichen Montage zu prüfen, ob die gewählte Position den Vorschriften entspricht.
+Der entwickelte Prototyp implementiert die Visualisierung von virtuellen Objekten in einer Augemented-Reality-Umgebung für mobile Smart-Geräte. Zwar werden die Montageregeln nicht direkt an der Decke dargestellt, jedoch wird der Monteur durch den Prozess der Platzierung und Ausrichtung des Rauchmelders visuell unterstützt. Dadurch wird indirekt auf die korrekten Installationspositionen hingewiesen. Die Visualisierung erfolgt in Echtzeit und passt sich dynamisch an die Umgebung an. Der Monteur kann die Platzierung des virtuellen Rauchmelders nutzen, um vor der eigentlichen Montage zu prüfen, ob die gewählte Position den Vorschriften entspricht.
 
 Potenzial zur Verbesserung besteht zum einen in der Qualität des virtuellen Rauchmelders. Hier könnte ein realistischeres 3D-Modell verwendet werden, um die Visualisierung noch authentischer zu gestalten. Zum anderen könnte der Ringindikator, der den Mindestabstand zu umgebenden Wänden anzeigt, verbessert werden. Aktuell wird der Indikator vollständig Rot beziehungsweise Grün gefärbt, je nachdem ob der Mindestabstand eingehalten wird oder nicht. Eine partielle Färbung könnte sofort erkennen lassen, an welchen Stellen der Mindestabstand nicht eingehalten wird.
 
-Der Prototyp wurde ausschließlich im Portrait-Modus entwickelt, um die Interaktion mit dem Tablet zu erleichtern. Eine Implementierung im Landscape-Modus könnte jedoch die Visualisierung der Montageregeln verbessern, da mehr Platz für die Darstellung der AR-Szene zur Verfügung steht. Dies gilt insbesondere bei der Verwendung von Smartphones, die im Landscape-Modus eine größere Bildschirmfläche bieten.
+Der Prototyp wurde ausschließlich im Portrait-Modus entwickelt, um die Interaktion mit dem Tablet zu erleichtern. Eine Implementierung im Landscape-Modus könnte jedoch die Visualisierung der Montageregeln verbessern, da das breitere Seitenverhältnis eine erweiterte Sicht auf die Umgebung ermöglicht. Besonders bei Smartphones führt der Landscape-Modus dazu, dass mehr von der Decke und anderen horizontalen Flächen im Sichtfeld liegt, was für bestimmte Anwendungsfälle vorteilhaft sein kann.
 
 \section{Praxistauglichkeit und Nutzererfahrung}
 
-Die Anwendung wurde in einem realen Umfeld getestet und evaluiert. Dabei wurden verschiedene Szenarien simuliert, um die Funktionalität und Benutzerfreundlichkeit der Anwendung zu überprüfen. Die Anwendung konnte erfolgreich in verschiedenen Umgebungen eingesetzt werden und zeigte eine hohe Stabilität und Genauigkeit bei der Visualisierung der Montageregeln. Auch bei schwierigen Lichtverhältnissen oder unebenen Oberflächen funktionierte die Anwendung zuverlässig.
+Die Anwendung wurde in einem realen Umfeld getestet und evaluiert. Dabei wurden verschiedene Szenarien simuliert, um die Funktionalität und Benutzerfreundlichkeit der Anwendung zu überprüfen. Die Anwendung konnte erfolgreich in verschiedenen Umgebungen eingesetzt werden und zeigte eine hohe Stabilität und Genauigkeit bei der Visualisierung der Montageregeln. Auch bei schwierigen Lichtverhältnissen oder unebenen Oberflächen funktionierte die Anwendung in den meisten Fällen.
 
-Hier stellt vor allem die "Plug-and-Play"-Eigenschaft der Anwendung einen großen Vorteil dar. Der Benutzer kann die Anwendung sofort starten und mit der Interaktion beginnen, ohne dass eine manuelle Kalibrierung oder Initialisierung erforderlich ist. Dies trägt dazu bei, dass die Anwendung eine geringe Einstiegshürde aufweist und schnell einsatzbereit ist.
+Hier stellt vor allem die "Plug-and-Play"-Eigenschaft der Anwendung einen großen Vorteil dar. Der Benutzer kann die Anwendung starten und sofort mit der Interaktion beginnen, ohne dass eine manuelle Kalibrierung oder Initialisierung erforderlich ist. Dies trägt dazu bei, dass die Anwendung eine geringe Einstiegshürde aufweist und schnell einsatzbereit ist.
 
 Fraglich ist jedoch, ob die Anwendung auch in größeren Räumen oder bei komplexeren Montagesituationen  eingesetzt werden kann. In solchen Fällen könnte die Tiefenmessung und das Tracking der Umgebung an ihre Grenzen stoßen. Auch die Platzierung von mehreren Rauchmeldern in einem Raum könnte die Leistung der Anwendung beeinträchtigen. Eine umfassende Evaluation in verschiedenen Umgebungen und Szenarien ist daher empfehlenswert, um die Leistungsfähigkeit der Anwendung zu überprüfen.
 
@@ -28,32 +28,28 @@ Im Test wurde von einem unerfahrenen Monteur ausgegangen. Dieser Monteur muss ma
 
 \section{Umsetzung der Montageregeln}
 
-Wie in Kapitel \ref{sec:ImplMontageregeln} beschrieben, wurde für den Prototypen eine Mindestanforderung an implementierten Montageregeln definiert. Es ist abzuwägen, welche der nicht integrierten Vorschriften für die Anwendung relevant sind und in zukünftigen Versionen berücksichtigt werden sollten. Hervorzuheben sind dabei die Montage an schrägen Decken und der Mindestabstand zu Decken-, Boden- und Wandöffnungen für Kühl- und Heizungsaus- und -einlässen. Diese Regeln sind besonders wichtig, da sie die Funktionalität der Rauchmelder beeinträchtigen können, wenn sie nicht eingehalten werden. Die Implementierung dieser Montageregeln könnte die Anwendung noch nützlicher machen und dem Benutzer eine umfassende Unterstützung bei der Installation von Rauchmeldern bieten.
+Wie in Kapitel \ref{sec:ImplMontageregeln} beschrieben, wurde für den Prototypen eine Mindestanforderung an implementierten Montageregeln definiert. Es ist abzuwägen, welche der nicht integrierten Vorschriften für die Anwendung relevant sind und in zukünftigen Versionen berücksichtigt werden sollten. Hervorzuheben sind dabei die Montage an schrägen Decken und der Mindestabstand zu Decken-, Boden- und Wandöffnungen für Kühl- und Heizungsaus- und -einlässen. Diese Regeln sind besonders wichtig, da sie die Funktionalität der Rauchmelder beeinträchtigen können, wenn sie nicht eingehalten werden. Die Implementierung dieser Montageregeln könnte die Anwendung noch nützlicher machen und dem Benutzer eine umfassendere Unterstützung bei der Installation von Rauchmeldern bieten.
 
 Insgesamt ist festzuhalten, dass die Umsetzung der Montageregeln in der Augmented-Reality-Umgebung erfolgreich war. Das Framework, das für die Implementierung der Montageregeln implementiert wurde, stellt eine solide Grundlage für zukünftige Erweiterungen dar und ermöglicht eine einfache Integration weiterer Regeln und Richtlinien.
 
 \section{Bewertung der Performance}
 
-Die Performance der Anwendung wird anhand von verschiedenen Kriterien bewertet. Dazu gehören die Bildrate, die Latenz, die Genauigkeit und die Stabilität der Tiefenmessung sowie die Stabilität des Trackings der Umgebung.
+Die Performance der Anwendung wird anhand von verschiedenen Kriterien bewertet. Dazu gehören die Bildrate, die Latenz, die Genauigkeit der Tiefenmessung sowie die Stabilität des Trackings der Umgebung.
 
 Die Bildrate der Anwendung liegt im Durschnitt bei etwa 60 FPS (Frames per Second). Dies ist vollkommen ausreichend, um eine flüssige Darstellung der AR-Szene zu gewährleisten. Wie bereits erwähnt, kann es bei der Platzierung des visuellen Rauchmelders zu kurzen Verzögerungen kommen. Diese Verzögerungen sind jedoch minimal und beeinträchtigen die Benutzererfahrung nicht.
 
 Die Latenz der Anwendung liegt im Durschnitt bei etwa 50 ms. Dies ist ein akzeptabler Wert, der eine schnelle Reaktion auf Benutzerinteraktionen ermöglicht. Die Anwendung reagiert unmittelbar auf Touch-Gesten und führt die entsprechenden Aktionen ohne Verzögerungen aus.
 
+[Bild: Stats der Performance]
+
 \section{Bekannte Schwachstellen und Verbesserungspotenzial}
 
-Trotz der positiven Ergebnisse gibt es noch einige Schwachstellen und Verbesserungspotenzial, die in zukünftigen Versionen der Anwendung berücksichtigt werden sollten.
+Trotz der positiven Ergebnisse gibt es noch einige Schwachstellen und Verbesserungspotenziale, die in zukünftigen Versionen der Anwendung berücksichtigt werden sollten.
 
-Die Genauigkeit der Tiefenmessung ist ein entscheidender Faktor für die Umsetzung der Montageregeln. Der Protoyp konnte eine Genauigkeit von etwa 1-2 cm erreichen. Dies wurde als ausreichend angesehen, um die Montageregeln präzise zu visualisieren. Fraglich ist ob diese Genauigkeit auch in komplexeren Umgebungen oder bei größeren Räumen gewährleistet werden kann. Eine umfassende Evaluation der Genauigkeit in verschiedenen Szenarien ist daher empfehlenswert. Zudem besteht die Frage, ob die von der Anwendung generierten Screenshots als eindeutiger Nachweis einer korrekten Installation genutzt werden können.
+Die Genauigkeit der Tiefenmessung ist ein entscheidender Faktor für die Umsetzung der Montageregeln. Der Protoyp konnte eine Genauigkeit von etwa 1-2 cm erreichen. Dies wurde als ausreichend angesehen, um die Montageregeln präzise zu visualisieren. 
 
-Eine weitere Schwachstelle stellt die begrenzte Reichweite der Tiefenmessung mithilfe von LiDAR-Sensoren dar. Die Anwendung konnte nur Entfernungen von bis zu 5 Metern messen. Dies könnte die Verwendung der Anwendung in größeren Räumen oder bei komplexeren Montagesituationen einschränken. 
+[Bild: Messtab vs DistanceIndicator]
 
+Fraglich ist ob diese Genauigkeit auch in komplexeren Umgebungen oder bei größeren Räumen gewährleistet werden kann, da die LiDAR-Sensoren der Apple-Geräte eine begrenzte Reichweite der Tiefenmessung aufweisen. Die Reichweite der Sensoren beträgt etwa 5 Meter. Eine umfassende Evaluation der Genauigkeit in verschiedenen Szenarien ist daher empfehlenswert. Zudem besteht die Frage, ob die von der Anwendung generierten Screenshots als eindeutiger Nachweis einer korrekten Installation genutzt werden können. \cite{appledevdoc}
 
-
-[ ] Bewertung der Umsetzung der Anforderungen
-
-[ ] Bewertung der Performance
-
-[ ] Bewertung der Genauigkeit
-
-[ ] Bugs
+Zudem besteht die Frage, ob die von der Anwendung generierten Screenshots als Nachweis einer korrekten Installation genutzt werden könnten. 
