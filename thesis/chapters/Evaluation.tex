@@ -24,7 +24,14 @@ Fraglich ist jedoch, ob die Anwendung auch in größeren Räumen oder bei komple
 
 Zusätzlich besteht die Frage, ob die Anwendung bei erfahrenen Monteuren eher als Hilfsmittel oder als Störfaktor wahrgenommen wird. Es ist denkbar, dass erfahrene Monteure die Visualisierung der Montageregeln als überflüssig empfinden und sich dadurch in ihrer Arbeit eingeschränkt fühlen. 
 
-Im Test wurde von einem unerfahrenen Monteur ausgegangen. Dieser Monteur muss manuell Messungen durchführen um die korrekten Installationspositionen für Rauchmelder zu bestimmen. Dies ist eine zeitaufwändige und fehleranfällige Aufgabe. Die Visualisierung der Montageregeln könnte ihm dabei helfen, die korrekten Installationspositionen schneller und einfacher zu finden. Tests haben gezeigt, dass die Anwendung eine Beschleunigung des Installationsprozesses von bis zu 30\% ermöglicht. Ob dies auch bei erfahrenen Monteuren der Fall ist, müsste in weiteren Tests überprüft werden.
+Im Test wurden die Probanden mit folgender Aufgabe konfrontiert:
+\begin{enumerate}
+    \item Finde eine potenziell gültige Installationsposition für den Rauchmelder.
+    \item Überprüfe, ob die Installationsposition den Montageregeln entspricht.
+    \item Dokumentiere die Installationsposition mithilfe eines Bildes.
+\end{enumerate}
+
+Die Aufgabe wurde in verschiedenen Räumen durchgeführt. Im Durchschnitt benötigten die Probanden etwa 1,5 Minuten, um sie zu erfüllen. Mit der Anwendung konnte die korrekte Installationsposition jedoch bereits im ersten Durchgang in weniger als einer Minute gefunden werden. Im zweiten Durchgang ließ sich die Aufgabe sogar innerhalb weniger Sekunden lösen. Dies entspricht einer Zeitersparnis von rund 90\%. Ob sich dieser Effekt auch bei erfahrenen Monteuren zeigt, müsste durch weitere Tests überprüft werden.
 
 \section{Umsetzung der Montageregeln}
 
@@ -34,13 +41,11 @@ Insgesamt ist festzuhalten, dass die Umsetzung der Montageregeln in der Augmente
 
 \section{Bewertung der Performance}
 
-Die Performance der Anwendung wird anhand von verschiedenen Kriterien bewertet. Dazu gehören die Bildrate, die Latenz, die Genauigkeit der Tiefenmessung sowie die Stabilität des Trackings der Umgebung.
+Die Performance der Anwendung wird anhand verschiedener Kriterien bewertet, darunter Bildrate, Latenz und Stabilität. Getestet wurde die Anwendung auf einem iPad Pro (11 Zoll, 3. Generation) mit M1-Chip.
 
-Die Bildrate der Anwendung liegt im Durschnitt bei etwa 60 FPS (Frames per Second). Dies ist vollkommen ausreichend, um eine flüssige Darstellung der AR-Szene zu gewährleisten. Wie bereits erwähnt, kann es bei der Platzierung des visuellen Rauchmelders zu kurzen Verzögerungen kommen. Diese Verzögerungen sind jedoch minimal und beeinträchtigen die Benutzererfahrung nicht.
+Die durchschnittliche Bildrate beträgt 59 FPS (Frames per Second), was für eine flüssige Darstellung der AR-Szene vollkommen ausreicht. Wie bereits erwähnt, kann es bei der Platzierung des virtuellen Rauchmelders zu kurzen Verzögerungen kommen. Diese sind jedoch minimal und beeinträchtigen die Benutzererfahrung nicht. Gelegentlich treten Drift-Effekte auf, die in der Regel schnell von ARKit korrigiert werden.
 
-Die Latenz der Anwendung liegt im Durschnitt bei etwa 50 ms. Dies ist ein akzeptabler Wert, der eine schnelle Reaktion auf Benutzerinteraktionen ermöglicht. Die Anwendung reagiert unmittelbar auf Touch-Gesten und führt die entsprechenden Aktionen ohne Verzögerungen aus.
-
-[Bild: Stats der Performance]
+Während der Tests kam es nur selten zu Abstürzen oder schwerwiegenden Fehlern. Die Stabilität der Anwendung ist insgesamt als gut zu bewerten. In Einzelfällen traten Fehler auf, die einen Neustart der AR-Anwendung erforderlich machten. In den meisten Fällen konnte die Anwendung jedoch problemlos weiterverwendet werden.
 
 \section{Bekannte Schwachstellen und Verbesserungspotenzial}
 
