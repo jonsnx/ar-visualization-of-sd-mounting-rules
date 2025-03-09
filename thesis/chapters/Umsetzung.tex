@@ -14,7 +14,12 @@ Denkbare Interaktionsmöglichkeiten umfassen unter anderem Handgesten vor der Ka
 
 Unter der Annahme, dass das Tablet, wie in Abbildung \ref{fig:ipad} dargestellt, mit beiden Händen gehalten wird, beschränken sich die möglichen Interaktionen auf die Daumen des Benutzers sowie auf die Positionierung und Ausrichtung des Geräts. Daher sollten die Interaktionsmechanismen der AR-Anwendung möglichst einfach und minimalistisch gestaltet sein, um eine komfortable Bedienung zu ermöglichen, ohne dass das Risiko besteht, das Gerät versehentlich fallen zu lassen.
 
-[Bild: iPad]
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{iPad}
+    \caption{Benutzerinteraktion mit einem Tablet}
+    \label{fig:ipad}
+\end{figure}
 
 \subsection{Genauigkeit}
 
@@ -36,7 +41,14 @@ Falls die Anwendung in einem professionellen Umfeld eingesetzt werden soll, ist 
 
 \section{Konzeption}
 
-Das Konzept des Prototypen wurde iterativ entwickelt und nicht in einem einzigen Schritt abgeschlossen. Dabei wurden die Lösungsansätze schrittweise umgesetzt und kontinuierlich optimiert, um die Anforderungen bestmöglich zu erfüllen. Zu Beginn wurde eine grundlegende Skizze des Prototyps erstellt (siehe Abbildung \ref{fig:Concept}), die die zentralen Funktionen und Interaktionen veranschaulichte. Diese diente als Ausgangspunkt für die weitere Entwicklung und half dabei, die wesentlichen Komponenten des Systems frühzeitig zu definieren.
+Das Konzept des Prototypen wurde iterativ entwickelt und nicht in einem einzigen Schritt abgeschlossen. Dabei wurden die Lösungsansätze schrittweise umgesetzt und kontinuierlich optimiert, um die Anforderungen bestmöglich zu erfüllen. Zu Beginn wurde grundlegende Skizzen des Prototyps erstellt (siehe Abbildung \ref{fig:Concept}), die die zentralen Funktionen und Interaktionen veranschaulichte. Diese diente als Ausgangspunkt für die weitere Entwicklung und half dabei, die wesentlichen Komponenten des Systems frühzeitig zu definieren.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Skizzen}
+    \caption{Konzeptskizzen des Prototypen}
+    \label{fig:Concept}
+\end{figure}
 
 Die Hauptkomponenten des ersten Konzepts umfassten die folgenden Funktionen:
 
@@ -63,21 +75,56 @@ Die Anzahl der notwendigen Interaktionen wurde bewusst auf ein Minimum reduziert
 
 Die Interaktionen wurden als Schaltflächen am unteren Rand des Bildschirms platziert. Die Schaltflächen sind so angeordnet, dass sie mit den Daumen erreicht werden können, ohne in irgendeiner Art und Weise umgreifen zu müssen. 
 
-Ein weiteres zentrales Element der Benutzeroberfläche ist die Informationsanzeige, die dem Benutzer jederzeit den aktuellen Status der Platzierung vermittelt. Um die Sicht auf die augmentierte Umgebung nicht zu beeinträchtigen, wurde sie am oberen rechten Rand des Bildschirms platziert. Statusänderungen werden durch Animationen hervorgehoben, um die Aufmerksamkeit des Benutzers gezielt darauf zu lenken. Ein zusätzliches Info-Icon dient als Ankerpunkt für das Textfeld und erleichtert die Einordnung der gezeigten Informationen.
+Ein weiteres zentrales Element der Benutzeroberfläche ist die Informationsanzeige, die dem Benutzer jederzeit den aktuellen Status der Platzierung vermittelt. Um die Sicht auf die augmentierte Umgebung nicht zu beeinträchtigen, wurde sie am oberen rechten Rand des Bildschirms platziert. Statusänderungen werden durch Animationen hervorgehoben, um die Aufmerksamkeit des Benutzers gezielt darauf zu lenken (siehe \ref{fig:Animation}). Ein zusätzliches Info-Icon dient als Ankerpunkt für das Textfeld und erleichtert die Einordnung der gezeigten Informationen.
 
-[Evtl. Bildersequenz der Animation]
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{\textwidth}
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Animation1}
+        \end{minipage}
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Animation2}
+        \end{minipage}
+    \end{minipage}
+    \begin{minipage}{\textwidth}
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Animation3}
+        \end{minipage}
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{Animation4}
+        \end{minipage}
+    \end{minipage}
+    \caption{Animation des Status-Feedbacks}
+    \label{fig:Animation}
+\end{figure}
 
 Um eine gültige Position für den Rauchmelder visuell zu verdeutlichen, wurden zwei Indikatoren implementiert. Zum einen ändert sich die Farbe der Focus-Entity sowie des Info-Icons, sobald sich der Rauchmelder an einer gültigen Position befindet. Zum anderen wird ein zusätzlicher Ring um die Focus-Entity angezeigt, der einen Abstand von 0,6 Metern gemäß den Montageregeln (gemäß Regeln 2 und 3, siehe \ref{cha:Problemstellung}) visualisiert. Dadurch erhält der Benutzer direktes Feedback zur Einhaltung der Mindestanforderungen und kann die Platzierung entsprechend anpassen.
-
-[Bild: Indikator auf gültiger Position]
 
 \section{Auswahl der Technologien}
 
 Für die Umsetzung des Prototypen wurden verschiedene Technologien und Frameworks in Betracht gezogen. Dabei wurden die Anforderungen an die Anwendung und die verfügbaren Ressourcen berücksichtigt. Da die Anwendung primär für mobile Endgeräte wie Smartphones und Tablets konzipiert wurde, lag der Fokus auf plattformgerechten Technologien mit leistungsfähiger AR-Unterstützung.
 
-Ein zentrales Kriterium bei der Wahl der Technologien war die Beschaffenheit der Deckenoberflächen, da diese in der Regel glatt sind und somit nur wenige markante Merkmale für das visuelle Tracking bieten. Diese begrenzte Anzahl an Feature-Punkten kann dazu führen, dass das Tracking instabil wird und virtuelle Objekte nicht präzise in der Umgebung verankert werden können. Erste Tests mit dem ARCore-Framework von Google zeigten, dass dessen Tracking-Mechanismus (vSLAM) auf glatten Oberflächen an seine Grenzen stößt. Abbildung \ref{fig:ARCore} zeigt eine Demo-Anwendung von Google, die die Anzahl der erkannten Feature-Punkte anzeigt. Dabei wird deutlich, dass ARCore auf einer glatten Decke nur wenige Referenzpunkte identifizieren kann, was zu einer eingeschränkten Tracking-Stabilität führt, wenn man davon ausgeht dass die Kamera primär auf die Decke gerichtet ist.
+Ein zentrales Kriterium bei der Wahl der Technologien war die Beschaffenheit der Deckenoberflächen, da diese in der Regel glatt sind und somit nur wenige markante Merkmale für das visuelle Tracking bieten. Diese begrenzte Anzahl an Feature-Punkten kann dazu führen, dass das Tracking instabil wird und virtuelle Objekte nicht präzise in der Umgebung verankert werden können. Erste Tests mit dem ARCore-Framework von Google zeigten, dass dessen Tracking-Mechanismus (vSLAM) auf glatten Oberflächen an seine Grenzen stößt. Abbildung \ref{fig:ARCore} zeigt eine Demo-Anwendung von Google, die die Computer-Vision-Perspektive von ARCore veranschaulicht. Während die Lampe und der Rauchmelder als Informationsquellen dienen, wird deutlich, dass die Decke selbst nur wenige Anhaltspunkte bietet. Da sich dort in der Regel keine markanten Objekte befinden, fehlen ausreichend Referenzpunkte für eine stabile Verankerung virtueller Objekte. Insbesondere wenn die Kamera hauptsächlich auf die Decke gerichtet ist, kann dies die Tracking-Genauigkeit erheblich beeinträchtigen.
 
-[Bild: ARCore Demo]
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ARCoreNoCV}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ARCoreCV}
+    \end{minipage}
+    \caption{ARCore-Demo: Referenzbild (links) und Computer-Vision-Sicht von ARCore (rechts)}
+    \label{fig:ARCore}
+\end{figure}
 
 Aufgrund dieser Limitation erwiesen sich Frameworks, die LiDAR-gestütztes Tracking unterstützen, als eine vielversprechende Alternative. Wie bereits in Kapitel \ref{LiDAR} beschrieben, ermöglicht LiDAR eine präzise Tiefenerfassung und eine zuverlässige Flächenerkennung – unabhängig von der Oberflächenstruktur. Darüber hinaus reduziert LiDAR die Initialisierungszeit, da die Tiefeninformationen fast augenblicklich verfügbar sind. Ein weiterer Vorteil ist, dass LiDAR-Sensoren unabhängig vom Umgebungslicht funktionieren, was besonders für professionelle Anwendungen von Bedeutung ist, da die Lichtverhältnisse in Gebäuden nicht immer optimal sind.
 
@@ -137,7 +184,7 @@ Die Benutzeroberfläche des Prototyps wurde mit dem SwiftUI-Framework von Apple 
 
 Der komponentenbasierte Aufbau der Benutzeroberfläche lässt sich ideal als Baumstruktur visualisieren:
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
@@ -305,8 +352,6 @@ Die beschriebene Implementierung stellt eine einfach erweiterbare Lösung zur Va
 Das ARKit-Framework bietet eine Funktion, mit der Raycasts innerhalb der AR-Szene durchgeführt werden können. Der Startpunkt und die Richtung des Strahls lassen sich über ein \texttt{RaycastQuery}-Objekt definieren. Die Funktion gibt ein Array von \texttt{ARRaycastResult}-Objekten zurück, die Informationen zu den Schnittpunkten des Strahls mit den getroffenen Objekten, deren Art und Orientierung enthalten. Falls das getroffene Objekt einen \texttt{ARAnchor} besitzt, wird auch dieser zurückgegeben.
 
 Im Rahmen der Anwendung wurde Raycasting genutzt, um den Mindestabstand zu umliegenden Wänden zu validieren. Hierfür werden mehrere Raycasts parallel zur x-z-Ebene in einem 360-Grad-Winkel um die Focus-Entity geschossen, um die Umgebung auf zu nahe Wände zu überprüfen. Wenn ein Strahl auf ein Objekt trifft, wird davon ausgegangen, dass es sich um eine Wand oder ein Wand-ähnliches Objekt handelt. Anschließend wird der Abstand zwischen diesem Objekt und der Focus-Entity berechnet und mit dem festgelegten Mindestabstand verglichen. Liegt der Abstand unter dem definierten Wert, wird die Position der Focus-Entity als ungültig betrachtet und die Platzierung des virtuellen Rauchmelders verhindert.
-
-[Bild: 360-Grad-Raycasting]
 
 Darüber hinaus bildet Raycasting die Grundlage für die Positionierung der Focus-Entity. Bei jedem Frame wird ein Raycast von der Kamera in das Zentrum der AR-Szene abgefeuert, und die Position des ersten getroffenen Objekts wird als Position der Focus-Entity verwendet. Dies ermöglicht eine präzise Platzierung der Focus-Entity und eine genaue Ausrichtung des virtuellen Rauchmelders.
 

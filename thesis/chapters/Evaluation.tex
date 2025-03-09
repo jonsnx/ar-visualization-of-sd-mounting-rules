@@ -51,9 +51,14 @@ Während der Tests kam es nur selten zu Abstürzen oder schwerwiegenden Fehlern.
 
 Trotz der positiven Ergebnisse gibt es noch einige Schwachstellen und Verbesserungspotenziale, die in zukünftigen Versionen der Anwendung berücksichtigt werden sollten.
 
-Die Genauigkeit der Tiefenmessung ist ein entscheidender Faktor für die Umsetzung der Montageregeln. Der Protoyp konnte eine Genauigkeit von etwa 1-2 cm erreichen. Dies wurde als ausreichend angesehen, um die Montageregeln präzise zu visualisieren. 
+Die Genauigkeit der Tiefenmessung ist ein entscheidender Faktor für die Umsetzung der Montageregeln. Der Protoyp konnte eine Genauigkeit von etwa 1-2 cm erreichen (siehe Abbildung \ref{fig:DistanceIndicator}). Dies wurde als ausreichend angesehen, um die Montageregeln präzise zu visualisieren. 
 
-[Bild: Messtab vs DistanceIndicator]
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{DistanzIndikator}
+    \caption{Genauigkeit der Tiefenmessung}
+    \label{fig:DistanceIndicator}
+\end{figure}
 
 Fraglich ist ob diese Genauigkeit auch in komplexeren Umgebungen oder bei größeren Räumen gewährleistet werden kann, da die LiDAR-Sensoren der Apple-Geräte eine begrenzte Reichweite der Tiefenmessung aufweisen. Die Reichweite der Sensoren beträgt etwa 5 Meter. Eine umfassende Evaluation der Genauigkeit in verschiedenen Szenarien ist daher empfehlenswert. Zudem besteht die Frage, ob die von der Anwendung generierten Screenshots als eindeutiger Nachweis einer korrekten Installation genutzt werden können. \cite{appledevdoc}
 
