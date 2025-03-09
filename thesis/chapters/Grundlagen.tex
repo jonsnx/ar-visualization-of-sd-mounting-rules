@@ -8,9 +8,9 @@ Die Mathematik bildet die Grundlage für viele Algorithmen und Technologien in d
 
 \subsection{Dreidimensionale Computergrafik}
 
-In der Computergrafik werden dreidimensionale Objekte, auch als Modelle bezeichnet, durch geometrische und relationale Informationen beschrieben. Diese Objekte bestehen in der Regel aus Polygonen, die durch ihre Eckpunkte (\emph{Vertices}) definiert sind. Ein Polygon ist eine geschlossene Fläche, die durch das Verbinden der Vertices mit geraden Linien entsteht. \cite{wikipedia2023polygons, espinoza2024graphics}
+In der Computergrafik werden dreidimensionale Objekte, auch als Modelle bezeichnet, durch geometrische und relationale Informationen beschrieben. Diese Objekte bestehen in der Regel aus Polygonen, die durch ihre Eckpunkte (\emph{Vertices}) definiert sind. Ein Polygon ist eine geschlossene Fläche (\emph{Face}), die durch das Verbinden der Vertices mit geraden Linien entsteht. \cite{wikipedia2023polygons, espinoza2024graphics}
 
-Das einfachsten Polygone sind Dreiecke, die die Grundbausteine der Computergrafik und die Basis für die Darstellung komplexerer Objekte bilden. Obwohl komplexere Polygone existieren, werden diese oft in Dreiecke zerlegt, da sie von Grafikpipelines effizienter verarbeitet werden können. Solche Modelle bestehen dann aus Dreiecksnetzen (\emph{Meshes}), die als Arrays von Vertices und Indizes gespeichert werden. \cite{wikipedia2023polygons, espinoza2024graphics}
+Das einfachsten Polygone sind Dreiecke, die die Grundbausteine der Computergrafik und die Basis für die Darstellung komplexerer Objekte bilden. Obwohl komplexere Polygone existieren, werden diese oft in Dreiecke zerlegt, da sie von Grafik-Pipelines effizienter verarbeitet werden können. Solche Modelle bestehen dann aus Dreiecksnetzen (\emph{Meshes}), die als Arrays von Vertices und Indizes gespeichert werden. \cite{wikipedia2023polygons, espinoza2024graphics}
 
 Die Abbildung \ref{fig:TriangleMesh} zeigt, wie das Polygonnetz eines Delfins in Dreiecke zerlegt wird. Um dieses Modell im dreidimensionalen Raum zu transformieren, werden mathematische Konzepte wie Vektoren, Matrizen und Transformationen verwendet. Diese Konzepte bilden die Grundlage für die Positionierung und Darstellung von 3D-Objekten in der Augmented Reality und werden in den kommenden Abschnitten näher erläutert. \cite{wikipedia2023mesh, espinoza2024graphics}
 
@@ -24,7 +24,7 @@ Die Abbildung \ref{fig:TriangleMesh} zeigt, wie das Polygonnetz eines Delfins in
 
 Dreidimensionale Szenen und Objekte werden in kartesischen Koordinatensystemen beschrieben. Man unterscheidet zwischen verschiedenen Koordinatensystemen, die für unterschiedliche Zwecke verwendet werden. Die wichtigsten Koordinatensysteme in der Computergrafik sind das Weltkoordinatensystem, das Kamerakoordinatensystem und das Objektkoordinatensystem. Während das Weltkoordinatensystem die Position und Orientierung der Objekte im Raum beschreibt, bezieht sich das Objektkoordinatensystem auf die Relationen der Vertices eines Objekts zueinander. \cite{doerner2022virtual, gao2021vSLAM, usau2023appleARCamera}
 
-Die Koordinatensysteme weisen \(x\)-, \(y\)- und \(z\)-Achsen auf, die die drei Dimensionen repräsentieren. In einem rechtshändigen Koordinatensystem zeigt die \(x\)-Achse nach links, die \(y\)-Achse nach oben und die \(z\)-Achse nach vorne (siehe Abbildung \ref{fig:Koordinatensystem}). Die Vertices eines dreidimensionalen Objekts werden durch die Koordinaten \(x\), \(y\) und \(z\) definiert. Diese Koordinaten werden meist als Vektoren dargestellt, die die Position eines Punktes im Raum beschreiben. Ein Vektor \(v\) wird durch die Koordinaten \(x\), \(y\) und \(z\) wie folgt definiert (\cite{doerner2022virtual, gao2021vSLAM, freescale2010math3d, pezzi2021matrices}):
+Die Koordinatensysteme weisen \(x\)-, \(y\)- und \(z\)-Achsen auf, die die drei Dimensionen repräsentieren. In einem rechtshändigen Koordinatensystem zeigt die \(x\)-Achse nach rechts, die \(y\)-Achse nach oben und die \(z\)-Achse entgegengesetzt der Blickrichtung (siehe Abbildung \ref{fig:Koordinatensystem}). Die Vertices eines dreidimensionalen Objekts werden durch die Koordinaten \(x\), \(y\) und \(z\) definiert. Diese Koordinaten werden meist als Vektoren dargestellt, die die Position eines Punktes im Raum beschreiben. Ein Vektor \(v\) wird durch die Koordinaten \(x\), \(y\) und \(z\) wie folgt definiert (\cite{doerner2022virtual, gao2021vSLAM, freescale2010math3d, pezzi2021matrices}):
 
 \begin{equation}
 v = \begin{bmatrix} x \\ y \\ z \end{bmatrix}
@@ -33,7 +33,7 @@ v = \begin{bmatrix} x \\ y \\ z \end{bmatrix}
 \begin{figure}
     \centering
     \includegraphics[ width=.5\textwidth ]{CoordinateSystem}
-    \caption{Rechtshändiges Koordinatensystem \cite{noakes2013coordinateSystem}\label{fig:Koordinatensystem}}\par
+    \caption{Rechtshändiges Koordinatensystem \cite{appledevdoc}\label{fig:Koordinatensystem}}\par
 \end{figure}
 
 \subsection{Transformationsmatrizen}
@@ -117,7 +117,7 @@ Die Transformationsmatrix wird, wie eingehend erläutert, häufig verwendet, um 
 
 \section{Sensorik}
 
-Die Erfassung der Umgebung in Augmented-Reality-Anwendungen erfolgt mithilfe verschiedener Sensoren, die Daten über die physische Welt liefern. Je nach Anwendungsfall und Eingabegerät können unterschiedliche Sensoren verwendet werden, um die Position und Bewegung des Geräts zu bestimmen. Bei vielen Tracking-Verfahren werden eine Kombination von Sensoren verwendet, um die Genauigkeit und Zuverlässigkeit der Positionsschätzung zu verbessern. Beispielsweise kann die Kamera für visuelle Tracking-Anwendungen verwendet werden, während das IMU für die Schätzung der Bewegung des Geräts verwendet wird. Durch die Fusion von Daten aus verschiedenen Sensoren können AR-Anwendungen eine präzise und konsistente Darstellung der virtuellen Objekte in der realen Welt erreichen. Die wichtigsten Sensorenarten für die Implementierung von AR-Anwendungen für mobile Smartgeräte werden in diesem Abschnitt erläutert. \cite{doerner2022virtual}
+Die Umgebung wird in Augmented-Reality-Anwendungen mithilfe verschiedener Sensoren erfasst, die Daten über die physische Welt liefern. Je nach Anwendungsfall und Eingabegerät können unterschiedliche Sensoren verwendet werden, um die Position und Bewegung des Geräts zu bestimmen. Bei vielen Tracking-Verfahren werden eine Kombination von Sensoren verwendet, um die Genauigkeit und Zuverlässigkeit der Positionsschätzung zu verbessern. Beispielsweise kann die Kamera für visuelle Tracking-Anwendungen verwendet werden, während inertiale Sensoren primär für die Schätzung der Bewegung des Geräts verwendet wird. Durch die Fusion von Daten aus verschiedenen Sensoren können AR-Anwendungen eine präzise und konsistente Darstellung der virtuellen Objekte in der realen Welt erreichen. Die wichtigsten Sensorenarten für die Implementierung von AR-Anwendungen für mobile Smartgeräte werden in diesem Abschnitt erläutert. \cite{doerner2022virtual}
 
 \subsection{Inertiale Sensoren}
 
@@ -129,11 +129,11 @@ Inertiale Sensoren erfassen die Bewegung und Ausrichtung eines Geräts, indem si
 
 \subsection{Kamera}
 
-Die Kamera spielt eine zentrale Rolle in AR-Anwendungen, da sie visuelle Informationen erfasst, die für viele Tracking-Verfahren essenziell sind. Die aufgenommenen Bilder dienen nicht nur als Grundlage der Ausgabe für die Darstellung virtueller Objekte, sondern ermöglichen auch die Erkennung von Markern, Features oder Objekten. Durch die Analyse dieser Bilddaten kann die Position und Orientierung des Geräts bestimmt werden, wodurch eine präzise Überlagerung virtueller Inhalte mit der realen Umgebung ermöglicht wird. \cite{doerner2022virtual}
+Die Kamera spielt eine zentrale Rolle in AR-Anwendungen, da sie visuelle Informationen erfasst, die für viele Tracking-Verfahren essenziell sind. Die aufgenommenen Bilder dienen nicht nur als Grundlage der Ausgabe für die Darstellung virtueller Objekte, sondern ermöglichen auch die Erkennung von Markern, Merkmalen oder Objekten. Durch die Analyse dieser Bilddaten kann die Position und Orientierung des Geräts bestimmt werden, wodurch eine präzise Überlagerung virtueller Inhalte mit der realen Umgebung ermöglicht wird. \cite{doerner2022virtual}
 
 \subsection{Lasersensoren}\label{LiDAR}
 
-LiDAR-Sensoren (\emph{Light Detection and Ranging}) sind eine spezielle Art von Lasersensoren, die die Entfernung zu Objekten mithilfe von Laserstrahlen messen. Dabei wird, entsprechend des ToF-Prinzips (\emph{Time of Flight}), die Zeit gemessen, die das Licht benötigt, um von der Lichtquelle zum Objekt und zurück zum Sensor zu gelangen. Durch die Messung der Laufzeit des Lichts kann die Entfernung zum Objekt präzise bestimmt werden. LiDAR-Sensoren sind besonders nützlich für die Erfassung von Tiefeninformationen in der Umgebung und bieten große Vorteile für die Genauigkeit und Zuverlässigkeit des Trackings in AR-Anwendungen. \cite{doerner2022virtual, ibm2024lidar}
+LiDAR-Sensoren (\emph{Light Detection and Ranging}) sind eine spezielle Art von Lasersensoren, die die Entfernung zu Objekten mithilfe von Laserstrahlen messen. Dabei wird, entsprechend des ToF-Prinzips (\emph{Time of Flight}), die Zeit gemessen, die das Licht benötigt, um von der Lichtquelle zum Objekt und zurück zum Sensor zu gelangen. Durch die Messung der Laufzeit des Lichts kann die Entfernung zum Objekt präzise bestimmt werden. LiDAR-Sensoren sind besonders nützlich für die Erfassung von Tiefeninformationen in der Umgebung und bieten große Vorteile für die Genauigkeit und Zuverlässigkeit des Tracking in AR-Anwendungen. \cite{doerner2022virtual, ibm2024lidar}
 
 \subsection{Satellitengestütze Systeme}
 
@@ -261,9 +261,9 @@ Im Folgenden wird der Fokus zunächst auf das Visual SLAM gelegt, da es in mobil
 
 \subsection{Feature Detection}
 
-Die Feature Detection dient der Identifikation von \emph{Feature-Punkten} in Bildern. Dabei handelt es sich um charakteristische Bereiche, die sich durch ihre besondere Struktur oder Helligkeitsverteilung vom restlichen Bild abheben. Zu diesen Feature-Punkten gehören beispielsweise Ecken, Kanten oder markante Texturbereiche. Jeder Feature-Punkt setzt sich aus einem \emph{Key Point}, welcher einem zweidimensionalen Punkt im Bild entspricht, und einem \emph{Deskriptor} zusammen. \cite{gao2021vSLAM, szeliski2022computerVision}
+Die Feature Detection dient der Identifikation von \emph{Feature-Punkten} in Bildern. Dabei handelt es sich um charakteristische Bereiche, die sich durch ihre besondere Struktur oder Helligkeitsverteilung vom restlichen Bild abheben. Zu diesen Bereichen gehören beispielsweise Ecken, Kanten oder markante Texturbereiche. Jeder Feature-Punkt setzt sich aus einem \emph{Key Point}, welcher einem zweidimensionalen Punkt im Bild entspricht, und einem \emph{Deskriptor} zusammen. \cite{gao2021vSLAM, szeliski2022computerVision}
 
-Der Deskriptor entspricht einer numerischen Beschreibung des erkannten Merkmals, um diese über mehrere Bilder hinweg vergleichbar zu machen. Diese Deskriptoren werden in der Regel als Vektoren dargestellt, die die verschiedene Charakteristiken um den jeweiligen Feature-Punkt erfassen. Übereinstimmende Feature-Punkte werden anhand der Ähnlichkeiten der Deskriptoren im Vektorraum bestimmt. \cite{gao2021vSLAM, szeliski2022computerVision}
+Der Deskriptor entspricht einer numerischen Beschreibung des erkannten Merkmals, um diese über mehrere Bilder hinweg vergleichbar zu machen. Diese Deskriptoren werden in der Regel als Vektoren dargestellt, die die verschiedenen Charakteristiken um den jeweiligen Feature-Punkt erfassen. Übereinstimmende Feature-Punkte werden anhand der Ähnlichkeiten der Deskriptoren im Vektorraum bestimmt. \cite{gao2021vSLAM, szeliski2022computerVision}
 
 Für die Erkennung von Feature-Punkten existieren verschiedene Algorithmen, darunter SIFT (\emph{Scale-Invariant Feature Transform}), SURF (\emph{Speeded-Up Robust Features}) und ORB (\emph{Oriented FAST and Rotated BRIEF}). Die folgende Tabelle vergleicht die Geschwindigkeit dieser Algorithmen bei der Extraktion von 1000 Feature-Punkten aus demselben Bild \cite{gao2021vSLAM}:
 
@@ -286,13 +286,9 @@ Da AR-Anwendungen in Echtzeit arbeiten müssen, spielen neben der Robustheit vor
 
 ORB kombiniert zwei bewährte Verfahren: FAST (\emph{Features from Accelerated Segment Test}) zur Erkennung von Feature-Punkten und BRIEF (\emph{Binary Robust Independent Elementary Features}) zur Erstellung kompakter Deskriptoren. \cite{gao2021vSLAM, rublee2011orb}
 
+Der FAST-Algorithmus erkennt Bereiche mit starken Helligkeitskontrasten, indem er benachbarte Pixel um einen zu prüfenden Pixel herum analysiert. Die Abbildung \ref{fig:FAST} zeigt das Prinzip des FAST-Algorithmus. Hierbei wird zunächst ein Pixel \( p \) mit einem Helligkeitswert \( I_p \) ausgewählt. Ausgehend von diesem Pixel werden die Helligkeitswerte der 16 umliegenden Pixel \( p \) auf einer Kreislinie mit einem Radius von 3 Pixel verglichen. Übersteigt die Anzahl der aufeinander folgenden, signifikant helleren oder dunkleren Pixel einen bestimmten Schwellenwert \( N \), wird \( p \) als Feature identifiziert. Diese Schritte werden für alle Pixel im Bild wiederholt, um alle Feature-Punkte zu identifizieren. 
 
-
-Oriented FAST and Rotated BRIEF (ORB) setzt sich aus zwei Komponenten zusammen: FAST (Features from Accelerated Segment Test) und BRIEF (Binary Robust Independent Elementary Features).  \cite{gao2021vSLAM, rublee2011orb}
-
-Der FAST-Algorithmus erkennt Bereiche mit starken Helligkeitskontrasten, indem er benachbarte Pixel um einen zu prüfenden Pixel herum analysiert. Die Abbildung \ref{fig:FAST} zeigt das Prinzip des FAST-Algorithmus. Hierbei wird zunächst ein Pixel \( p \) mit einem Helligkeitswert \( I_p \) ausgewählt. Ausgehend von diesem Pixel werden die Helligkeitswerte der 16 umliegenden Pixel \( p \) auf einer Kreislinie mit einem Radius von 3 verglichen. Übersteigt die Anzahl der aufeinander folgenden, signifikant helleren oder dunkleren Pixel einen bestimmten Schwellenwert \( N \), wird \( p \) als Feature identifiziert. Diese Schritte werden für alle Pixel im Bild wiederholt, um alle Feature-Punkte zu identifizieren. 
-
-Der Algorithmus kann optimiert werden, indem zunächst die Nachbarpixel 1, 5, 9, und 13 (siehe Abbildung \ref{fig:FAST}) betrachtet werden. Falls drei der vier Pixel heller oder dunkler sind als \( I_p \), kann es sich um einen potenziellen Feature-Punkt handeln. Andernfalls wird der Pixel \( p \) verworfen als möglicher Feature-Punkt verworfen. \cite{gao2021vSLAM, rublee2011orb, rosten2006fast}
+Der Algorithmus kann optimiert werden, indem zunächst die Nachbarpixel 1, 5, 9, und 13 (siehe Abbildung \ref{fig:FAST}) betrachtet werden. Falls drei der vier Pixel heller oder dunkler sind als \( I_p \), kann es sich um einen potenziellen Feature-Punkt handeln. Andernfalls wird der Pixel \( p \) als möglicher Feature-Punkt verworfen. \cite{gao2021vSLAM, rublee2011orb, rosten2006fast}
 
 \begin{figure}
     \centering
@@ -300,7 +296,7 @@ Der Algorithmus kann optimiert werden, indem zunächst die Nachbarpixel 1, 5, 9,
     \caption{FAST-Feature-Punkte \cite{rosten2006fast}\label{fig:FAST}}\par
 \end{figure}
 
-Zusätzlich zu den erkannten Feature-Punkten berechnet ORB Rotations- bzw. Richtungsinformationen für jedes Merkmal. Dazu wird ein sogenannter Zentroid berechnet, der ein Schwerpunkt anhand der Grauwerte des Bildblocks in der Nähe des Feature-Punkts definiert. Diese Zentroide werden wie folgt berechnet \cite{gao2021vSLAM, rublee2011orb}:
+Zusätzlich zu den erkannten Feature-Punkten berechnet ORB Rotations- bzw. Richtungsinformationen für jedes Merkmal. Dazu wird ein sogenannter Zentroid berechnet, der ein Schwerpunkt anhand der Grauwerte des Bildblocks in der Nähe des Feature-Punktes definiert. Diese Zentroide werden wie folgt berechnet \cite{gao2021vSLAM, rublee2011orb}:
 
 Zunächst wird das \emph{Moment} \( m_{pq} \) im Bildblock \( B \) berechnet, wobei \( p \) und \( q \) entweder 0 oder 1 sind:
 
@@ -344,7 +340,7 @@ Da die Anzahl der Feature-Punkte in einem Bild hoch sein kann, stößt der Brute
 
 \subsection{Pose Estimation}
 
-Die Schätzung der Kameraposition (\emph{Pose Estimation}) bildet die Grundlage für die Rekonstruktion der dreidimensionalen Szene. Die Berechnung basiert auf der \emph{Epipolargeometrie}, die die Beziehung zwischen zwei oder mehr Bildern beschreibt und die Bestimmung der Kameraposition ermöglicht. \cite{gao2021vSLAM} 
+Die Schätzung der Kameraposition (\emph{Pose Estimation}) bildet die Grundlage für die Rekonstruktion der dreidimensionalen Szene. Die Berechnung basiert auf der \emph{Epipolargeometrie}, die die Beziehung zwischen zwei oder mehreren Bildern beschreibt und die Bestimmung der Kameraposition ermöglicht. \cite{gao2021vSLAM} 
 
 Dazu wird die Bewegung der Kamera zwischen den Bildern ermittelt. Diese Bewegung kann mithilfe der \emph{Essential Matrix} dargestellt werden, die die Rotation \( R \) und Translation \( t \) der Kamera zwischen den Bildern definiert. \cite{gao2021vSLAM}
 
@@ -408,8 +404,6 @@ Die Essential Matrix kann dann mithilfe des \emph{Eight-Point-Algorithmus} gesch
 
 Um die Essential Matrix in die Rotationsmatrix \( R \) und den Translationsvektor \( t \) zu zerlegen, wird die \emph{Singulärwertzerlegung} (SVD) verwendet. Die genaue Beschreibung dieser Zerlegung und die Anwendung des Eight-Point-Algorithmus sind keine Bestandteile dieser Arbeit. Stattdessen wird auf weiterführende Literatur verwiesen. \cite{gao2021vSLAM, tsai1984svd, hartley1997eightpoint}
 
-Wichtig ist, dass sich aus der Zerlegung der Essential Matrix vier mögliche Lösungen für \( R \) und \( t \), da die Matrix nur die relative Bewegung zwischen zwei Bildern beschreibt. Die korrekte Lösung kann durch die Überprüfung der positiven Parallaxe ermittelt werden. Diese gibt an, ob sich die rekonstruierten Punkte vor oder hinter der Kamera befinden. Die richtige Lösung ist diejenige, bei der die meisten Punkte vor der Kamera liegen. \cite{gao2021vSLAM}
-
 Wichtig ist, dass sich aus der Zerlegung der Essential Matrix vier mögliche Lösungen für \( R \) und \( t \) ergeben, da die Matrix nur die relative Bewegung zwischen zwei Bildern beschreibt. Die Abbildung \ref{fig:SVD} zeigt ein Beispiel für die vier möglichen Lösungen der Zerlegung. Die korrekte Lösung kann durch die Überprüfung der positiven Parallaxe ermittelt werden. Diese gibt an, ob sich die rekonstruierten Punkte vor oder hinter der Kamera befinden. Die richtige Lösung ist diejenige, bei der die meisten Punkte vor der Kamera liegen. \cite{gao2021vSLAM}
 
 \begin{figure}
@@ -424,7 +418,7 @@ Da die Berechnung der Kamerabewegung nur die relative Pose zwischen zwei Bildern
 
 Die Rekonstruktion der dreidimensionalen Szene basiert auf der Bestimmung der räumlichen Positionen von Feature-Punkten. Dieser Prozess wird als \emph{Triangulation} bezeichnet und ermöglicht es, aus mehreren Bildern die dreidimensionalen Koordinaten eines Punktes zu berechnen. \cite{gao2021vSLAM}
 
-Abbildung \ref{fig:Triangulation} illustriert das Prinzip der Triangulation eines Punktes /( P ) anhand von zwei Bildern. Die Kamerapositionen \( O_1 \) und \( O_2 \) sowie die korrespondierenden Punkte \( p_1 \) und \( p_2 \) sind dargestellt. Der gesuchte Punkt \( P \) entspricht dem gesuchten Feature-Punkt im Raum. In einer idealen Welt entspricht \( P \) dem Schnittpunkt der Geraden \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \). Aufgrund von Rauschen und Ungenauigkeiten in den Bildern ist die exakte Bestimmung des Punktes durch die Berechnung des Schnittpunktes meist nicht möglich. Stattdessen kann der gesuchte Punkt durch die Minimierung des quadratischen Abstandes zwischen berechnet werden. Der gesuchte Punkt \( P \) ist derjenige, der sich im minimalen Abstand zu allen Strahlen befindet (siehe Abbildung \ref{fig:Triangulation}). \cite{gao2021vSLAM}
+Abbildung \ref{fig:Triangulation} illustriert das Prinzip der Triangulation eines Punktes \( P \) anhand zweier Bildern. Die Kamerapositionen \( O_1 \) und \( O_2 \) sowie die korrespondierenden Punkte \( p_1 \) und \( p_2 \) sind dargestellt. Der gesuchte Punkt \( P \) entspricht dem gesuchten Feature-Punkt im Raum. In einer idealen Welt entspricht \( P \) dem Schnittpunkt der Geraden \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \). Aufgrund von Rauschen und Ungenauigkeiten in den Bildern ist die exakte Bestimmung des Punktes durch die Berechnung des Schnittpunktes meist nicht möglich. Stattdessen kann der gesuchte Punkt durch die Minimierung des quadratischen Abstandes berechnet werden. Der gesuchte Punkt \( P \) ist derjenige, der sich im minimalen Abstand zu allen Strahlen befindet (siehe Abbildung \ref{fig:Triangulation}). \cite{gao2021vSLAM}
 
 \begin{figure}
     \centering
@@ -457,14 +451,14 @@ Durch die Erkennung von Flächen in der Punktwolke können die 3D-Modelle der Sz
 
 \subsection{Bundle Adjustment}
 
-Bei der Rekonstruktion einer Szene treten zwangsläufig Ungenauigkeiten auf. Diese entstehen zum Beispiel durch Bildrauschen, Unsicherheiten bei der Schätzung der Kamerapositionen oder Fehlern bei der Triangulation. Um diese Fehler zu minimieren und eine präzisere Rekonstruktion zu erreichen, wird das \textit{Bundle Adjustment} (BA) eingesetzt. Dieses Verfahren optimiert die gesamte Szene, indem es die Kameraposen und die 3D-Feature-Punkte gleichzeitig anpasst. \cite{gao2021vSLAM}
+Bei der Rekonstruktion einer Szene treten zwangsläufig Ungenauigkeiten auf. Diese entstehen zum Beispiel durch Bildrauschen, Unsicherheiten bei der Schätzung der Kamerapositionen oder Fehlern bei der Triangulation. Um diese Fehler zu minimieren und eine präzisere Rekonstruktion zu erreichen, wird das \textit{Bundle Adjustment} (BA) eingesetzt. Dieses Verfahren optimiert die gesamte Szene, indem es die Kamerapositionen und die 3D-Feature-Punkte gleichzeitig anpasst. \cite{gao2021vSLAM}
 
 In SLAM-Systemen ist das Bundle Adjustment eine der wichtigsten Methoden zur globalen Optimierung. Ziel ist es, den sogenannten \textit{Reprojektionsfehler} zu minimieren. Dieser Fehler beschreibt die Differenz zwischen den erkannten Feature-Punkten und den reprojizierten Punkten auf der zweidimensionalen Bildebene. Die reprojizierten Punkte können durch die Projektion der triangulierten Feature-Punkte im Weltkoordinatensystem zurück auf die zweidimensionale Bildebene berechnet werden. \cite{gao2021vSLAM}
 
 \begin{figure}
     \centering
     \includegraphics[ width=.8\textwidth ]{BundleAdjustment}
-    \caption{Beispiel einer Situation mit Reprojektionsfehler\label{fig:BA}}\par
+    \caption{Beispiel einer Situation mit Reprojektionsfehler \cite{kumar2024bundleAdjustment}\label{fig:BA}}\par
 \end{figure}
 
 Die Abbildung \ref{fig:BA} veranschaulicht den Reprojektionsfehler eines Feature-Punktes. Um diesen triangulierten Punkt zurück in die Bildebene zu projizieren, werden sowohl die extrinsischen als auch die intrinsischen Kameraparameter (siehe Kapitel \ref{Kalibrierung}) benötigt. Die Projektion erfolgt in mehreren Schritten \cite{gao2021vSLAM}:
@@ -544,7 +538,7 @@ Der k-Mean-Algorithmus ist ein Verfahren, das die Merkmalspunkte in \( k \) Clus
 \begin{figure}
     \centering
     \includegraphics[ width=.5\textwidth ]{Dictionary}
-    \caption{Aufbau eines Wörterbuches mithilfe eines k-d-Baumes \cite{gao2021vSLAM}\label{fig:Dictionary}}\par
+    \caption{Aufbau eines Wörterbuchs mithilfe eines k-d-Baumes \cite{gao2021vSLAM}\label{fig:Dictionary}}\par
 \end{figure}
 
 \begin{tcolorbox}[colback=THAi-Blue!20!white, colframe=THAi-Blue]
@@ -559,9 +553,9 @@ Scene Understanding bezeichnet die Fähigkeit eines Systems, die Umgebung zu int
 
 Die semantische Segmentierung, ermöglicht es, die Pixel eines Bildes in verschiedene Klassen, wie beispielsweise Wände, Decken oder Möbel, zu unterteilen. Dadurch lassen sich einzelne Elemente der Szene identifizieren und voneinander unterscheiden. Besonders in der Augmented Reality spielt die semantische Segmentierung eine entscheidende Rolle, da sie die Grundlage für die Interaktion zwischen virtuellen und realen Objekten bildet. \cite{szeliski2022computerVision, appledevdoc, arcoredevdoc}
 
-Frühere Verfahren zur semantischen Segmentierung basierten auf klassischen Bildverarbeitungstechniken wie der Histogramm-basierten oder der Regionen-basierten Segmentierung. Diese Methoden analysieren Farbverteilungen oder Gruppierungen von benachbarten Pixeln mit ähnlichen Eigenschaften, um verschiedene Bereiche im Bild zu identifizieren. Allerdings stoßen diese Techniken an ihre Grenzen, insbesondere bei der Erkennung komplexer Strukturen oder der Unterscheidung visuell ähnlicher Objekte. \cite{szeliski2022computerVision}
+Frühere Verfahren zur semantischen Segmentierung basierten auf klassischen Bildverarbeitungstechniken wie der histogrammbasierten oder der regionenbasierten Segmentierung. Diese Methoden analysieren Farbverteilungen oder Gruppierungen von benachbarten Pixeln mit ähnlichen Eigenschaften, um verschiedene Bereiche im Bild zu identifizieren. Allerdings stoßen diese Techniken an ihre Grenzen, insbesondere bei der Erkennung komplexer Strukturen oder der Unterscheidung visuell ähnlicher Objekte. \cite{szeliski2022computerVision}
 
-In den letzten Jahren haben sich Deep-Learning-Modelle, insbesondere Convolutional Neural Networks (CNNs), als effektive Methode für die semantische Segmentierung etabliert. Ein bekanntes CNN-Modell für die semantische Segmentierung ist die Fully Convolutional Neural Network (FCNN) Architektur, die speziell für die Segmentierung von Bildern entwickelt wurde. FCNNs sind in der Lage, komplexe Muster in den Bildern zu erkennen und die Pixel in verschiedene Klassen zu segmentieren. \cite{long2014fcnn}
+In den letzten Jahren haben sich Deep-Learning-Modelle, insbesondere Convolutional Neural Networks (CNNs), als effektive Methode für die semantische Segmentierung etabliert. Ein bekanntes CNN-Modell für die semantische Segmentierung ist die Fully-Convolutional-Neural-Network-Architektur (FCNN), die speziell für die Segmentierung von Bildern entwickelt wurde. FCNNs sind in der Lage, komplexe Muster in den Bildern zu erkennen und die Pixel in verschiedene Klassen zu segmentieren. \cite{long2014fcnn}
 
 Die FCNN-Architektur besteht aus mehreren Convolutional-Schichten (siehe Abbildung \ref{fig:FCNN}), die die Klassifizierung pro Pixel implementieren. Auf eine detaillierte Beschreibung der Funktionsweise von FCNNs wird aufgrund des gesetzten Rahmens dieser Arbeit verzichtet. Stattdessen wird auf weiterführende Literatur verwiesen. \cite{long2014fcnn, ronneberger2015unet}
 

@@ -207,7 +207,7 @@ struct ControlButton: View {
     var action: () -> Void
         
     var body: some View {
-        // Implementatierung der Button-Komponente
+        // Implementierung der Button-Komponente
     }
 }
 \end{lstlisting}
@@ -403,7 +403,7 @@ class SmokeDetector: Entity, HasModel, HasAnchoring {
 
 Die Klasse \texttt{SmokeDetector} erbt, wie alle anderen Entitäte, von \texttt{Entity}, der grundlegenden Klasse für alle virtuellen Objekte in einer ARKit-Szene. Sie implementiert zudem das \texttt{HasModel}-Protokoll, das die Nutzung von 3D-Modellen innerhalb der Entität ermöglicht. Das \texttt{HasAnchoring}-Protokoll sorgt dafür, dass die Entität an einem AR-Anchor verankert werden kann. Änderungen an der Entität werden automatisch in der AR-Szene übernommen und visuell dargestellt.
 
-Der \texttt{SmokeDetector} kann in der AR-Szene platziert, sobald die Focus-Entity eine gültige Position aufweist. Eine Benutzerinteraktion mit einer Schaltfläche löst die Platzierung des Rauchmelders aus, wobei die Position der Focus-Entity als Ankerpunkt für den Rauchmelder verwendet wird. Die Bestimmung der Abstände zu umliegenden Wänden wurde wie folgt implementiert \cite{appledevdoc}:
+Der \texttt{SmokeDetector} kann in der AR-Szene platziert werden, sobald die Focus-Entity eine gültige Position aufweist. Eine Benutzerinteraktion mit einer Schaltfläche löst die Platzierung des Rauchmelders aus, wobei die Position der Focus-Entity als Ankerpunkt für den Rauchmelder verwendet wird. Die Bestimmung der Abstände zu umliegenden Wänden wurde wie folgt implementiert \cite{appledevdoc}:
 
 \begin{lstlisting}[language=Swift]
 for data in raycastData {
@@ -419,7 +419,7 @@ for data in raycastData {
 }
 \end{lstlisting}
 
-Das Array \texttt{raycastData} enthält die Ergebnisse eines zuvor durchgeführten 360-Grad-Raycasts um die Focus-Entity. Die Raycasts werden durch die Benutzerinteraktion ausgelöst. Für jedes Ergebnis wird überprüft, ob es sich um eine erkannte Fläche handelt. Ist dies der Fall, wird die Normale der Fläche berechnet. Da der Normalenvektor eines \texttt{ARPlaneAnchor} im lokalen Koordinatensystem immer in Richtung der positiven y-Achse zeigt, lässt sich die Weltkoodinaten der Normalen einfach bestimmen. Sie ergibt sich aus der Multiplation des Vektors \[ (0,1,0)^T \] mit der Transformationsmatrix des \texttt{ARPlaneAnchors}. Anschließend wird der Winkel zwischen dem Richtungsvektor des Raycasts und der Normalen berechnet. Ein Winkel von 0 Grad bedeutet, dass der Raycast senkrecht auf die Fläche trifft. In diesem Fall kann er als Abstand zur Wand interpretiert werden. Um die Wahrscheinlichkeit des Vorhandenseins eines solchen Raycasts zu erhöhen, wurde die Anzahl der Raycasts auf 30 erhöht, so dass der Bereich um die Focus-Entity besser abgedeckt wird. Zusätzlich dazu wird ein kleiner Toleranzwert epsilon hinzugefügt, um Ungenauigkeiten in der Berechnung zu berücksichtigen. Liegt der Winkel innerhalb des Toleranzbereichs, wird eine Linie von der Focus-Entity zur Wand gezeichnet und der Abstand berechnet. Diese visuelle Rückmeldung hilft dem Benutzer, die Position der Wand besser einzuschätzen.
+Das Array \texttt{raycastData} enthält die Ergebnisse eines zuvor durchgeführten 360-Grad-Raycasts um die Focus-Entity. Die Raycasts werden durch die Benutzerinteraktion ausgelöst. Für jedes Ergebnis wird überprüft, ob es sich um eine erkannte Fläche handelt. Ist dies der Fall, wird die Normale der Fläche berechnet. Da der Normalenvektor eines \texttt{ARPlaneAnchor} im lokalen Koordinatensystem immer in Richtung der positiven y-Achse zeigt, lässt sich die Weltkoodinaten der Normalen einfach bestimmen. Sie ergibt sich aus der Multiplation des Vektors \[ (0,1,0)^T \] mit der Transformationsmatrix des \texttt{ARPlaneAnchors}. Anschließend wird der Winkel zwischen dem Richtungsvektor des Raycasts und der Normalen berechnet. Ein Winkel von 0 Grad bedeutet, dass der Raycast senkrecht auf die Fläche trifft. In diesem Fall kann er als Abstand zur Wand interpretiert werden. Um die Wahrscheinlichkeit des Vorhandenseins eines solchen Raycasts zu erhöhen, wurde die Anzahl der Raycasts auf 30 erhöht, so dass der Bereich um die Focus-Entity besser abgedeckt wird. Zusätzlich dazu wird ein kleiner Toleranzwert epsilon hinzugefügt, um Ungenauigkeiten in der Berechnung zu berücksichtigen. Liegt der Winkel innerhalb des Toleranzbereichs, wird eine Linie von der Focus-Entity zur Wand gezeichnet und der Abstand berechnet. Diese visuelle Rückmeldung hilft dem Benutzer, die Position zur Wand besser einzuschätzen.
 
 Ein potenzieller Nachteil dieser Implementierung besteht darin, dass die \texttt{RealityKit}-Komponenten direkt in den Model-Klassen verwendet werden. Dies führt zu einer gewissen Abhängigkeit zwischen der Model- und der View-Schicht, wodurch die strikte Trennung der Architekturprinzipien – insbesondere des MVVM-Patterns – nicht vollständig eingehalten wird. Eine alternative Lösung wäre die vollständige Entkopplung der Model-Klassen von den AR-spezifischen Komponenten. Dies würde jedoch eine zusätzliche Abstraktionsebene und damit eine erhöhte Komplexität mit sich bringen.
 
