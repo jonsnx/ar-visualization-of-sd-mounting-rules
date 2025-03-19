@@ -10,7 +10,8 @@ struct ARViewWrapper: UIViewRepresentable {
         let arView = ARView(frame: .zero)
         arView.session = arViewModel.arSession
         arView.environment.sceneUnderstanding.options = []
-        arView.debugOptions.insert(.showSceneUnderstanding)
+        // The following line can be used for debugging purposes
+        // arView.debugOptions.insert(.showSceneUnderstanding)
         arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur]
         arView.automaticallyConfigureSession = false
         for entity in arViewModel.scene {
@@ -21,7 +22,7 @@ struct ARViewWrapper: UIViewRepresentable {
     
     func updateUIView(_ uiView: ARView, context: Context) {
         for anchor in uiView.scene.anchors {
-            if anchor is SmokeDetector || anchor is DistanceIndicators {
+            if anchor.name == "SmokeDetector" || anchor.name == "DistanceIndicators" {
                 uiView.scene.removeAnchor(anchor)
             }
         }

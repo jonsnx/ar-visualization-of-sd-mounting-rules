@@ -5,21 +5,22 @@ import Combine
 
 
 class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
-    private(set) var arSession: ARSession = ARSession()
-    private let ruleManager: MountingRuleManager!
-    
     @Published private(set) var scene: [Entity & HasAnchoring] = []
     @Published private(set) var errorType: MountingErrorType = .none
+    private(set) var arSession: ARSession = ARSession()
+    private let ruleManager: MountingRuleManager!
+    private var focusEntity: FocusEntity!
+    private var currentFocus: ARRaycastResult?
+    private var isProcessing: Bool = false
+    private var frameCount: Int = 0
     private(set) var trackingState: TrackingState = .initializing {
         didSet {
             guard trackingState != oldValue else { return }
-            
             switch trackingState {
             case .initializing:
                 if oldValue != .initializing {
                     focusEntity.displayAsBillboard()
                 }
-                
             case let .tracking(raycastResult):
                 let planeAnchor = raycastResult.anchor as? ARPlaneAnchor
                 if let planeAnchor = planeAnchor {
@@ -31,19 +32,9 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         }
     }
     
-    private var focusEntity: FocusEntity!
-    private var distanceBetweenDetectorAndFocus: Float = -1.0
-    
-    private var isProcessing: Bool = false
-    private var currentFocus: ARRaycastResult?
-    private var recentFocusEntityAlignments: [ARPlaneAnchor.Alignment] = []
-    private var isChangingAlignment: Bool = false
-    private var isFocusOnCeiling: Bool = false
-    
-    private var frameCount: Int = 0
-    
     override init() {
-        ruleManager = MountingRuleManager(
+        // let variables must be initialized before super.init() call
+        self.ruleManager = MountingRuleManager(
             rules: [
                 CeilingRule(),
                 WallRule(),
@@ -51,12 +42,12 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
             ]
         )
         super.init()
-        let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal, .vertical]
-        config.sceneReconstruction = .meshWithClassification
-        config.frameSemantics = .sceneDepth
-        arSession.run(config)
-        arSession.delegate = self
+        self.arSession.run(WorldTrackingConfiguration.instance.config)
+        self.arSession.delegate = self
+        initScene()
+    }
+    
+    func initScene() {
         let cameraAnchor = AnchorEntity(.camera)
         focusEntity = FocusEntity(cameraAnchor: cameraAnchor, getCurrentCameraRotation: {
             guard let currentFrame = self.arSession.currentFrame else { return simd_quatf() }
@@ -83,7 +74,6 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     
     private func validateMountingRules() async {
         guard let currentFocus else {
-            
             await setErrorType(.ceilingRuleError)
             return
         }
@@ -102,12 +92,14 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
               let (camPos, camDir) = CameraUtils.getCamVector(camTransform: camera.transform),
               let result = RaycastUtil.smartRaycast(in: arSession, from: camPos, to: camDir)
         else {
+            // Tracking is not functioning as intended
             focusEntity.distanceToDetector = -1.0
             focusEntity.putInFrontOfCamera()
             trackingState = .initializing
             currentFocus = nil
             return
         }
+        // Tracking is functioning as intended
         focusEntity.distanceToDetector = calcDistanceBetweenDetectorAndFocus()
         currentFocus = result
         trackingState = .tracking(raycastResult: result)
@@ -127,7 +119,7 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         guard let position = currentFocus?.worldTransform.translation,
               focusEntity.isPlaceable
         else { return }
-        scene.removeAll { $0 is SmokeDetector || $0 is DistanceIndicators }
+        scene.removeAll { $0.name == "SmokeDetector" || $0.name == "DistanceIndicators" }
         let currentSurroundings = RaycastUtil.performRaycastsAroundYAxis(in: arSession, from: position, 30)
         let smokeDetector = SmokeDetector(worldPosition: position)
         let distanceIndicators = DistanceIndicators(from: position, around: currentSurroundings)
@@ -144,19 +136,16 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         else { return -1.0 }
         return distance(smokeDetector.position, currentFocus.worldTransform.translation)
     }
+    
+    func takeScreenshotAndSave() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let view = windowScene.windows.first?.rootViewController?.view else {
+            return
+        }
+        let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
+        let screenshotImage = renderer.image { context in
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        }
+        UIImageWriteToSavedPhotosAlbum(screenshotImage, self, nil, nil)
+    }
 }
-
-enum TrackingState: Equatable {
-    case initializing
-    case tracking(raycastResult: ARRaycastResult)
-}
-
-
-// TODOS:
-// [ ] implement snapshot logic
-// [ ] implement info modal
-// [ ] implement indicator of door and window constraints
-// [ ] implement "detector placed"-screen
-// [ ] implement partially coloring of ring indicator
-// [X] implement like a constraints framework or something
-// [ ] implement TA
