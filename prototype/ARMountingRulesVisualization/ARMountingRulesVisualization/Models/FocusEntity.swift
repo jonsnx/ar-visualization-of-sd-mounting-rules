@@ -59,14 +59,17 @@ class FocusEntity: Entity, HasAnchoring {
         self.getCurrentCameraRotation = getCurrentCameraRotation
         self.orientation = simd_quatf(angle: .pi / 2, axis: [1, 0, 0])
         self.addChild(self.positioningEntity)
+        var modelMaterial = PhysicallyBasedMaterial()
+        modelMaterial.baseColor = .init(tint: onColor)
+        modelMaterial.emissiveColor = .init(color: onColor)
+        modelMaterial.emissiveIntensity = 0.5
         if let ringPlane = try? ModelEntity.loadModel(named: "flat_ring") {
             self.positioningEntity.addChild(ringPlane)
             self.ringIndicatorEntity = ringPlane
+            ringPlane.model?.materials[0] = modelMaterial
         }
-        self.detectorEntity = ModelEntity(mesh: .generateCylinder(height: 0.05, radius: 0.05))
-        self.positioningEntity.addChild(detectorEntity!)
+        ringIndicatorEntity?.transform.scale = SIMD3<Float>(0.12, 0.12, 0.12)
         displayAsBillboard()
-        self.stateChanged()
     }
     
     required init() {
@@ -119,29 +122,6 @@ class FocusEntity: Entity, HasAnchoring {
         updateTransform(raycastResult: raycastResult)
     }
     
-    private func stateChanged() {
-        var endColor: UIColor
-        if self.isPlaceable {
-            endColor = self.onColor
-        } else {
-            endColor = self.offColor
-        }
-        if self.detectorEntity?.model?.materials.count == 0 {
-            self.detectorEntity?.model?.materials = [PhysicallyBasedMaterial()]
-        }
-        if self.ringIndicatorEntity?.model?.materials.count == 0 {
-            self.ringIndicatorEntity?.model?.materials = [PhysicallyBasedMaterial()]
-        }
-        var modelMaterial = PhysicallyBasedMaterial()
-        modelMaterial.baseColor = .init(tint: endColor)
-        modelMaterial.emissiveColor = .init(color: endColor)
-        modelMaterial.emissiveIntensity = 0.5
-        let pbOpacity: PhysicallyBasedMaterial.Opacity = .init(floatLiteral: getMaterialOpacity())
-        modelMaterial.blending = .transparent(opacity: pbOpacity)
-        self.detectorEntity?.model?.materials[0] = modelMaterial
-        self.ringIndicatorEntity?.model?.materials[0] = modelMaterial
-    }
-    
     private func getMaterialOpacity() -> Float {
         var opacity: Float = 1.0
         if self.distanceToDetector != -1.0 && self.distanceToDetector < 0.5 {
@@ -154,7 +134,6 @@ class FocusEntity: Entity, HasAnchoring {
     
     private func stateChangedSetup() {
         guard !isAnimating else { return }
-        self.stateChanged()
     }
 }
 
@@ -165,11 +144,6 @@ extension FocusEntity {
             SIMD3<Float>.zero, { $0 + $1 }
         ) / Float(recentFocusEntityPositions.count)
         self.position = average
-        if self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(1.0, 1.0, 1.0) {
-            self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(1.0, 1.0, 1.0), duration: 0.5)
-        } else if !self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(0.12, 0.12, 0.12) {
-            self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(0.12, 0.12, 0.12), duration: 0.5)
-        }
     }
     
     private func updateTransform(raycastResult: ARRaycastResult) {

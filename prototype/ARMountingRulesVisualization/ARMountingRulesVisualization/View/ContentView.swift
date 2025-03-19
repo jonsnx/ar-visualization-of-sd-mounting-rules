@@ -12,26 +12,12 @@ struct ContentView: View {
                     trailingPadding: 10.0
                 )
                 Spacer()
-                HStack {
-                    ControlButton(
-                        iconName: "plus",
-                        action: {
-                            arViewModel.placeDetector()
-                        }
-                    )
-                    ControlButton(
-                        iconName: "trash",
-                        action: {
-                            arViewModel.removeDetector()
-                        }
-                    )
-                    ControlButton(
-                        iconName: "camera.fill",
-                        action: {
-                            //TODO: add action
-                        }
-                    )
-                }
+                ControlButton(
+                    iconName: "plus",
+                    action: {
+                        arViewModel.addPoint()
+                    }
+                )
             }
         }
     }

@@ -39,6 +39,7 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
     private var recentFocusEntityAlignments: [ARPlaneAnchor.Alignment] = []
     private var isChangingAlignment: Bool = false
     private var isFocusOnCeiling: Bool = false
+    private var points = [SIMD3<Float>]()
     
     private var frameCount: Int = 0
     
@@ -132,6 +133,22 @@ class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
         let smokeDetector = SmokeDetector(worldPosition: position)
         let distanceIndicators = DistanceIndicators(from: position, around: currentSurroundings)
         scene.append(contentsOf: [smokeDetector, distanceIndicators])
+    }
+    
+    func addPoint() {
+        guard let position = currentFocus?.worldTransform.translation else { return }
+        switch self.points.count {
+            case 0: self.points.append(position);
+            case 1:
+                self.points.append(position)
+                let distanceIndicators = DistanceIndicators(from: self.points[0], to: self.points[1])
+                scene.append(contentsOf: [distanceIndicators]);
+            case 2:
+                self.points.removeAll()
+                self.points.append(position)
+                scene.removeAll()
+            default: return
+        }
     }
     
     func removeDetector() {

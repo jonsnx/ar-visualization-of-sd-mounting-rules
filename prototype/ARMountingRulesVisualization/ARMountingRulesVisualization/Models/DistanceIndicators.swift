@@ -29,6 +29,11 @@ class DistanceIndicators: Entity, HasModel, HasAnchoring {
         }
     }
     
+    init(from start: SIMD3<Float>, to end: SIMD3<Float>) {
+        super.init()
+        addLineEntity(from: start, to: end)
+    }
+    
     private func addLineEntity(from start: SIMD3<Float>, to end: SIMD3<Float>, showDistanceLabel: Bool = false) {
         let midPosition = SIMD3(
             x:(start.x + end.x) / 2,
@@ -39,6 +44,7 @@ class DistanceIndicators: Entity, HasModel, HasAnchoring {
         anchor.position = midPosition
         anchor.look(at: start, from: midPosition, relativeTo: nil)
         let meters = simd_distance(start, end)
+        print("Distance: \(meters)m")
         let lineMaterial = UnlitMaterial.init(color: .magenta)
         let bottomLineMesh = MeshResource.generateBox(width:0.005, height: 0, depth: meters)
         let bottomLineEntity = ModelEntity(mesh: bottomLineMesh, materials: [lineMaterial])
@@ -58,3 +64,15 @@ class DistanceIndicators: Entity, HasModel, HasAnchoring {
         self.addChild(anchor)
     }
 }
+
+//Real: 1.5m
+//Distance: 1.5114754m
+//Distance: 1.5054088m
+
+//Real: 2m
+//Distance: 2.975608m
+//Distance: 2.985186m
+
+//Real: 5m
+//Distance: 4.9524994m
+//Distance: 4.9443893m
