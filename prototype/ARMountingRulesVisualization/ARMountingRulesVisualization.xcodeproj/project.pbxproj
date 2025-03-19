@@ -7,12 +7,25 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		B96FBD232D6F0A6900ACF461 /* ARMountingRulesVisualization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARMountingRulesVisualization.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B96FBDA12D8B7EEA00ACF461 /* ARMountingRulesVisualization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARMountingRulesVisualization.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B96FBDA32D8B7F0500ACF461 /* Exceptions for "ARMountingRulesVisualization" folder in "ARMountingRulesVisualization" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B9047E442D1D6A0C00B083F1 /* ARMountingRulesVisualization */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B9047E472D1D6A0C00B083F1 /* ARMountingRulesVisualization */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B96FBDA32D8B7F0500ACF461 /* Exceptions for "ARMountingRulesVisualization" folder in "ARMountingRulesVisualization" target */,
+			);
 			path = ARMountingRulesVisualization;
 			sourceTree = "<group>";
 		};
@@ -33,7 +46,7 @@
 			isa = PBXGroup;
 			children = (
 				B9047E472D1D6A0C00B083F1 /* ARMountingRulesVisualization */,
-				B96FBD232D6F0A6900ACF461 /* ARMountingRulesVisualization.app */,
+				B96FBDA12D8B7EEA00ACF461 /* ARMountingRulesVisualization.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,7 +72,7 @@
 			packageProductDependencies = (
 			);
 			productName = ARMountingRulesVisualization;
-			productReference = B96FBD232D6F0A6900ACF461 /* ARMountingRulesVisualization.app */;
+			productReference = B96FBDA12D8B7EEA00ACF461 /* ARMountingRulesVisualization.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -247,7 +260,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9R488Q5966;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ARMountingRulesVisualization/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need access to your photo library to save screenshots.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
@@ -276,7 +291,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9R488Q5966;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ARMountingRulesVisualization/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need access to your photo library to save screenshots.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;

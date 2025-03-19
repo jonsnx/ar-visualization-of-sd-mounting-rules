@@ -1,10 +1,9 @@
 import ARKit
 
-struct MountingRules {
-    // 1 Float equals 1 Meter in ARKit
+struct MinDistances {
+    // 1.0f equals 1m in ARKit
     static let minDistanceToWalls: Float = 0.6
-    static let minDistanceToObjects: Float = 0.6
-    static let minDistanceToWindows: Float = 1
+    static let minDistanceToWindowOrDoor: Float = 1.5
 }
 
 struct RaycastConstants {
@@ -20,5 +19,11 @@ class WorldTrackingConfiguration {
     private init() {
         config.planeDetection = [.horizontal, .vertical]
         config.sceneReconstruction = .meshWithClassification
+        config.frameSemantics = .sceneDepth
     }
+}
+
+class EntityConstants {
+    static let smokeDetectorSize: Float = 0.05
+    static let angleThreshold: Float = 0.005
 }

@@ -11,11 +11,12 @@ class RaycastUtil {
                 allowing: target, alignment: .any
             )
             let results = session.raycast(rcQuery)
-            
             // Check for a result matching target
             if let result = results.first(
                 where: { $0.target == target }
-            ) { return result }
+            ) {
+                return result
+            }
         }
         return nil
     }
@@ -34,11 +35,4 @@ class RaycastUtil {
         }
         return results
     }
-}
-
-
-struct RaycastData {
-    let origin: SIMD3<Float>
-    let direction: SIMD3<Float>
-    let result: ARRaycastResult
 }

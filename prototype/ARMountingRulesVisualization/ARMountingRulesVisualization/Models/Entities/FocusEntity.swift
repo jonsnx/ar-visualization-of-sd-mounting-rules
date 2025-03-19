@@ -1,7 +1,4 @@
 //
-//  FocusEntity.swift
-//  FocusEntity
-//
 //  This code is strongly inspired by Max Cobb's FocusEntity implementation,
 //  which can be found at:
 //  https://github.com/maxxfrazer/FocusEntity
@@ -33,25 +30,47 @@
 import RealityKit
 import ARKit
 
+/**
+ An `Entity` which is used to provide uses with visual cues about the status of ARKit world tracking.
+ */
 class FocusEntity: Entity, HasAnchoring {
+    /// True if current position is a valid position for the smoke detector
     internal var isPlaceable = false
+    /// Current distance to a smoke detector: -1.0 if there is no smoke detector placed
     internal var distanceToDetector: Float = -1.0
+    /// Whether FocusEntity is on the ceiling or not.
     private var isOnCeiling: Bool = false
+    /// Indicates if the square is currently being animated.
     private var isAnimating = false
+    /// Indicates if the square is currently changing its alignment.
     private var isChangingAlignment = false
+    /// A camera anchor used for placing the focus entity in front of the camera.
     private var cameraAnchor: AnchorEntity?
+    /// The focus square's current alignment.
     private var currentAlignment: ARPlaneAnchor.Alignment?
+    /// The focus square's most recent alignments.
     private var recentFocusEntityAlignments: [ARPlaneAnchor.Alignment] = []
+    /// The focus square's most recent positions.
     private var recentFocusEntityPositions: [SIMD3<Float>] = []
+    /// The primary node that controls the position of other `FocusEntity` nodes.
     private let positioningEntity = Entity()
+    /// `ModelEntity` of a smoke detector used as the model of the `FocusEntity`.
     private var detectorEntity: ModelEntity?
+    /// `ModelEntity` of a ring used to show the minimum distance to walls.
     private var ringIndicatorEntity: ModelEntity?
+    /// Color when `FocusEntity` is on valid position.
     private let onColor: UIColor = .green
+    /// Color when `FocusEntity` is  on invalid position.
     private let offColor: UIColor = .red
+    /// Callback-function to get the current rotation of the camera.
     private var getCurrentCameraRotation: () -> simd_quatf = {
         return simd_quatf()
     }
     
+    /// Create a new ``FocusEntity`` instance.
+    /// - Parameters:
+    ///   - cameraAnchor: Anchor of the camera in the scene.
+    ///   - getCurrentCameraRotation: Callback function to get the current camera rotation.
     required init(cameraAnchor: AnchorEntity, getCurrentCameraRotation: @escaping () -> simd_quatf) {
         super.init()
         self.name = "FocusEntity"
@@ -65,6 +84,7 @@ class FocusEntity: Entity, HasAnchoring {
         }
         self.detectorEntity = ModelEntity(mesh: .generateCylinder(height: 0.05, radius: 0.05))
         self.positioningEntity.addChild(detectorEntity!)
+        // Start the focus square as a billboard.
         displayAsBillboard()
         self.stateChanged()
     }
@@ -73,26 +93,26 @@ class FocusEntity: Entity, HasAnchoring {
         fatalError("init() has not been implemented")
     }
     
-    func entityOffPlane(_ raycastResult: ARRaycastResult) {
-        displayOffPlane(for: raycastResult)
-    }
-    
+    /// Displays the focus square parallel to the camera plane.
     func displayAsBillboard() {
         self.isOnCeiling = false
         self.currentAlignment = .none
         stateChangedSetup()
     }
     
+    /// Places the focus entity in front of the camera instead of on a plane.
     func putInFrontOfCamera() {
         self.isOnCeiling = false
         guard let newPosition = cameraAnchor?.convert(position: [0, 0, -1], to: nil) else { fatalError("cameraAnchor is nil!") }
         recentFocusEntityPositions.append(newPosition)
         updatePosition()
+        updateScaleOfRingIndicator()
         var newRotation = self.getCurrentCameraRotation()
         newRotation *= simd_quatf(angle: .pi / 2, axis: [1, 0, 0])
         performAlignmentAnimation(to: newRotation)
     }
     
+    /// Called when a surface has been detected.
     private func displayOffPlane(for raycastResult: ARRaycastResult) {
         self.stateChangedSetup()
         let position = raycastResult.worldTransform.translation
@@ -105,6 +125,7 @@ class FocusEntity: Entity, HasAnchoring {
         updateTransform(raycastResult: raycastResult)
     }
     
+    /// Called when a plane has been detected.
     func entityOnPlane(
         for raycastResult: ARRaycastResult, planeAnchor: ARPlaneAnchor
     ) {
@@ -119,6 +140,12 @@ class FocusEntity: Entity, HasAnchoring {
         updateTransform(raycastResult: raycastResult)
     }
     
+    /// Called when no plane has been detected.
+    func entityOffPlane(_ raycastResult: ARRaycastResult) {
+        displayOffPlane(for: raycastResult)
+    }
+    
+    /// Called whenever the state of the focus entity changes
     private func stateChanged() {
         var endColor: UIColor
         if self.isPlaceable {
@@ -142,12 +169,12 @@ class FocusEntity: Entity, HasAnchoring {
         self.ringIndicatorEntity?.model?.materials[0] = modelMaterial
     }
     
+    /// Returns an opacity value based on the distance to a placed smoke detector.
     private func getMaterialOpacity() -> Float {
         var opacity: Float = 1.0
-        if self.distanceToDetector != -1.0 && self.distanceToDetector < 0.5 {
+        if self.distanceToDetector != -1.0 && self.distanceToDetector < MinDistances.minDistanceToWalls {
             let normalizedDistance = max(0.0, min(self.distanceToDetector, 1.0))
-            let t = normalizedDistance / 0.5
-            opacity = (t * t * (3 - 2 * t))
+            opacity = normalizedDistance / MinDistances.minDistanceToWalls
         }
         return opacity
     }
@@ -159,26 +186,36 @@ class FocusEntity: Entity, HasAnchoring {
 }
 
 extension FocusEntity {
+    
+    /// Update the position of the focus entity.
     private func updatePosition() {
         recentFocusEntityPositions = Array(recentFocusEntityPositions.suffix(10))
         let average = recentFocusEntityPositions.reduce(
             SIMD3<Float>.zero, { $0 + $1 }
         ) / Float(recentFocusEntityPositions.count)
         self.position = average
-        if self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(1.0, 1.0, 1.0) {
-            self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(1.0, 1.0, 1.0), duration: 0.5)
-        } else if !self.isOnCeiling && self.ringIndicatorEntity?.transform.scale != SIMD3<Float>(0.12, 0.12, 0.12) {
-            self.ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(0.12, 0.12, 0.12), duration: 0.5)
+    }
+    
+    /// Update the scale of the ring indicator.
+    private func updateScaleOfRingIndicator() {
+        if isOnCeiling && ringIndicatorEntity?.transform.scale != SIMD3<Float>(1.0, 1.0, 1.0) {
+            ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(1.0, 1.0, 1.0), duration: 0.5)
+        } else if !isOnCeiling && ringIndicatorEntity?.transform.scale != SIMD3<Float>(0.12, 0.12, 0.12) {
+            ringIndicatorEntity?.scaleAnimated(with: SIMD3<Float>(0.12, 0.12, 0.12), duration: 0.5)
         }
     }
     
+    /// Update the transform of the focus square to be aligned with the camera.
     private func updateTransform(raycastResult: ARRaycastResult) {
         self.updatePosition()
+        self.updateScaleOfRingIndicator()
         updateAlignment(for: raycastResult)
     }
     
+    /// Update the alignment based on the raycast result.
     private func updateAlignment(for raycastResult: ARRaycastResult) {
         var targetAlignment = raycastResult.worldTransform.orientation
+        // Determine current alignment
         var alignment: ARPlaneAnchor.Alignment?
         if let planeAnchor = raycastResult.anchor as? ARPlaneAnchor {
             alignment = planeAnchor.alignment
@@ -190,13 +227,16 @@ extension FocusEntity {
         } else if raycastResult.targetAlignment == .vertical {
             alignment = .vertical
         }
+        // Add to list of recent alignments
         if alignment != nil {
             self.recentFocusEntityAlignments.append(alignment!)
         }
+        // Average using several most recent alignments.
         self.recentFocusEntityAlignments = Array(self.recentFocusEntityAlignments.suffix(20))
         let alignCount = self.recentFocusEntityAlignments.count
         let horizontalHistory = recentFocusEntityAlignments.filter({ $0 == .horizontal }).count
         let verticalHistory = recentFocusEntityAlignments.filter({ $0 == .vertical }).count
+        // Alignment is same as most of the history - change it
         if alignment == .horizontal && horizontalHistory > alignCount * 3/4 ||
             alignment == .vertical && verticalHistory > alignCount / 2 ||
             raycastResult.anchor is ARPlaneAnchor {
@@ -207,17 +247,22 @@ extension FocusEntity {
                 self.currentAlignment = alignment
             }
         } else {
+            // Alignment is different than most of the history - ignore it
             return
         }
         if isChangingAlignment {
+            // Needs to be called on every frame that the animation is desired, Not just the first frame.
             performAlignmentAnimation(to: targetAlignment)
         } else {
             orientation = targetAlignment
         }
     }
     
+    /// Uses interpolation between orientations to create a smooth `easeOut` orientation adjustment animation.
     private func performAlignmentAnimation(to newOrientation: simd_quatf) {
+        // Interpolate between current and target orientations.
         orientation = simd_slerp(orientation, newOrientation, 0.15)
+        // This length creates a normalized vector (of length 1) with all 3 components being equal.
         self.isChangingAlignment = self.shouldContinueAlignAnim(to: newOrientation)
     }
     

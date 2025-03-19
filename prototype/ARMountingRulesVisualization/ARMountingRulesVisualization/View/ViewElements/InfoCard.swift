@@ -3,6 +3,7 @@ import SwiftUI
 struct InfoCard: View {
     var infoText: String
     var trailingPadding: CGFloat
+    
     var body: some View {
         ZStack {
             InfoText(infoText: infoText)
@@ -39,15 +40,11 @@ struct InfoCard: View {
         var body: some View {
             HStack {
                 Spacer()
-                Button(action: {
-                    // TODO: add action
-                }){
-                    Image(systemName: "info.circle.fill")
-                        .imageScale(.large)
-                        .font(.system(size: 40))
-                        .foregroundStyle(foregroundStyle)
-                        .clipShape(Circle())
-                }
+                Image(systemName: "info.circle.fill")
+                    .imageScale(.large)
+                    .font(.system(size: 40))
+                    .foregroundStyle(foregroundStyle)
+                    .clipShape(Circle())
             }
         }
     }
