@@ -16,22 +16,39 @@ Der Prototyp wurde ausschließlich im Portrait-Modus entwickelt, um die Interakt
 
 \section{Praxistauglichkeit und Nutzererfahrung}
 
-Die Anwendung wurde in einem realen Umfeld getestet und evaluiert. Dabei wurden verschiedene Szenarien simuliert, um die Funktionalität und Benutzerfreundlichkeit der Anwendung zu überprüfen. Die Anwendung konnte erfolgreich in verschiedenen Umgebungen eingesetzt werden und zeigte eine hohe Stabilität und Genauigkeit bei der Visualisierung der Montageregeln. Auch bei schwierigen Lichtverhältnissen oder unebenen Oberflächen funktionierte die Anwendung in den meisten Fällen.
+Die Anwendung wurde in einem realen Umfeld getestet, um ihre Funktionalität und Benutzerfreundlichkeit zu evaluieren. Hierzu wurde ein reproduzierbares Szenario simuliert, das die praktischen Anforderungen an die Anwendung abbildet.
 
-Hier stellt vor allem die ,,Plug-and-Play''-Eigenschaft der Anwendung einen großen Vorteil dar. Der Benutzer kann die Anwendung starten und sofort mit der Interaktion beginnen, ohne dass eine manuelle Kalibrierung oder Initialisierung erforderlich ist. Dies trägt dazu bei, dass die Anwendung eine geringe Einstiegshürde aufweist und schnell einsatzbereit ist.
-
-Fraglich ist jedoch, ob die Anwendung auch in größeren Räumen oder bei komplexeren Montagesituationen  eingesetzt werden kann. In solchen Fällen könnte die Tiefenmessung und das Tracking der Umgebung an ihre Grenzen stoßen. Auch die Platzierung von mehreren Rauchmeldern in einem Raum könnte die Leistung der Anwendung beeinträchtigen. Eine umfassende Evaluation in verschiedenen Umgebungen und Szenarien ist daher empfehlenswert, um die Leistungsfähigkeit der Anwendung zu überprüfen.
-
-Zusätzlich besteht die Frage, ob die Anwendung bei erfahrenen Monteuren eher als Hilfsmittel oder als Störfaktor wahrgenommen wird. Es ist denkbar, dass erfahrene Monteure die Visualisierung der Montageregeln als überflüssig empfinden und sich dadurch in ihrer Arbeit eingeschränkt fühlen. 
-
-Im Test wurden die Probanden mit folgender Aufgabe konfrontiert:
+Im Test wurden die Teilnehmer mit den folgenden Aufgaben konfrontiert:
 \begin{enumerate}
-    \item Finde eine potenziell gültige Installationsposition für den Rauchmelder.
-    \item Überprüfe, ob die Installationsposition den Montageregeln entspricht.
-    \item Dokumentiere die Installationsposition mithilfe eines Bildes.
+    \item Finden einer geeigneten Installationsposition für den Rauchmelder.
+    \item Überprüfen, ob die Montageposition den geltenden Vorschriften entspricht
+    \item Dokumentation der Installationsposition durch ein Foto.
 \end{enumerate}
 
-Die Aufgabe wurde in verschiedenen Räumen durchgeführt. Im Durchschnitt benötigten die Probanden etwa 1,5 Minuten, um sie zu erfüllen. Mit der Anwendung konnte die korrekte Installationsposition jedoch bereits im ersten Durchgang in weniger als einer Minute gefunden werden. Im zweiten Durchgang ließ sich die Aufgabe sogar innerhalb weniger Sekunden lösen. Dies entspricht einer Zeitersparnis von rund 90\%. Ob sich dieser Effekt auch bei erfahrenen Monteuren zeigt, müsste durch weitere Tests überprüft werden.
+Diese Aufgaben spiegeln die Arbeitsschritte wider, die der Prototyp unterstützen oder direkt automatisieren soll. Zu Beginn des Tests erhielten die Teilnehmer eine Einführung in die relevanten Montagevorschriften, die den Mindestanforderungen des Prototyps entsprechen. Die Tests erfolgten in mehreren Durchgängen, wobei die benötigten Zeiten erfasst wurden. Im ersten Durchgang führten die Teilnehmer die Aufgaben zunächst ohne Unterstützung durch die Anwendung durch. Dabei erhielten sie einen Zollstock, mit dem sie die Einhaltung der Montageregeln überprüfen sollten. In den folgenden Durchgängen konnten die Teilnehmer den Prototypen nutzen, um die Aufgaben mit Unterstützung zu erfüllen. Jeder Test wurde einzeln durchgeführt, um den Einfluss anderer Teilnehmer zu minimieren. Darüber hinaus wurde die Anwendung ohne zusätzliche Erklärungen oder Einführungen verwendet, um die Testergebnisse nicht zu verfälschen. Insgesamt nahmen fünf Teilnehmer am Test teil, die keine Erfahrung in der Installation von Rauchmeldern hatten.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ccccl}
+        \hline
+        Proband & 1. Durchgang (min:s) & 2. Durchgang (min:s) & 3. Durchgang (min:s) \\
+        \hline
+        1 & 1:30 & 0:52 & 0:13 \\
+        2 & 1:20 & 1:47 & 0:34 \\
+        3 & 1:32 & 1:23 & 0:23 \\
+        4 & 1:45 & 2:01 & 0:15 \\
+        5 & 1:19 & 1:16 & 0:08 \\
+        \hline
+    \end{tabular}
+    \caption{Ergebnisse der Praxistests}
+    \label{tab:TestResults}
+\end{table}
+
+Die Ergebnisse der Tests sind in Tabelle \ref{tab:TestResults} zusammengefasst. Während die durchschnittlichen Zeiten für den ersten und zweiten Durchgang mit jeweils 1 min 29 s und 1 min 28 s nahezu identisch sind, zeigt der dritte Durchgang mit einem Durchschnitt von nur 18 s eine signifikante Verbesserung. Dies deutet darauf hin, dass die Anwendung den Teilnehmern hilft, die Aufgaben schneller zu erledigen, sobald sie mit der Anwendung vertraut sind. Insbesondere konnten die Teilnehmer potenzielle Montagepositionen schneller identifizieren und die Montagevorschriften effizienter überprüfen und einhalten, wenn sie den Prototypen als Unterstützung verwendeten. Dies zeigt, dass die Anwendung das Potenzial hat, die Effizienz des Installationsprozesses zu verbessern.
+
+Die anschließende Befragung der Teilnehmer ergab, dass der Prototyp bereits einen hohen Grad an Benutzerfreundlichkeit (Usability) erreicht hat. Besonders positiv hervorgehoben wurde die „Plug-and-Play“-Eigenschaft der Anwendung. Der Benutzer kann die Anwendung sofort starten und direkt mit der Interaktion beginnen, ohne dass eine manuelle Kalibrierung oder zusätzliche Vorbereitungen erforderlich sind. Diese Eigenschaft trägt dazu bei, dass die Anwendung eine niedrige Einstiegshürde aufweist und schnell einsatzbereit ist.
+
+Trotz dieser positiven Testergebnisse und Rückmeldungen bleibt die Frage, ob die Anwendung auch in größeren Räumen oder bei komplexeren Montagesituationen effektiv eingesetzt werden kann. In solchen Szenarien könnte die begrenzte Reichweite der Tiefenmessung und die Implementierung der Montagevorschriften an ihre Grenzen stoßen. Darüber hinaus stellt sich die Frage, wie die Anwendung von erfahrenen Monteuren wahrgenommen wird. Es ist denkbar, dass diese die Visualisierung der Montagevorschriften als unnötig empfinden und dadurch in ihrer Arbeit gestört werden. Eine weiterführende Evaluation unter realen Einsatzbedingungen und in unterschiedlichen Szenarien ist daher erforderlich, um die Leistungsfähigkeit und Skalierbarkeit der Anwendung umfassend zu überprüfen.
 
 \section{Umsetzung der Montageregeln}
 
@@ -43,21 +60,41 @@ Insgesamt ist festzuhalten, dass die Umsetzung der Montageregeln in der Augmente
 
 Die Performance der Anwendung wird anhand verschiedener Kriterien bewertet, darunter Bildrate, Latenz und Stabilität. Getestet wurde die Anwendung auf einem iPad Pro (11 Zoll, 3. Generation) mit M1-Chip.
 
-Die durchschnittliche Bildrate beträgt 59 FPS (Frames per Second), was für eine flüssige Darstellung der AR-Szene vollkommen ausreicht. Wie bereits erwähnt, kann es bei der Platzierung des virtuellen Rauchmelders zu kurzen Verzögerungen kommen. Diese sind jedoch minimal und beeinträchtigen die Benutzererfahrung nicht. Gelegentlich treten Drift-Effekte auf, die in der Regel schnell von ARKit korrigiert werden.
+Die durchschnittliche Bildrate beträgt 60 FPS (Frames per Second), was für eine flüssige Darstellung der AR-Szene vollkommen ausreicht. Wie bereits erwähnt, kann es bei der Platzierung des virtuellen Rauchmelders zu kurzen Verzögerungen kommen. Diese sind jedoch minimal und beeinträchtigen die Benutzererfahrung nicht. 
 
-Während der Tests kam es nur selten zu Abstürzen oder schwerwiegenden Fehlern. Die Stabilität der Anwendung ist insgesamt als gut zu bewerten. In Einzelfällen traten Fehler auf, die einen Neustart der AR-Anwendung erforderlich machten. In den meisten Fällen konnte die Anwendung jedoch problemlos weiterverwendet werden.
+Während der Tests trat lediglich einmal ein Absturz der Anwendung auf. Dieser war auf einen Fehler in der Implementierung zurückzuführen, der später behoben werden konnte. Gelegentlich treten Drift-Effekte auf, die in der Regel schnell von ARKit korrigiert werden. Diese treten vor allem dann auf, wenn das Gerät sehr nahe an der Decke gehalten wird. In einem Testdurchgang konnte die Anwendung den Fehler nicht korrigieren, was zu einer falschen Positionierung des virtuellen Rauchmelders führte. Dieser Fehler konnte jedoch durch einen Neustart der Anwendung behoben werden. In den meisten Fällen konnte die Anwendung problemlos weiterverwendet werden. Die Stabilität der Anwendung ist daher insgesamt als gut zu bewerten. 
 
-\section{Bekannte Schwachstellen und Verbesserungspotenzial}
+\section{Genauigkeitsanalyse}
 
-Trotz der positiven Ergebnisse gibt es noch einige Schwachstellen und Verbesserungspotenziale, die in zukünftigen Versionen der Anwendung berücksichtigt werden sollten.
+Die Genauigkeit der Tiefenmessung ist ein entscheidender Faktor für die korrekte Anwendung der Montageregeln. Zur Evaluierung dieser Genauigkeit wurden Tests durchgeführt. Dabei wurden Markierungen an der Decke einer realen Umgebung angebracht, um Distanzen von 1,5 m, 3 m und 5 m zu kennzeichnen. Anschließend wurden Start- und Endpunkte der Distanzen mithilfe einer angepassten \texttt{FocusEntity} erfasst und die Abstände anhand der im Prototyp verwendeten Berechnungsmethoden ermittelt.
 
-Die Genauigkeit der Tiefenmessung ist ein entscheidender Faktor für die Umsetzung der Montageregeln. Der Prototyp konnte eine Genauigkeit von etwa 1-2 cm erreichen (siehe Abbildung \ref{fig:DistanceIndicator}). Dies wurde als ausreichend angesehen, um die Montageregeln präzise zu visualisieren. 
+Jede Distanzmessung wurde mehrfach wiederholt, wobei die AR-Szene vor jeder Messung neu initialisiert wurde, um eine Beeinflussung durch vorherige Rekonstruktionen der Umgebung zu vermeiden. Die Ergebnisse dieser Messungen sind in Tabelle \ref{tab:DistanceMeasurement} zusammengefasst.
 
-\begin{figure}[ht]
+\begin{table}[ht]
     \centering
-    \includegraphics[width=0.5\textwidth]{DistanzIndikator}
-    \caption{Genauigkeit der Tiefenmessung}
-    \label{fig:DistanceIndicator}
-\end{figure}
+    \begin{tabular}{ccccl}
+        \hline
+        Tatsächliche Distanz & Gemessene Distanz & Absolute Abweichung & Relative Abweichung \\
+        \hline
+        1,5 m & 1,5114 m & 0,0114 m & 0,76 \% \\
+        1,5 m & 1,5045 m & 0,0045 m & 0,3 \% \\
+        1,5 m & 1,5062 m & 0,0062 m & 0,41 \% \\
+        \hline
+        3 m & 2,9756 m & 0,0244 m & 0,81 \% \\
+        3 m & 2,9851 m & 0,0149 m & 0,5 \% \\
+        3 m & 2,9913 m & 0,0087 m & 0,29 \% \\
+        \hline
+        5 m & 4,9632 m & 0,0368 m & 0,74 \% \\
+        5 m & 4,9524 m & 0,0476 m & 0,95 \% \\
+        5 m & 4,9443 m & 0,0557 m & 1,11 \% \\
+        \hline
+    \end{tabular}
+    \caption{Ergebnisse der Evaluierung der Genauigkeit der Tiefenmessung}
+    \label{tab:DistanceMeasurement}
+\end{table}
 
-Fraglich ist, ob diese Genauigkeit auch in komplexeren Umgebungen oder bei größeren Räumen gewährleistet werden kann, da die LiDAR-Sensoren der Apple-Geräte eine begrenzte Reichweite der Tiefenmessung aufweisen. Die Reichweite der Sensoren beträgt etwa 5 Meter. Eine umfassende Evaluation der Genauigkeit in verschiedenen Szenarien ist daher empfehlenswert. Zudem besteht die Frage, ob die von der Anwendung generierten Screenshots als eindeutiger Nachweis einer korrekten Installation genutzt werden können. \cite{appledevdoc}
+Die Ergebnisse zeigen, dass die gemessenen Distanzen insgesamt nur geringe Abweichungen von den tatsächlichen Werten aufweisen. Insbesondere bei kürzeren Distanzen bis 1,5m sind die Messungen sehr präzise. Mit zunehmender Entfernung steigt jedoch die durchschnittliche absolute Abweichung. Die relative Abweichung bleibt jedoch mit durchschnittlich etwa 0,7 \% innerhalb eines akzeptablen Bereichs. Dies entspricht einer durchschnittlichen Messgenauigkeit von rund 2 cm, was als ausreichend angesehen wird, um die Montageregeln präzise zu visualisieren. Zusätzlich ist zu berücksichtigen, dass die tatsächlichen Distanzen mit einem Maßband bestimmt wurden, wodurch eine Messungenauigkeit von 0,5-1 cm nicht ausgeschlossen werden kann.
+
+Die durchgeführten Tests belegen, dass die LiDAR-gestützte Rekonstruktion der Umgebung eine ausreichende Genauigkeit für die Anforderungen der Anwendung bietet. Allerdings bleibt offen, ob diese Präzision auch in komplexeren Umgebungen oder in großflächigen Räumen gewährleistet werden kann. Ein limitierender Faktor ist die maximale Reichweite der LiDAR-Sensoren von Apple-Geräten, die bei etwa 5 Metern liegt. Daher wird eine weitergehende Evaluation in unterschiedlichen Anwendungsszenarien empfohlen. \cite{appledevdoc}
+
+Darüber hinaus stellt sich die Frage, ob die von der Anwendung generierten Screenshots als eindeutiger Nachweis einer korrekten Installation ausreichen. Eine weitergehende Untersuchung zur Validierung der Messergebnisse und deren Dokumentation könnte hierfür erforderlich sein. 

@@ -149,7 +149,7 @@ Ein häufig verwendetes Modell zur Beschreibung der Kamera ist das \emph{Pinhole
 
 Durch die Kalibrierung lassen sich die intrinsischen und extrinsischen Parameter bestimmen, die gemeinsam eine Projektionsmatrix definieren. Diese Matrix ermöglicht die Umrechnung von Bildkoordinaten in das reale 3D-Koordinatensystem (siehe Abbildung \ref{fig:Kalibrierung}). Die intrinsischen Parameter umfassen die Brennweite, die Objektivverzerrung und die Position des optischen Zentrums der Kamera. Die extrinsischen Parameter hingegen beschreiben die Position und Orientierung der Kamera im Raum. \cite{mw2024calibration}
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
@@ -203,7 +203,7 @@ x = PX
 
 Ein wichtiger Bestandteil der Kalibrierung ist die Korrektur von Objektivverzerrungen, da sie die Genauigkeit der Projektion beeinträchtigen können. Diese Verzerrungen entstehen durch die Krümmung der Linse (radiale Verzerrung, siehe Abbildung \ref{fig:Distortion}) oder durch Fehlausrichtungen zwischen Linse und Sensor (tangentiale Verzerrung). Werden sie nicht berücksichtigt, können sich Fehler in der Umrechnung zwischen Bild- und Weltkoordinaten ergeben. \cite{mw2024calibration, szeliski2022computerVision}
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=.5\textwidth]{Distortion}
     \caption{Radiale Verzerrungen der Linse \cite{stachniss2021calibration}\label{fig:Distortion}}
@@ -259,7 +259,7 @@ Der Deskriptor entspricht einer numerischen Beschreibung des erkannten Merkmals,
 
 Für die Erkennung von Feature-Punkten existieren verschiedene Algorithmen, darunter SIFT (\emph{Scale-Invariant Feature Transform}) \cite{lowe1999sift}, SURF (\emph{Speeded-Up Robust Features}) \cite{bay2006surf} und ORB (\emph{Oriented FAST and Rotated BRIEF}) \cite{rublee2011orb}. Die folgende Tabelle vergleicht die Geschwindigkeit dieser Algorithmen bei der Extraktion von 1000 Feature-Punkten aus demselben Bild \cite{gao2021vSLAM}:
 
-\begin{table}[h]
+\begin{table}
     \centering
     \begin{tabular}{ccl} 
         \hline
@@ -336,7 +336,7 @@ Die Schätzung der Kameraposition (\emph{Pose Estimation}) bildet die Grundlage 
 
 Dazu wird die Bewegung der Kamera zwischen den Bildern ermittelt. Diese Bewegung kann mithilfe der \emph{Essential Matrix} dargestellt werden, die die Rotation \( R \) und Translation \( t \) der Kamera zwischen den Bildern definiert. \cite{gao2021vSLAM}
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[ width=.5\textwidth ]{Epipolar}
     \caption{Situation der Epipolargeometrie bei zwei Bildern \cite{gao2021vSLAM}\label{fig:Epipolar}}\par
@@ -351,17 +351,17 @@ Unter Verwendung des Pinhole-Modells aus Kapitel \ref{Kalibrierung} und der besc
 
 Dabei entspricht \( R \) der Rotation und \( t \) der Translation der Kamera. Der Punkt \( P \) ist der Schnittpunkt der Linien \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \) (siehe Abbildung \ref{fig:Epipolar}). \cite{gao2021vSLAM}
 
-Die epipolare Bedingung besagt, dass die Kamerapositionen \( O_1 \) und \( O_2 \) zusammen mit dem Punkt \( P \) auf einer Ebene liegen. Diese Bedingung kann durch die folgende Gleichung ausgedrückt werden \cite{gao2021vSLAM}:
+Die epipolare Bedingung besagt, dass die Kamerapositionen \( O_1 \) und \( O_2 \) zusammen mit dem Punkt \( P \) auf einer Ebene liegen. Diese Bedingung kann durch die folgende Gleichung ausgedrückt werden \cite{gao2021vSLAM, kitani2017essentialMatrix}:
 \begin{equation}
-    x_2^T t \times R x_1 = 0\label{eq:Epipolar}
+    (x_2^T R) (t \times x_1) = 0\label{eq:Epipolar}
 \end{equation}
 
-Hierbei stehen \( x_1 \) und \( x_2 \) für die homogenen Koordinaten der übereinstimmenden Feature-Punkte \( p_1 \) und \( p_2 \) in den Bildern \( I_1 \) und \( I_2 \). Die Essential Matrix \( E \) wird nun wie folgt definiert \cite{gao2021vSLAM}:
+Hierbei stehen \( x_1 \) und \( x_2 \) für die homogenen Koordinaten der übereinstimmenden Feature-Punkte \( p_1 \) und \( p_2 \) in den Bildern \( I_1 \) und \( I_2 \). Die Essential Matrix \( E \) wird nun wie folgt definiert \cite{gao2021vSLAM, kitani2017essentialMatrix}:
 \begin{equation}
-    E = t \times R
+    E = R [t_{\times}]
 \end{equation}
 
-Diese Matrix entspricht einer 3x3-Matrix mit neun Unbekannten. Geht man nun von \( x_1 = [u_1, v_1, 1]^T \) und \( x_2 = [u_2, v_2, 1]^T \) aus, kann die epipolare Bedingung \ref{eq:Epipolar} in die folgende Gleichung umgeformt werden \cite{gao2021vSLAM}:
+Diese Matrix entspricht einer 3x3-Matrix mit neun Unbekannten, wobei \( [t_{\times}] \) die schiefsymmetrische Matrix des Translationsvektors \( t \) darstellt. Geht man nun von \( x_1 = [u_1, v_1, 1]^T \) und \( x_2 = [u_2, v_2, 1]^T \) aus, kann die epipolare Bedingung \ref{eq:Epipolar} in die folgende Gleichung umgeformt werden \cite{gao2021vSLAM}:
 \begin{equation}
 (u_2, v_2, 1) 
 \begin{pmatrix}
@@ -412,7 +412,7 @@ Die Rekonstruktion der dreidimensionalen Szene basiert auf der Bestimmung der r�
 
 Abbildung \ref{fig:Triangulation} illustriert das Prinzip der Triangulation eines Punktes \( P \) anhand zweier Bilder. Die Kamerapositionen \( O_1 \) und \( O_2 \) sowie die korrespondierenden Punkte \( p_1 \) und \( p_2 \) sind dargestellt. Der gesuchte Punkt \( P \) entspricht dem gesuchten Feature-Punkt im Raum. In einer idealen Welt entspricht \( P \) dem Schnittpunkt der Geraden \( \overrightarrow{O_1p_1} \) und \( \overrightarrow{O_2p_2} \). Aufgrund von Rauschen und Ungenauigkeiten in den Bildern ist die exakte Bestimmung des Punktes durch die Berechnung des Schnittpunktes meist nicht möglich. Stattdessen kann der gesuchte Punkt durch die Minimierung des quadratischen Abstandes berechnet werden. Der gesuchte Punkt \( P \) ist derjenige, der sich im minimalen Abstand zu allen Strahlen befindet (siehe Abbildung \ref{fig:Triangulation}). \cite{gao2021vSLAM}
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=.5\textwidth]{Triangulation}
     \caption{Dreidimensionale Triangulation mit zwei Bildern \cite{gao2021vSLAM}\label{fig:Triangulation}}\par
@@ -420,7 +420,7 @@ Abbildung \ref{fig:Triangulation} illustriert das Prinzip der Triangulation eine
 
 Das Ergebnis der Triangulation verschiedener Feature-Punkte über mehrere Bilder ergibt eine sogenannte Punktwolke (\emph{Point Cloud}, siehe Abbildung \ref{fig:PointCloud}), die die 3D-Struktur der Szene abbildet. Diese Punktwolke dient als Grundlage für die weitere Verarbeitung zur Erstellung eines detaillierten 3D-Modells der Szene.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[ width=.5\textwidth ]{PointCloud}
     \caption{Beispiel einer Punktwolke \cite{open3d2025pointcloud}\label{fig:PointCloud}}\par
@@ -529,7 +529,7 @@ Der k-Mean-Algorithmus ist ein Verfahren, das die Merkmalspunkte in \( k \) Clus
     \item Wiederholung der Schritte 2 und 3, bis die Clusterzentren konvergieren.
 \end{enumerate}
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[ width=.5\textwidth ]{Dictionary}
     \caption{Aufbau eines Wörterbuchs mithilfe eines k-d-Baumes \cite{gao2021vSLAM}\label{fig:Dictionary}}\par
@@ -591,7 +591,7 @@ Die LiDAR-Odometrie unterscheidet sich von der visuellen Odometrie, da keine Ext
     \item Wiederholung der Schritte 2 bis 4, bis die Transformation konvergiert.
 \end{enumerate}
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \begin{minipage}{0.24\textwidth}
         \centering

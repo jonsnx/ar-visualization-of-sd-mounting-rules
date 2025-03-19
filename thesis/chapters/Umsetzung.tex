@@ -109,7 +109,7 @@ Um eine gültige Position für den Rauchmelder visuell zu verdeutlichen, sind zw
 
 Für die Umsetzung des Prototypen kommen verschiedene Technologien und Frameworks in Betracht. Dabei werden die Anforderungen an die Anwendung und die verfügbaren Ressourcen berücksichtigt. Da die Anwendung primär für mobile Endgeräte, wie Smartphones und Tablets konzipiert konzipiert ist, liegt der Fokus auf plattformgerechten Technologien mit leistungsfähiger AR-Unterstützung.
 
-Ein zentrales Kriterium bei der Wahl der Technologien war die Beschaffenheit der Deckenoberflächen, da diese in der Regel glatt sind und somit nur wenige markante Merkmale für das visuelle Tracking bieten. Diese begrenzte Anzahl an Feature-Punkten kann dazu führen, dass das Tracking instabil wird und virtuelle Objekte nicht präzise in der Umgebung verankert werden können. Erste Tests mit dem ARCore-Framework von Google zeigen, dass dessen Tracking-Mechanismus (vSLAM) auf glatten Oberflächen an seine Grenzen stößt. Abbildung \ref{fig:ARCore} zeigt eine Demo-Anwendung von Google, die die Computer-Vision-Perspektive von ARCore veranschaulicht. Während die Lampe und der Rauchmelder als Informationsquellen dienen wird deutlich, dass die Decke selbst nur wenige Anhaltspunkte bietet. Da sich dort in der Regel keine markanten Objekte befinden, fehlen ausreichend Referenzpunkte für eine stabile Verankerung virtueller Objekte. Insbesondere wenn die Kamera hauptsächlich auf die Decke gerichtet ist, kann dies die Tracking-Genauigkeit erheblich beeinträchtigen.
+Ein zentrales Kriterium bei der Wahl der Technologien war die Beschaffenheit der Deckenoberflächen, da diese in der Regel glatt sind und somit nur wenige markante Merkmale für das visuelle Tracking bieten. Diese begrenzte Anzahl an Feature-Punkten kann dazu führen, dass das Tracking instabil wird und virtuelle Objekte nicht präzise in der Umgebung verankert werden können. Erste Tests mit dem ARCore-Framework von Google zeigen, dass dessen Tracking-Mechanismus (vSLAM) auf glatten Oberflächen an seine Grenzen stößt. Abbildung \ref{fig:ARCore} zeigt eine Demo-Anwendung von Google, die die Kantenerkennung von ARCore veranschaulicht. Während die Lampe und der Rauchmelder als Informationsquellen dienen wird deutlich, dass die Decke selbst nur wenige Anhaltspunkte bietet. Da sich dort in der Regel keine markanten Objekte befinden, fehlen ausreichend Referenzpunkte für eine stabile Verankerung virtueller Objekte. Insbesondere wenn die Kamera hauptsächlich auf die Decke gerichtet ist, kann dies die Tracking-Genauigkeit erheblich beeinträchtigen.
 
 \begin{figure}[ht]
     \centering
@@ -122,7 +122,7 @@ Ein zentrales Kriterium bei der Wahl der Technologien war die Beschaffenheit der
         \centering
         \includegraphics[width=\textwidth]{ARCoreCV}
     \end{minipage}
-    \caption{ARCore-Demo: Referenzbild (links) und Computer-Vision-Sicht von ARCore (rechts)}
+    \caption{ARCore-Demo: Referenzbild (links) und Kantenerkennung von ARCore (rechts)}
     \label{fig:ARCore}
 \end{figure}
 
@@ -178,7 +178,7 @@ Das \texttt{ViewModel} erhält kontinuierlich Tracking-Daten von der \texttt{ARS
 
 Durch diese Architektur wird eine klare Trennung der Verantwortlichkeiten erreicht, wodurch die Anwendung strukturiert, effizient und leicht erweiterbar bleibt. Neue Funktionen oder zusätzliche Entitäten können nahtlos integriert werden, ohne die bestehende Codebasis grundlegend verändern zu müssen.
 
-\subsection{View}
+\subsection{Benutzeroberfläche}
 
 Die Benutzeroberfläche des Prototyps wird mit dem SwiftUI-Framework von Apple entwickelt. SwiftUI verwendet eine deklarative Syntax, um Benutzeroberflächen zu erstellen und zu verwalten. Dabei werden einzelne \texttt{View}-Komponenten als grundlegende Bausteine der Benutzeroberfläche verwendet, die durch Modifikatoren und Container zu komplexen Layouts zusammengesetzt werden können. \cite{appledevdoc}
 
@@ -199,7 +199,11 @@ Der komponentenbasierte Aufbau der Benutzeroberfläche lässt sich ideal als Bau
     \label{fig:AppUI}
 \end{figure}
 
-Dieser modulare Aufbau ermöglicht eine strukturierte und flexible Implementierung der Benutzeroberfläche, wobei jede Komponente eigenständig und wiederverwendbar ist. Ein Beispiel hierfür ist der \texttt{ControlButton}, der mehrfach mit verschiedenen Symbolen und zugehörigen Callback-Funktionen eingesetzt wird.
+Die \texttt{ContentView} bildet den Wurzelknoten der Ansichtshierarchie und repräsentiert die gesamte Benutzeroberfläche der Anwendung. Darunter befindet sich die \texttt{ZStack}-Komponente, die als Teil des SwiftUI-Frameworks die Überlagerung von \texttt{View}-Elementen ermöglicht. Dadurch können die UI-Elemente über der \texttt{ARView} positioniert werden.
+
+Die \texttt{VStack}-Komponente trennt die \texttt{InfoCard} vertikal von den Steuerelementen, indem ein \textit{Spacer} eingefügt wird, der den maximal möglichen Abstand zwischen diesen Komponenten herstellt. Die Steuerelemente selbst sind innerhalb einer \texttt{HStack} angeordnet, die die Schaltflächen für die Interaktionen bündelt.
+
+Dieser modulare Aufbau ermöglicht eine strukturierte und flexible Implementierung der Benutzeroberfläche, wobei jede Komponente eigenständig und wiederverwendbar bleibt. Ein Beispiel hierfür ist der \texttt{ControlButton}, der mit verschiedenen Symbolen und zugehörigen Callback-Funktionen mehrfach verwendet werden kann.
 
 \begin{lstlisting}[language=Swift]
 struct ControlButton: View {
@@ -211,8 +215,6 @@ struct ControlButton: View {
     }
 }
 \end{lstlisting}
-
-SwiftUI stellt eine Vielzahl vordefinierter Komponenten bereit, die speziell für die Entwicklung von iOS-Anwendungen optimiert sind. So kommt beispielsweise die \texttt{ZStack}-Komponente zum Einsatz, um die Buttons und die InfoCard über der ARView zu platzieren.
 
 Zur Steuerung der Darstellung und des Verhaltens der Komponenten kommen Modifikatoren zum Einsatz. Ein Beispiel hierfür ist die Verwendung von Übergängen und Animationen, um die Zustandsänderungen der \texttt{InfoCard} visuell darzustellen:
 
@@ -226,7 +228,7 @@ InfoText(infoText: infoText)
 
 Der \texttt{transition}-Modifikator stellt eine Bewegung der Komponente von der rechten Bildschirmkante dar. Diese Bewegung wird durch den \texttt{animation}-Modifikator animiert. Um den Übergangseffekt zu verstärken, wird zusätzlich der \texttt{opacity}-Modifikator verwendet, um die Transparenz der Komponente während des Übergangs zu steuern.
 
-Die ARView bildet das Herzstück der Augmented-Reality-Darstellung und ist Teil des RealityKit-Frameworks. Sie ermöglicht das Rendering von 3D-Objekten in einer erweiterten Umgebung. Um die ARView in die SwiftUI-View zu integrieren, muss sie als \texttt{UIViewRepresentable}-Komponente eingebunden werden. Dies erlaubt es, die ARView als Subview der SwiftUI-View zu verwenden, wo sie mithilfe von Modifikatoren positioniert und skaliert wird.
+Die \texttt{ARView} bildet das Herzstück der Augmented-Reality-Darstellung und ist Teil des RealityKit-Frameworks. Sie ermöglicht das Rendering von 3D-Objekten in einer erweiterten Umgebung. Um die \texttt{ARView} in die SwiftUI-View zu integrieren, muss sie als \texttt{UIViewRepresentable}-Komponente eingebunden werden. Dies erlaubt es, die \texttt{ARView} als Subview der SwiftUI-View zu verwenden, wo sie mithilfe von Modifikatoren positioniert und skaliert wird.
 
 \subsection{Konfiguration und Nutzung der ARSession}
 
@@ -289,7 +291,7 @@ Zur Validierung dieser Regeln existiert ein Framework, das die Überprüfung der
 Die Regeln selbst sind als Klassen implementiert, die das \texttt{MountingRule}-Protokoll implementieren. Dieses Protokoll definiert eine Methode zur Validierung der jeweiligen Regel und gibt einen booleschen Wert zurück:
 
 \begin{tcolorbox}[colback=THAi-Blue!20!white, colframe=THAi-Blue]
-    Ein Protokoll legt Anforderungen an Methoden und Eigenschaften fest, die von Klassen, Strukturen oder Aufzählungen umgesetzt werden können, sodass ein Typ als konform gilt, wenn er diese erfüllt. \cite{apple2025swift}
+    Ein \textbf{Protokoll} legt Anforderungen an Methoden und Eigenschaften fest, die von Klassen, Strukturen oder Aufzählungen umgesetzt werden können, sodass ein Typ als konform gilt, wenn er diese erfüllt. \cite{apple2025swift}
 \end{tcolorbox}  
 
 \begin{lstlisting}[language=Swift]
@@ -357,27 +359,20 @@ Darüber hinaus bildet Raycasting die Grundlage für die Positionierung der Focu
 
 \subsection{Abstand zu Fenstern und Türen}
 
-Bei der Überprüfung des Abstands zu Fenstern und Türen wird direkt auf die klassifizierten Meshes im \texttt{ARFrame} zurückgegriffen. Dazu werden die Faces der Meshes wie folgt analysiert: 
+Bei der Überprüfung des Abstands zu Fenstern und Türen wird direkt auf die klassifizierten Meshes im \texttt{ARFrame} zurückgegriffen. Abbildung \ref{fig:WindowDoorDistance} visualisiert die einzelnen Schritte der Implementierung.
 
-\begin{lstlisting}[language=Swift]
-for index in 0..<anchor.geometry.faces.count {
-    if ![.window, .door].contains(anchor.geometry.classificationOf(faceWithIndex: index)) { continue }
-    let geometricCenterOfFace = anchor.geometry.centerOf(faceWithIndex: index)
-    var centerLocalTransform = matrix_identity_float4x4
-    centerLocalTransform.columns.3 = SIMD4<Float>(geometricCenterOfFace.0, geometricCenterOfFace.1, geometricCenterOfFace.2, 1)
-    let centerWorldPosition = (anchor.transform * centerLocalTransform).translation
-    let distanceToFace = distance(centerWorldPosition, position)
-    if distanceToFace <= MountingRuleConstants.minDistanceToWindowOrDoor {
-        return false
-    }
-}
-\end{lstlisting}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{WindowDoorDistance}
+    \caption{Überprüfung des Abstands zu Fenstern und Türen}
+    \label{fig:WindowDoorDistance}
+\end{figure}
 
-Hierbei wird zunächst überprüft, ob das jeweilige Face des Meshes als Fenster oder Tür klassifiziert wurde. Wenn dies nicht der Fall ist, wird das Face ignoriert. Andernfalls wird der Abstand zwischen dem Mittelpunkt des Faces und der Position der Focus-Entity wie folgt berechnet:
+Zunächst wird der geometrische Mittelpunkt eines Faces innerhalb des lokalen Koordinatensystems des Meshes auf Basis der Eckpunkte (Vertices) berechnet. Anschließend erfolgt die Transformation dieses Mittelpunkts in das Weltkoordinatensystem, um den Abstand zur Focus-Entity zu bestimmen.
 
-Die Methode \texttt{centerOf(faceWithIndex:)} berechnet den geometrischen Mittelpunkt eines Faces im lokalen Koordinatensystem des Meshes mithilfe der Eckpunkte (Vertices) des Faces. Dieser Mittelpunkt wird anschließend in das Weltkoordinatensystem transformiert, um den Abstand zur Focus-Entity zu bestimmen. Liegt der Abstand unterhalb des Mindestabstands, wird die Platzierung des Rauchmelders verhindert.
+Unterschreitet dieser Abstand den vorgegebenen Mindestwert, wird geprüft, ob das entsprechende Face als Fenster oder Tür klassifiziert ist. Ist dies der Fall, gilt die aktuelle Position der Focus-Entity als ungültig, und die Platzierung des Rauchmelders wird verhindert.
 
-Durch diese Implementierung wird sichergestellt, dass der Abstand zu Fenstern und Türen korrekt überprüft wird und die Montageregeln zuverlässig eingehalten werden.
+Durch diese Implementierung wird sichergestellt, dass der Abstand zu Fenstern und Türen korrekt überprüft wird und die Montageregel zuverlässig eingehalten werden.
 
 \subsection{Virtuelle Objekte der AR-Szene}
 
@@ -403,23 +398,20 @@ class SmokeDetector: Entity, HasModel, HasAnchoring {
 
 Die Klasse \texttt{SmokeDetector} erbt, wie alle anderen Entitäten, von \texttt{Entity}, der grundlegenden Klasse für alle virtuellen Objekte in einer ARKit-Szene. Sie implementiert zudem das \texttt{HasModel}-Protokoll, das die Nutzung von 3D-Modellen innerhalb der Entität ermöglicht. Das \texttt{HasAnchoring}-Protokoll sorgt dafür, dass die Entität an einem AR-Anchor verankert werden kann. Änderungen an der Entität werden automatisch in der AR-Szene übernommen und visuell dargestellt.
 
-Der \texttt{SmokeDetector} kann in der AR-Szene platziert werden, sobald die Focus-Entity eine gültige Position aufweist. Eine Benutzerinteraktion mit einer Schaltfläche löst die Platzierung des Rauchmelders aus, wobei die Position der Focus-Entity als Ankerpunkt für den Rauchmelder verwendet wird. Die Bestimmung der Abstände zu umliegenden Wänden wird wie folgt implementiert \cite{appledevdoc}:
+Der \texttt{SmokeDetector} kann in der AR-Szene platziert werden, sobald die Focus-Entity eine gültige Position aufweist. Eine Benutzerinteraktion mit einer Schaltfläche löst die Platzierung des Rauchmelders aus, wobei die Position der Focus-Entity als Ankerpunkt für den Rauchmelder verwendet wird.
 
-\begin{lstlisting}[language=Swift]
-for data in raycastData {
-    guard let plane = data.result.anchor as? ARPlaneAnchor else { continue }
-    let finalWorldNormal = plane.calculateNormalVetor()
-    let normalizedScalar = simd_dot(data.direction, finalWorldNormal) / (simd_length(finalWorldNormal) * simd_length(data.direction))
-    let epsilon: Float = 0.005  
-    if  normalizedScalar > (1 - epsilon) || normalizedScalar < (-1 + epsilon) {
-        var targetPosition = data.result.worldTransform.translation
-        targetPosition.y += RaycastConstants.raycastOffset
-        addLineEntity(from: position, to: targetPosition, showDistanceLabel: true)
-    }
-}
-\end{lstlisting}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{DistanceIndicatorEvaluation}
+    \caption{Bestimmung des Abstands zu umliegenden Wänden}
+    \label{fig:DistanceIndicatorEvaluation}
+\end{figure}
 
-Das Array \texttt{raycastData} enthält die Ergebnisse eines zuvor durchgeführten 360-Grad-Raycasts um die Focus-Entity. Die Raycasts werden durch die Benutzerinteraktion ausgelöst. Für jedes Ergebnis wird überprüft, ob es sich um eine erkannte Fläche handelt. Ist dies der Fall, wird die Normale der Fläche berechnet. Da der Normalenvektor eines \texttt{ARPlaneAnchor} im lokalen Koordinatensystem immer in Richtung der positiven y-Achse zeigt, lassen sich die Weltkoodinaten der Normalen einfach bestimmen. Sie ergibt sich aus der Multiplikation des Vektors \( (0,1,0)^T \) mit der Transformationsmatrix des \texttt{ARPlaneAnchors}. Anschließend wird der Winkel zwischen dem Richtungsvektor des Raycasts und der Normalen berechnet. Ein Winkel von 0 Grad bedeutet, dass der Raycast senkrecht auf die Fläche trifft. In diesem Fall kann er als Abstand zur Wand interpretiert werden. Um die Wahrscheinlichkeit des Vorhandenseins eines solchen Raycasts zu erhöhen, wurde die Anzahl der Raycasts auf 30 erhöht, so dass der Bereich um die Focus-Entity besser abgedeckt wird. Zusätzlich dazu wird ein kleiner Toleranzwert epsilon hinzugefügt, um Ungenauigkeiten in der Berechnung zu berücksichtigen. Liegt der Winkel innerhalb des Toleranzbereichs, wird eine Linie von der Focus-Entity zur Wand gezeichnet und der Abstand berechnet. Diese visuelle Rückmeldung hilft dem Benutzer, die Position zur Wand besser einzuschätzen.
+Zur Ermittlung des Abstands zu umliegenden Wänden wird ein 360-Grad-Raycast um die Focus-Entity durchgeführt. Diese Raycasts liefern Informationen über die Umgebung und ermöglichen die Berechnung der Abstände zu den erkannten Flächen. Für jedes getroffene Objekt wird überprüft, ob es als Fläche klassifiziert wurde. Falls dies zutrifft, wird die Normale der Fläche berechnet.
+
+Da der Normalenvektor eines \texttt{ARPlaneAnchor} im lokalen Koordinatensystem stets in Richtung der positiven y-Achse zeigt, lassen sich die Weltkoodinaten der Normalen einfach bestimmen. Sie ergibt sich aus der Multiplikation des Vektors \( (0,1,0)^T \) mit der Transformationsmatrix des \texttt{ARPlaneAnchors}. Anschließend wird der Winkel \( \alpha \) zwischen dem Richtungsvektor des Raycasts und der Normalen berechnet (siehe Abbildung \ref{fig:DistanceIndicatorEvaluation}). 
+
+Ein Winkel von 0 Grad bedeutet, dass der Raycast senkrecht auf die Fläche trifft. In diesem Fall kann er als Abstand zur Wand interpretiert werden. Um die Wahrscheinlichkeit des Vorhandenseins eines solchen Raycasts zu erhöhen, wird die Anzahl der Raycasts auf 30 erhöht, wodurch der Bereich um die Focus-Entity besser abgedeckt wird. Zusätzlich dazu wird ein kleiner Toleranzwert \( \epsilon \) hinzugefügt, um Ungenauigkeiten in der Berechnung zu berücksichtigen. Liegt der Winkel innerhalb des Toleranzbereichs, wird eine Linie von der Focus-Entity zur Wand gezeichnet und der Abstand berechnet. Diese visuelle Rückmeldung hilft dem Benutzer, die Position zur Wand besser einzuschätzen.
 
 Ein potenzieller Nachteil dieser Implementierung besteht darin, dass die \texttt{RealityKit}\linebreak-Komponenten direkt in den Model-Klassen verwendet werden. Dies führt zu einer gewissen Abhängigkeit zwischen der Model- und der View-Schicht, wodurch die strikte Trennung der Architekturprinzipien – insbesondere des MVVM-Patterns – nicht vollständig eingehalten wird. Eine alternative Lösung wäre die vollständige Entkopplung der Model-Klassen von den AR-spezifischen Komponenten. Dies würde jedoch eine zusätzliche Abstraktionsebene und damit eine erhöhte Komplexität mit sich bringen.
 
