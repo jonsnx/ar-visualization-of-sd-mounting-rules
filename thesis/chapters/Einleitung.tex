@@ -4,25 +4,25 @@
 
 Die BRUNATA-METRONA GmbH \& Co. KG zählt seit mehr als 50 Jahren zu den führenden Anbietern verbrauchsbasierter Abrechnungssysteme für Heiz- und Wasserkosten. Das Unternehmen hat seine Marktposition durch die schrittweise Erweiterung seines Dienstleistungsangebots und den gezielten Einsatz digitaler Tools gesichert. Diese strategische Ausrichtung half dabei, auch in komplexen Phasen der Branchenentwicklung wettbewerbsfähig zu bleiben.
 
-Um die Effizienz weiter zu steigern und Dienstleistern bzw. Kunden neue Interaktionsmöglichkeiten zu bieten, evaluieren Abteilungen regelmäßig neue Technologien zur Integration in bestehende Abläufe. Hier stehen aktuell vor allem KI-gestützte Lösungen, wie die Implementierung eines Chatbots zur Unterstützung der Kundenkommunikation, und die Verwendung von \emph{Computer-Vision-Algorithmen} für die automatisierte Ablesung von Zählerständen im Fokus.
+Um die Effizienz weiter zu steigern und Dienstleistern bzw. Kunden neue Interaktionsmöglichkeiten zu bieten, evaluieren Abteilungen regelmäßig neue Technologien zur Integration in bestehende Abläufe. Hier stehen aktuell vor allem KI-gestützte Lösungen, wie die Implementierung eines Chatbots zur Unterstützung der Kundenkommunikation, und die Verwendung von \emph{Computer-Vision}-Algorithmen für die automatisierte Ablesung von Zählerständen im Fokus.
 
-Letzteres stellt die Grundlage der \textit{Augmented-Reality}-Technologie (AR) dar, die in den letzten Jahren zunehmend an Bedeutung gewonnen hat. AR ermöglicht die Einblendung digitaler Informationen in die reale Welt und eröffnet damit vielfältige Anwendungsmöglichkeiten. Die rasante Entwicklung dieser Technologie hat nicht nur branchenübergreifend, sondern auch bei BRUNATA-METRONA großes Interesse geweckt. Wesentliche Treiber dieser Entwicklung sind die fortschreitende Leistungsfähigkeit mobiler Endgeräte, die zunehmende Verfügbarkeit praxistauglicher Smartglasses sowie Fortschritte in der KI-gestützten Bilderkennung und -verarbeitung. Diese Fortschritte in der Computer Vision machen AR zunehmend alltagstauglich und interessant für diverse Einsatzgebiete. \cite{verma2022advances, boulanger2024applications, doerner2022virtual}
+Letzteres stellt die Grundlage der \emph{Augmented-Reality}-Technologie (AR) dar, die in den letzten Jahren zunehmend an Bedeutung gewonnen hat. AR ermöglicht die Einblendung digitaler Informationen in die reale Welt und eröffnet damit vielfältige Anwendungsmöglichkeiten. Die rasante Entwicklung dieser Technologie hat nicht nur branchenübergreifend, sondern auch bei BRUNATA-METRONA großes Interesse geweckt. Wesentliche Treiber dieser Entwicklung sind die fortschreitende Leistungsfähigkeit mobiler Endgeräte, die zunehmende Verfügbarkeit praxistauglicher Smartglasses sowie Fortschritte in der KI-gestützten Bilderkennung und \linebreak-verarbeitung. Diese Fortschritte in der Computer Vision machen AR zunehmend alltagstauglich und interessant für diverse Einsatzgebiete. \cite{verma2022advances, boulanger2024applications, doerner2022virtual}
 
 Im Folgenden werden die theoretischen Grundlagen von AR, ihre technischen Implementierungsmöglichkeiten sowie ihr Potenzial zur Optimierung von Geschäftsprozessen näher untersucht.
 
 \section{Augmented Reality}
 
-Augmented Reality (AR) ist eine Technologie, die die reale Welt durch die Einbindung digitaler Informationen und virtueller Objekte erweitert und dabei gegebenenfalls Interaktionen zwischen Nutzern und diesen digitalen Elementen ermöglicht. Abbildung \ref{fig:Continuum} zeigt die Einordnung von AR in dem Kontinuum der Mixed-Reality-Technologien. Im Gegensatz zu \emph{Virtual Reality} (VR), die Benutzer vollständig in eine künstliche Umgebung eintauchen lässt, bewahrt AR die Sicht auf die reale Welt. Dadurch wird die Realität ergänzt, statt sie zu ersetzen. \cite{azuma1997ar, doerner2022virtual}
+Augmented Reality ist eine Technologie, die die reale Welt durch die Einbindung digitaler Informationen und virtueller Objekte erweitert und dabei gegebenenfalls Interaktionen zwischen Nutzern und diesen digitalen Elementen ermöglicht. Abbildung \ref{fig:Continuum} zeigt die Einordnung von AR in dem Kontinuum der \emph{Mixed-Reality}-Technologien. Im Gegensatz zur \emph{Virtual Reality} (VR), die Benutzer vollständig in eine künstliche Umgebung eintauchen lässt, bewahrt AR die Sicht auf die reale Welt. Dadurch wird die Realität ergänzt, statt sie zu ersetzen. \cite{azuma1997ar, doerner2022virtual}
 
 \begin{figure}
     \centering
     \includegraphics[ width=.5\textwidth ]{Continuum}
-    \caption{Kontinuum der Mixed Reality Technologien\label{fig:Continuum}}\par
+    \caption{Kontinuum der Mixed Reality Technologien \cite{doerner2022virtual}\label{fig:Continuum}}\par
 \end{figure}
 
-Die Ursprünge von AR reichen bis in die 1960er Jahre zurück, als Ivan Sutherland mit seiner Vision des ,,ultimativen Displays'' \cite{sutherland1965ultimateDisplay} den Grundstein legte. In seinen Forschungen beschrieb er die Idee einer interaktiven, computergenerierten Welt und verglich sie mit einem ,,Wunderland, wie Alice es betrat''. 
+Die Ursprünge von AR reichen bis in die 1960er Jahre zurück, als Ivan Sutherland mit seiner Vision des ,,ultimativen Displays'' \cite{sutherland1965ultimateDisplay} den Grundstein legte. In seinen Forschungen beschrieb er die Idee einer interaktiven, computergenerierten Welt und verglich sie mit einem ,,Wunderland, wie Alice es betrat'' \cite{sutherland1965ultimateDisplay}. 
 
-Im Jahr 1968 entwickelte Sutherland gemeinsam mit seinem Studenten Bob Sproull ein \textit{Head-Mounted Display}. Dieses System ermöglichte es Nutzern erstmals, einfache dreidimensionale Formen in der realen Umgebung zu visualisieren. Dabei trägt der Benutzer eine Kopfapparatur, die an der Decke befestigt ist. Das Gerät zeichnet die Rotation des Kopfes auf und überträgt die Bewegungen auf die virtuellen Objekte, die durch die Linsen sichtbar werden. Dies gilt als die erste praktische Anwendung von AR. \cite{sutherland19683dDisplay, doerner2022virtual}
+Im Jahr 1968 entwickelte Sutherland gemeinsam mit seinem Studenten Bob Sproull ein \emph{Head-Mounted-Display}. Dieses System ermöglichte es Nutzern erstmals, einfache dreidimensionale Formen in der realen Umgebung zu visualisieren. Dabei trägt der Benutzer eine Kopfapparatur, die an der Decke befestigt ist. Das Gerät zeichnet die Rotation des Kopfes auf und überträgt die Bewegungen auf die virtuellen Objekte, die durch die Linsen sichtbar werden. Dies gilt als die erste praktische Anwendung von AR. \cite{sutherland19683dDisplay, doerner2022virtual}
 
 \begin{figure}
     \centering
@@ -70,7 +70,7 @@ Die Ergebnisse dieser Arbeit sollen als Entscheidungsgrundlage für den möglich
 
 Zu Beginn dieser Arbeit wird die Problemstellung im Kontext der BRUNATA-METRONA GmbH \& Co. KG erläutert. Anschließend wird das methodische Vorgehen bei der Recherche und Ausarbeitung beschrieben. 
 
-Im dritten Kapitel werden die theoretischen Grundlagen von Augmented Reality und die technischen Konzepte, die für die Implementierung einer mobilen AR-Anwendung relevant sind, dargestellt. Dazu gehören mathematische Prinzipien, Tracking- und Rekonstruktionsalgorithmen sowie die Integration von AR.
+Im vierten Kapitel werden die theoretischen Grundlagen von Augmented Reality und die technischen Konzepte, die für die Implementierung einer mobilen AR-Anwendung relevant sind, dargestellt. Dazu gehören mathematische Prinzipien, Tracking- und Rekonstruktionsalgorithmen sowie die Integration von AR.
 
 Im Hauptteil der Arbeit liegt der Fokus auf die Entwicklung und Implementierung des AR-Prototypen. Hierbei werden die Anforderungen an die Anwendung definiert, die technische Umsetzung erläutert und die Implementierung der Montageregeln thematisiert. 
 
