@@ -161,18 +161,14 @@ Die AR-Objekte entsprechen Subklassen der \texttt{EntityModel}-Klasse. Für die 
     \item \texttt{DistanceIndicators}: zeigen Abstände zu den umgebenden Flächen an, um die korrekte Montage sicherzustellen
 \end{itemize}
 
-Die Kommunikation zwischen diesen Komponenten erfolgt mithilfe des \texttt{Observer}-Patterns. Die View beobachtet dabei das \texttt{ViewModel} und reagiert auf Änderungen in der Szene. Dank des in Swift integrierten Observation-Frameworks lässt sich dieses Muster einfach umsetzen, ohne zusätzlichen Boilerplate-Code zu erzeugen. Die Annotation \texttt{@Observable} ermöglicht es, dass Änderungen an einer Klasse automatisch an ihre Beobachter weitergeleitet werden \cite{appledevdoc}:
+Die Kommunikation zwischen diesen Komponenten erfolgt mithilfe des \texttt{Observer}-Patterns. Die View beobachtet dabei das \texttt{ViewModel} und reagiert auf Änderungen in der Szene. Dank des in Swift integrierten Observation-Frameworks lässt sich dieses Muster einfach umsetzen, ohne zusätzlichen Boilerplate-Code zu erzeugen. Damit das \texttt{ViewModel} Änderungen an die Benutzeroberfläche weitergeben kann, muss es das \texttt{ObservableObject}-Protokoll implementieren. Zudem sollten relevante Variablen mit dem \texttt{@Published}-Attribut versehen werden, um Änderungen automatisch zu signalisieren \cite{appledevdoc}:
 
 \begin{lstlisting}[language=Swift]
-@Observable
-class ARViewModel {
-    private(set) var scene: [Entity & HasAnchor] = []
-    @ObservationIgnored private var isProcessing: Bool = false
+class ARViewModel: NSObject, ARSessionDelegate, ObservableObject {
+    @Published private(set) var scene: [Entity & HasAnchor] = []
     // ...
 }
 \end{lstlisting}
-
-Variablen, die nicht beobachtet werden sollen, können mit \texttt{@ObservationIgnored} markiert werden, wodurch unnötige Updates vermieden und die Performance optimiert wird. \cite{appledevdoc}
 
 Das \texttt{ViewModel} erhält kontinuierlich Tracking-Daten von der \texttt{ARSession}, indem es das \linebreak\texttt{ARSessionDelegate}-Protokoll implementiert. Dieses stellt verschiedene Callback-Methoden bereit, mit denen auf Änderungen in der Umgebung reagiert werden kann. Die \texttt{ARSession} erfasst Sensordaten und liefert Informationen zu Kamerapositionen, erkannten Flächen sowie identifizierten Objekten. Das \texttt{ViewModel} verarbeitet diese Daten und aktualisiert daraufhin die \texttt{EntityModels}, um die Darstellung in der AR-Szene entsprechend anzupassen. \cite{appledevdoc}
 
